@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLT · Powerbank Sharing — Tanzania</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345C278'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
+<style>
+:root{
+  --bg:#080C0A; --surface:#0D1410; --surface-2:#141C17; --surface-3:#1C2720;
+  --border:#243029; --border-subtle:#182018;
+  --text:#EAF2ED; --text-mid:rgba(234,242,237,.62); --text-dim:rgba(234,242,237,.38);
+  --accent:#45C278; --teal:#2ABFAA;
+  --grad:linear-gradient(135deg,#45C278 0%,#2ABFAA 100%);
+  --glow-card:0 0 0 1px rgba(69,194,120,.25),0 8px 32px rgba(69,194,120,.08);
+  --ease-swift:cubic-bezier(.4,0,.2,1);
+  --ease-soft:cubic-bezier(.25,.1,.25,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-decel:cubic-bezier(0,0,.2,1);
+  --display:'Unbounded',sans-serif;
+  --body:'Golos Text',-apple-system,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--body);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  min-height:100vh;position:relative;
+}
+/* ── ambient: dot-grid + дыхание заряда ── */
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0}
+.ambient::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(69,194,120,.07) 1px,transparent 1px);
+  background-size:26px 26px;
+  opacity:0;animation:gridIn 1.2s ease .4s forwards;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%);
+          mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%);
+}
+.ambient::after{
+  content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);
+  width:980px;height:680px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(69,194,120,.13),rgba(42,191,170,.05) 55%,transparent 75%);
+  filter:blur(10px);
+}
+@keyframes gridIn{to{opacity:.6}}
+
+.wrap{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:44px 32px 72px}
+
+/* ── header ── */
+.header{display:flex;align-items:center;gap:14px}
+.logo-box{
+  width:42px;height:42px;border-radius:12px;background:var(--grad);
+  display:grid;place-items:center;
+  box-shadow:0 0 16px rgba(69,194,120,.5);
+  animation:logoPop .28s var(--ease-spring) both;
+}
+.logo-box svg{width:22px;height:22px}
+.logo-word{
+  font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:.02em;
+  animation:fadeSoft .2s var(--ease-soft) .08s both;
+}
+.lang-pills{display:flex;gap:2px;margin-left:auto;background:var(--surface);border:1px solid var(--border-subtle);border-radius:12px;padding:3px;animation:fadeSoft .2s var(--ease-soft) .12s both}
+.lang-pill{
+  padding:6px 13px;border:0;border-radius:9px;background:none;cursor:pointer;
+  font-family:var(--body);font-size:12px;font-weight:600;color:var(--text-dim);
+  transition:color .18s var(--ease-swift),background .18s var(--ease-swift);
+}
+.lang-pill:hover{color:var(--text-mid)}
+.lang-pill.on{color:#08130C;background:var(--grad)}
+@keyframes logoPop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fadeSoft{from{opacity:0}to{opacity:1}}
+
+/* ── hero ── */
+.hero{margin:88px 0 72px}
+.slash{
+  font-size:13px;font-weight:500;color:var(--accent);opacity:0;
+  animation:riseIn .24s var(--ease-decel) .2s forwards;
+}
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(36px,5.5vw,64px);line-height:1.07;letter-spacing:-.03em;
+  margin:18px 0 26px;
+}
+h1 .l1,h1 .l2{display:block;opacity:0}
+h1 .l1{animation:riseBig .36s var(--ease-decel) .32s forwards}
+h1 .l2{animation:riseBig .36s var(--ease-decel) .42s forwards}
+h1 .gx{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(69,194,120,.35));
+}
+.hero-sub{
+  max-width:520px;font-size:16px;line-height:1.65;color:var(--text-mid);
+  opacity:0;animation:fadeSoft .3s var(--ease-soft) .56s forwards;
+}
+@keyframes riseIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes riseBig{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ── карточки: featured CRM + два спутника ── */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{
+  position:relative;display:flex;flex-direction:column;gap:14px;
+  background:var(--surface);border:1px solid var(--border-subtle);border-radius:18px;
+  padding:26px;text-decoration:none;color:inherit;isolation:isolate;
+  transition:transform .24s var(--ease-swift);
+  opacity:0;
+}
+.card.featured{grid-column:1/-1;flex-direction:row;align-items:center;gap:28px;animation:riseBig .32s var(--ease-decel) .68s forwards}
+.card:nth-child(2){animation:riseBig .32s var(--ease-decel) .76s forwards}
+.card:nth-child(3){animation:riseBig .32s var(--ease-decel) .84s forwards}
+.card::after{
+  content:'';position:absolute;inset:-1px;border-radius:inherit;z-index:-1;
+  background:linear-gradient(135deg,rgba(69,194,120,.5),rgba(42,191,170,.12));
+  opacity:0;transition:opacity .24s ease;
+}
+.card:hover{transform:translateY(-4px)}
+.card:hover::after{opacity:1}
+.card:hover .cta-arrow{transform:translateX(4px)}
+.ci{
+  width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex:none;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--accent);
+}
+.featured .ci{width:54px;height:54px;border-radius:15px}
+.card-main{flex:1;min-width:0}
+.card-title{font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.card-desc{font-size:13.5px;line-height:1.6;color:var(--text-mid)}
+.card-side{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex:none}
+.mini{display:flex;gap:18px}
+.mini b{display:block;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.mini span{font-size:11.5px;color:var(--text-dim)}
+.cta{
+  display:inline-flex;align-items:center;gap:8px;margin-top:auto;
+  font-size:13.5px;font-weight:600;color:var(--accent);
+}
+.featured .cta{margin:0}
+.cta-arrow{transition:transform .24s var(--ease-spring);display:inline-flex}
+
+/* ── метрики ── */
+.section{margin-top:64px}
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:18px}
+.m-item{
+  background:var(--surface);border:1px solid var(--border-subtle);border-radius:14px;
+  padding:16px 18px;opacity:0;transform:translateY(12px);
+  transition:opacity .24s var(--ease-decel),transform .24s var(--ease-decel),border-color .2s ease;
+}
+.m-item.vis{opacity:1;transform:none}
+.m-item:hover{border-color:rgba(69,194,120,.35)}
+.m-val{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.m-val small{font-size:12px;font-weight:500;color:var(--text-mid);margin-left:2px}
+.m-lab{font-size:11.5px;color:var(--text-dim);margin-top:3px;line-height:1.4}
+
+/* ── стек ── */
+.stack-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pill{
+  font-size:12.5px;font-weight:500;color:var(--text-mid);
+  background:var(--surface);border:1px solid var(--border-subtle);border-radius:10px;padding:7px 13px;
+  transition:color .18s ease,border-color .18s ease;
+}
+.pill:hover{color:var(--text);border-color:var(--border)}
+
+/* ── footer ── */
+.footer{
+  margin-top:72px;padding-top:28px;border-top:1px solid var(--border-subtle);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  font-size:12px;color:var(--text-dim);
+}
+
+/* ── lang-fade при смене языка ── */
+.i18n-zone{transition:opacity .12s var(--ease-swift),transform .12s var(--ease-swift)}
+.i18n-zone.swap{opacity:0;transform:translateY(4px)}
+
+@media(max-width:760px){
+  .wrap{padding:30px 20px 56px}
+  .hero{margin:56px 0 48px}
+  .cards{grid-template-columns:1fr}
+  .card.featured{flex-direction:column;align-items:flex-start;gap:16px}
+  .card-side{align-items:flex-start}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .card,.hero-sub,.slash,h1 .l1,h1 .l2,.m-item{opacity:1!important;transform:none!important}
+  .ambient::before{opacity:.6}
+}
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<div class="wrap">
+
+  <header class="header">
+    <div class="logo-box" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M14 2L6 14h6l-2 8 10-12h-6l2-8z" fill="#08130C"/></svg>
+    </div>
+    <span class="logo-word">VOLT</span>
+    <div class="lang-pills" role="group" aria-label="Language">
+      <button class="lang-pill" data-setlang="en">EN</button>
+      <button class="lang-pill" data-setlang="ru">RU</button>
+      <button class="lang-pill" data-setlang="sw">SW</button>
+    </div>
+  </header>
+
+  <div class="i18n-zone" id="zone">
+
+  <section class="hero">
+    <div class="slash" data-i18n="slashLive">/ live prototype — open &amp; click, no install</div>
+    <h1>
+      <span class="l1" data-i18n="h1a">Powerbank sharing</span>
+      <span class="l2"><span class="gx" data-i18n="h1b">for Tanzania</span></span>
+    </h1>
+    <p class="hero-sub" data-i18n="heroSub">Mobile client app, operator CRM with live simulation, and production-grade architecture — one working prototype for Dar es Salaam. Click any card to open.</p>
+  </section>
+
+  <div class="cards">
+    <a class="card featured" href="crm/index.html">
+      <div class="ci" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="3" width="18" height="14" rx="2.5"/><path d="M7 19h8M11 17v2" stroke-linecap="round"/><path d="M6 8h10M6 11.5h6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-main">
+        <div class="card-title" data-i18n="c2t">Operator CRM</div>
+        <p class="card-desc" data-i18n="c2d">Real-time network monitoring: live KPIs, per-station slot grids, powerbank registry with QR codes, rentals log. Roles: operator · manager · investor.</p>
+      </div>
+      <div class="card-side">
+        <div class="mini">
+          <div><b>64</b><span data-i18n="miniBanks">powerbanks</span></div>
+          <div><b>5</b><span data-i18n="miniStations">stations</span></div>
+          <div><b>3</b><span data-i18n="miniRoles">roles</span></div>
+        </div>
+        <span class="cta"><span data-i18n="open">Open</span>
+          <span class="cta-arrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="app-mobile/index.html">
+      <div class="ci" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="5" y="2" width="12" height="18" rx="3"/><path d="M9 5h4M11 16v.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-main">
+        <div class="card-title" data-i18n="c1t">Client Application</div>
+        <p class="card-desc" data-i18n="c1d">iOS-style clickable prototype: Dar es Salaam map, station slots, QR scan → live rental with a TZS timer. Three languages on board.</p>
+      </div>
+      <span class="cta"><span data-i18n="open">Open</span>
+        <span class="cta-arrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </span>
+    </a>
+
+    <a class="card" href="docs/">
+      <div class="ci" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 3H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7L14 3z"/><path d="M14 3v4h4M8 13h6M8 9h4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-main">
+        <div class="card-title" data-i18n="c3t">Architecture</div>
+        <p class="card-desc" data-i18n="c3d">Production blueprint: Firebase, Flutter client, M-Pesa / Airtel / Tigo billing, PDPA compliance, 3–4 week MVP plan — with rendered diagrams.</p>
+      </div>
+      <span class="cta"><span data-i18n="read">Read</span>
+        <span class="cta-arrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </span>
+    </a>
+  </div>
+
+  <section class="section">
+    <div class="slash" style="animation:none;opacity:.85" data-i18n="slashData">/ demo data — consistent across CRM and app</div>
+    <div class="metrics" id="metrics">
+      <div class="m-item"><div class="m-val" data-count="5">0</div><div class="m-lab" data-i18n="d1">Stations · DSM</div></div>
+      <div class="m-item"><div class="m-val" data-count="64">0</div><div class="m-lab" data-i18n="d2">Powerbanks total</div></div>
+      <div class="m-item"><div class="m-val" data-count="18">0</div><div class="m-lab" data-i18n="d3">Active rentals</div></div>
+      <div class="m-item"><div class="m-val" data-count="1500"><span>0</span><small>TZS</small></div><div class="m-lab" data-i18n="d4">First hour</div></div>
+      <div class="m-item"><div class="m-val" data-count="7000"><span>0</span><small>TZS</small></div><div class="m-lab" data-i18n="d5">Max per day</div></div>
+      <div class="m-item"><div class="m-val" data-count="15400"><span>0</span><small>TZS</small></div><div class="m-lab" data-i18n="d6">June history</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="slash" style="animation:none;opacity:.85" data-i18n="slashStack">/ production stack</div>
+    <div class="stack-row">
+      <span class="pill">React + TypeScript</span><span class="pill">Flutter</span>
+      <span class="pill">Firebase Auth</span><span class="pill">Firestore</span>
+      <span class="pill">Cloud Functions</span><span class="pill">M-Pesa / Airtel / Tigo</span>
+      <span class="pill">FCM Push</span><span class="pill">MapLibre / OpenStreetMap</span>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span data-i18n="f1">VOLT Tanzania · powerbank sharing prototype · 2026</span>
+    <span data-i18n="f2">vanilla JS · no build · EN / RU / Kiswahili</span>
+  </footer>
+
+  </div><!-- /i18n-zone -->
+</div>
+
+<script>
+(function () {
+  /* ── i18n ── */
+  var L = {
+    en: { slashLive:"/ live prototype — open & click, no install",
+      h1a:"Powerbank sharing", h1b:"for Tanzania",
+      heroSub:"Mobile client app, operator CRM with live simulation, and production-grade architecture — one working prototype for Dar es Salaam. Click any card to open.",
+      c1t:"Client Application", c1d:"iOS-style clickable prototype: Dar es Salaam map, station slots, QR scan → live rental with a TZS timer. Three languages on board.",
+      c2t:"Operator CRM", c2d:"Real-time network monitoring: live KPIs, per-station slot grids, powerbank registry with QR codes, rentals log. Roles: operator · manager · investor.",
+      c3t:"Architecture", c3d:"Production blueprint: Firebase, Flutter client, M-Pesa / Airtel / Tigo billing, PDPA compliance, 3–4 week MVP plan — with rendered diagrams.",
+      open:"Open", read:"Read",
+      miniBanks:"powerbanks", miniStations:"stations", miniRoles:"roles",
+      slashData:"/ demo data — consistent across CRM and app",
+      d1:"Stations · DSM", d2:"Powerbanks total", d3:"Active rentals", d4:"First hour", d5:"Max per day", d6:"June history",
+      slashStack:"/ production stack",
+      f1:"VOLT Tanzania · powerbank sharing prototype · 2026", f2:"vanilla JS · no build · EN / RU / Kiswahili" },
+    ru: { slashLive:"/ живой прототип — открой и кликай, без установки",
+      h1a:"Шеринг повербанков", h1b:"для Танзании",
+      heroSub:"Мобильное приложение, CRM оператора с live-симуляцией и production-архитектура — один рабочий прототип для Дар-эс-Салама. Нажмите на любую карточку.",
+      c1t:"Клиентское приложение", c1d:"Кликабельный прототип в стиле iOS: карта Дар-эс-Салама, слоты станций, скан QR → живая аренда с таймером в TZS. Три языка на борту.",
+      c2t:"CRM оператора", c2d:"Мониторинг сети в реальном времени: живые KPI, слот-гриды станций, реестр повербанков с QR-кодами, журнал аренд. Роли: оператор · менеджер · инвестор.",
+      c3t:"Архитектура", c3d:"Production-чертёж: Firebase, Flutter-клиент, биллинг M-Pesa / Airtel / Tigo, соответствие PDPA, план MVP на 3–4 недели — с живыми диаграммами.",
+      open:"Открыть", read:"Читать",
+      miniBanks:"повербанка", miniStations:"станций", miniRoles:"роли",
+      slashData:"/ данные демо — сходятся между CRM и приложением",
+      d1:"Станции · DSM", d2:"Всего повербанков", d3:"Активные аренды", d4:"Первый час", d5:"Максимум в сутки", d6:"История за июнь",
+      slashStack:"/ технологический стек",
+      f1:"VOLT Танзания · прототип шеринга повербанков · 2026", f2:"vanilla JS · без сборки · EN / RU / суахили" },
+    sw: { slashLive:"/ prototip hai — fungua na ubofye, bila usakinishaji",
+      h1a:"Kushiriki powerbank", h1b:"kwa Tanzania",
+      heroSub:"Programu ya simu, CRM ya opereta na uigaji hai, na usanifu wa uzalishaji — prototip moja inayofanya kazi kwa Dar es Salaam. Bofya kadi yoyote.",
+      c1t:"Programu ya Mteja", c1d:"Prototip ya mtindo wa iOS: ramani ya Dar es Salaam, sloti za vituo, skani QR → ukodishaji hai na kipima muda cha TZS. Lugha tatu.",
+      c2t:"CRM ya Opereta", c2d:"Ufuatiliaji wa mtandao kwa wakati halisi: KPI hai, gridi za sloti, rejista ya betri na misimbo ya QR, kumbukumbu za ukodishaji. Majukumu: opereta · meneja · mwekezaji.",
+      c3t:"Usanifu", c3d:"Mchoro wa uzalishaji: Firebase, programu ya Flutter, malipo ya M-Pesa / Airtel / Tigo, PDPA, mpango wa MVP wa wiki 3–4 — na michoro hai.",
+      open:"Fungua", read:"Soma",
+      miniBanks:"betri", miniStations:"vituo", miniRoles:"majukumu",
+      slashData:"/ data ya demo — inalingana kati ya CRM na programu",
+      d1:"Vituo · DSM", d2:"Jumla ya betri", d3:"Ukodishaji hai", d4:"Saa ya kwanza", d5:"Kiwango cha juu kwa siku", d6:"Historia ya Juni",
+      slashStack:"/ production stack",
+      f1:"VOLT Tanzania · prototip ya kushiriki powerbank · 2026", f2:"vanilla JS · bila build · EN / RU / Kiswahili" }
+  };
+  var zone = document.getElementById("zone");
+  function applyTexts(lang) {
+    var d = L[lang] || L.en;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n");
+      if (d[k]) el.textContent = d[k];
+    });
+    document.documentElement.lang = lang;
+    document.querySelectorAll(".lang-pill").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-setlang") === lang);
+    });
+    try {
+      localStorage.setItem("volt_landing_lang", lang);
+      localStorage.setItem("volt_lang", lang);
+      localStorage.setItem("volt_crm_lang", lang);
+    } catch (e) {}
+  }
+  var booted = false;
+  function setLang(lang) {
+    if (!booted) { applyTexts(lang); return; }
+    zone.classList.add("swap");
+    setTimeout(function () {
+      applyTexts(lang);
+      zone.style.transition = "none"; zone.style.transform = "translateY(-4px)";
+      void zone.offsetHeight;
+      zone.style.transition = ""; zone.classList.remove("swap"); zone.style.transform = "";
+    }, 120);
+  }
+  document.querySelectorAll(".lang-pill").forEach(function (b) {
+    b.addEventListener("click", function () { setLang(b.getAttribute("data-setlang")); });
+  });
+  var saved; try { saved = localStorage.getItem("volt_landing_lang"); } catch (e) {}
+  var nav = (navigator.language || "en").slice(0, 2);
+  setLang(saved || (L[nav] ? nav : "en"));
+  booted = true;
+
+  /* ── count-up метрик при появлении ── */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function fmtNum(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function countUp(el, target, dur) {
+    var slot = el.querySelector("span") || el;
+    if (reduce) { slot.textContent = fmtNum(target); return; }
+    var t0 = performance.now();
+    (function tick(now) {
+      var k = Math.min(1, (now - t0) / dur);
+      var e = 1 - Math.pow(1 - k, 3);
+      slot.textContent = fmtNum(Math.round(target * e));
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  var items = [].slice.call(document.querySelectorAll(".m-item"));
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      var i = items.indexOf(en.target);
+      setTimeout(function () {
+        en.target.classList.add("vis");
+        var v = en.target.querySelector("[data-count]");
+        if (v) countUp(v, parseInt(v.getAttribute("data-count"), 10), 1400);
+      }, reduce ? 0 : i * 80);
+    });
+  }, { threshold: 0.3 });
+  items.forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>

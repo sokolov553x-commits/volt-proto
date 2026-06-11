@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLT · CRM — Powerbank Station Network Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=7">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345C278'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
+</head>
+<body>
+<div id="app" class="shell">
+
+  <!-- ───── Sidebar ───── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="logo" href="../" title="VOLT Hub" style="text-decoration:none;color:inherit;cursor:pointer">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></svg>
+      </span>
+      <span class="logo-word">VOLT</span>
+      <span class="logo-tag">CRM</span>
+    </a>
+
+    <nav class="nav" id="navWrap"><div id="navIndicator"></div><div id="nav"></div></nav>
+
+    <div class="sidebar-foot">
+      <div class="role-switch" id="roleSwitch">
+        <button class="role-btn" id="roleBtn" aria-haspopup="listbox" aria-expanded="false">
+          <span class="role-dot"></span>
+          <span class="role-current" id="roleCurrent">Manager</span>
+          <svg class="ico-14" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="role-menu" id="roleMenu" role="listbox" hidden></div>
+      </div>
+      <div class="live-status"><span class="ld"></span><span id="liveStatusTxt">live data</span></div>
+      <div class="sidebar-version" id="sidebarVersion">demo prototype · v0.1 · synthetic data</div>
+    </div>
+  </aside>
+
+  <!-- ───── Main ───── -->
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb" id="crumb">Overview</div>
+      <div class="topbar-right">
+        <div class="lang-switch" id="langSwitch">
+          <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" title="Language">
+            <svg class="ico-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span id="langCurrent">EN</span>
+            <svg class="ico-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="lang-menu" id="langPicker" hidden role="listbox"></div>
+        </div>
+        <button class="live-btn" id="liveBtn" title="Simulate live station events">
+          <svg class="ico-14" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+          <span>Live demo</span>
+        </button>
+        <button class="icon-btn" id="bellBtn" title="Alerts">
+          <svg class="ico-18" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="bell-count" id="bellCount">0</span>
+        </button>
+        <div class="user-chip">
+          <span class="avatar" id="userAvatar">AM</span>
+          <span class="user-name" id="userName">Amani M.</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content" id="view" tabindex="-1"></main>
+  </div>
+</div>
+
+<!-- modal root -->
+<div class="modal-root" id="modalRoot" hidden></div>
+<!-- drawer root -->
+<div class="drawer-root" id="drawerRoot" hidden></div>
+<!-- toast root -->
+<div class="toast-root" id="toastRoot"></div>
+
+<script src="qrcode.js?v=6"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=6"></script>
+</body>
+</html>

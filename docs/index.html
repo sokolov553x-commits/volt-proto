@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLT · Architecture — Powerbank Sharing Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345C278'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
+<style>
+:root {
+  --bg: #F7F4EF; --surface: #FFFFFF; --surface-2: #F0EBE2;
+  --border: #DCD5C8; --border-subtle: #E7E1D4;
+  --text: #1A1714; --text-muted: #8A8278;
+  --accent: #92580A; --accent-soft: rgba(232,160,32,.16);
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: "Onest", -apple-system, sans-serif;
+  font-size: 15px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 28px;
+  background: rgba(247,244,239,.92); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.back {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--text-muted); text-decoration: none;
+  font-size: 13px; font-weight: 600;
+  padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+  transition: all .15s;
+}
+.back:hover { color: var(--text); border-color: var(--text-muted); }
+.tb-title { font-size: 14px; font-weight: 600; }
+.tb-tag { margin-left: auto; font-size: 11px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 36px 28px 80px; }
+.loading { color: var(--text-muted); padding: 60px 0; text-align: center; }
+
+/* markdown */
+.md h1 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 500; font-size: 38px; line-height: 1.2; margin: 8px 0 18px; }
+.md h2 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; font-size: 26px; margin: 42px 0 14px; padding-top: 18px; border-top: 1px solid var(--border-subtle); }
+.md h3 { font-size: 16.5px; margin: 28px 0 10px; }
+.md h4 { font-size: 14.5px; margin: 20px 0 8px; color: var(--text); }
+.md p { margin: 0 0 12px; }
+.md ul, .md ol { margin: 0 0 14px 22px; }
+.md li { margin-bottom: 4px; }
+.md a { color: var(--accent); text-decoration: none; }
+.md a:hover { text-decoration: underline; }
+.md strong { font-weight: 600; }
+.md hr { border: 0; border-top: 1px solid var(--border-subtle); margin: 28px 0; }
+.md blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 16px; border-radius: 0 8px 8px 0; margin: 0 0 14px; }
+.md code { font-family: var(--mono); font-size: 12.5px; background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 5px; padding: 1.5px 6px; }
+.md pre { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; overflow-x: auto; margin: 0 0 16px; }
+.md pre code { background: none; border: 0; padding: 0; font-size: 12.5px; line-height: 1.6; }
+.md table { width: 100%; border-collapse: collapse; margin: 0 0 18px; font-size: 13.5px; }
+.md th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding: 8px 12px; }
+.md td { border-bottom: 1px solid var(--border-subtle); padding: 8px 12px; vertical-align: top; }
+.md tr:hover td { background: var(--surface); }
+.md .mermaid { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; margin: 0 0 16px; display: flex; justify-content: center; overflow-x: auto; }
+
+/* TOC */
+.toc { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px 20px; margin: 0 0 28px; }
+.toc-title { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.toc a { display: block; color: var(--text-muted); text-decoration: none; font-size: 13px; padding: 3px 0; }
+.toc a:hover { color: var(--accent); }
+
+@media (max-width: 640px) { .wrap { padding: 24px 16px 60px; } .md h1 { font-size: 24px; } }
+@media print { .topbar { display: none; } body { background: #fff; color: #111; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="back" href="../">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    VOLT Hub
+  </a>
+  <span class="tb-title">Architecture</span>
+  <span class="tb-tag">production blueprint · EN</span>
+</div>
+<div class="wrap">
+  <div id="content" class="md"><div class="loading">Loading document…</div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" integrity="sha384-WmdflGW9aGfoBdHc4rRyWzYuAjEmDwMdGdiPNacbwfGKxBW/SO6guzuQ76qjnSlr" crossorigin="anonymous"></script>
+<script>
+(async function () {
+  const el = document.getElementById("content");
+  let mdText;
+  try {
+    const res = await fetch("ARCHITECTURE.md");
+    if (!res.ok) throw new Error(res.status);
+    mdText = await res.text();
+  } catch (e) {
+    el.innerHTML = '<div class="loading">Could not load the document. <a href="ARCHITECTURE.md">Open raw file</a>.</div>';
+    return;
+  }
+
+  if (typeof marked === "undefined") {
+    // CDN недоступен — показываем сырой текст, читабельно
+    el.innerHTML = "<pre style='white-space:pre-wrap'></pre>";
+    el.firstChild.textContent = mdText;
+    return;
+  }
+
+  marked.setOptions({ mangle: false, headerIds: true });
+  el.innerHTML = marked.parse(mdText);
+
+  // mermaid-блоки: code.language-mermaid → div.mermaid
+  document.querySelectorAll("code.language-mermaid").forEach((code) => {
+    const div = document.createElement("div");
+    div.className = "mermaid";
+    div.textContent = code.textContent;
+    code.closest("pre").replaceWith(div);
+  });
+  if (typeof mermaid !== "undefined") {
+    mermaid.initialize({ startOnLoad: false, theme: "neutral", themeVariables: {
+      primaryColor: "#F0EBE2", primaryBorderColor: "#DCD5C8", primaryTextColor: "#1A1714",
+      lineColor: "#8A8278", fontFamily: "Onest, sans-serif", fontSize: "13px",
+    }});
+    try { await mermaid.run({ querySelector: ".mermaid" }); } catch (e) { /* диаграмма с ошибкой остаётся текстом */ }
+  }
+
+  // TOC из h2
+  const h2s = [...el.querySelectorAll("h2")];
+  if (h2s.length > 2) {
+    const toc = document.createElement("nav");
+    toc.className = "toc";
+    toc.innerHTML = '<div class="toc-title">Contents</div>' +
+      h2s.map((h) => `<a href="#${h.id}">${h.textContent}</a>`).join("");
+    const h1 = el.querySelector("h1");
+    (h1 || el).insertAdjacentElement("afterend", toc);
+  }
+})();
+</script>
+</body>
+</html>

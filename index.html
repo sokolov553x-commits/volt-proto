@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLT · Powerbank Sharing — Dar es Salaam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z' fill='%23E8A020'/></svg>">
+<style>
+/* ============================================================
+   VOLT EDITORIAL AMBER — DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Backgrounds */
+  --c-bg:          #F7F4EF;
+  --c-bg-warm:     #F0EBE2;
+  --c-bg-paper:    #EDE7DB;
+  --c-surface:     #FFFFFF;
+
+  /* Ink */
+  --c-ink:         #1A1714;
+  --c-ink-mid:     #3D3830;
+  --c-ink-muted:   #8A8278;
+  --c-ink-ghost:   #C4BDB3;
+
+  /* Volt Amber */
+  --c-volt:        #E8A020;
+  --c-volt-hot:    #F5B830;
+  --c-volt-dim:    #F2C96A;
+  --c-volt-pale:   #FBF0D5;
+
+  /* Color Zones */
+  --c-zone-ink:    #1A1714;
+  --c-zone-forest: #2D4A3E;
+  --c-zone-volt:   #E8A020;
+
+  /* Hairlines */
+  --hairline:      rgba(26, 23, 20, 0.12);
+  --hairline-dark: rgba(255, 255, 255, 0.15);
+
+  /* Badges */
+  --badge-ok-bg:   #DFFAE4; --badge-ok-text:   #1A6B2E; --badge-ok-border:   #A8D5B5;
+  --badge-warn-bg: #FFF0CC; --badge-warn-text: #92580A; --badge-warn-border: #F2C96A;
+  --badge-err-bg:  #FFE8E8; --badge-err-text:  #8B1A1A; --badge-err-border:  #F5B8B8;
+
+  /* Spacing (8pt grid) */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-12: 48px;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Onest', system-ui, sans-serif;
+
+  /* Radius: редакционный минимум */
+  --r-none: 0px;
+  --r-sm:   2px;
+  --r-btn:  0px;
+}
+
+/* ============================================================
+   GLOBAL RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.num { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+hr.divider { border: none; border-top: 1px solid var(--hairline); }
+a { text-decoration: none; color: inherit; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 14px 28px;
+  background: var(--c-volt);
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+.btn-primary:hover { background: var(--c-volt-hot); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.btn-ghost:hover { border-color: var(--c-volt); }
+
+/* volt accent line on hover */
+.volt-hover-line { position: relative; }
+.volt-hover-line::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px; width: 0;
+  background: var(--c-volt);
+  transition: width 0.3s ease;
+}
+.volt-hover-line:hover::after { width: 100%; }
+
+/* ============================================================
+   SECTION 1 — NAV (56px sticky)
+   ============================================================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--hairline);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 80px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--c-ink);
+  letter-spacing: 0.04em;
+}
+.nav-logo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-volt);
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+.nav-anchors {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.nav-anchors a {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--c-ink-mid);
+  transition: color 0.15s;
+}
+.nav-anchors a:hover { color: var(--c-ink); }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+.lang-switcher {
+  display: flex;
+  gap: 0;
+  align-items: center;
+}
+.lang-btn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--c-ink-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.15s;
+}
+.lang-btn:hover { color: var(--c-ink-mid); }
+.lang-btn.active {
+  font-weight: 600;
+  color: var(--c-ink);
+}
+.lang-sep {
+  color: var(--c-ink-ghost);
+  font-size: 11px;
+  user-select: none;
+}
+
+/* ============================================================
+   SECTION 2 — HERO (100svh)
+   ============================================================ */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100svh - 56px);
+  min-height: calc(100vh - 56px);
+}
+.hero-left {
+  padding: 80px 48px 80px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--hairline);
+}
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+  margin-bottom: 24px;
+}
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 7vw, 96px);
+  line-height: 0.95;
+  font-weight: 300;
+  color: var(--c-ink);
+}
+.hero-h1 em {
+  font-style: italic;
+  color: var(--c-ink-muted);
+}
+.hero-body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--c-ink-mid);
+  max-width: 440px;
+  margin-top: 32px;
+}
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.hero-ghost-link {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--c-ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.hero-ghost-link:hover { color: var(--c-ink); }
+
+/* Hero right: orbital diagram */
+.hero-right {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg-warm);
+}
+.orbit-container {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+.orbit-ring {
+  position: absolute;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-ring-inner  { width: 120px; height: 120px; }
+.orbit-ring-mid    { width: 220px; height: 220px; }
+.orbit-ring-outer  { width: 320px; height: 320px; }
+.orbit-center {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--c-volt);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.orbit-center-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--c-ink);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+/* Pulse ring */
+.pulse-ring {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--c-volt);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 2.5s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes pulse {
+  0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+}
+/* Station dots on outer orbit */
+.orbit-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+}
+.orbit-dot-active { background: var(--c-volt); }
+.orbit-dot-off    { background: var(--c-ink-ghost); }
+
+/* ============================================================
+   SECTION 3 — STATS BAR (ink zone)
+   ============================================================ */
+.stats-bar {
+  background: var(--c-zone-ink);
+  padding: 40px 80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stats-col {
+  padding-right: 40px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+.stats-col:last-child {
+  border-right: none;
+  padding-left: 40px;
+  padding-right: 0;
+}
+.stats-col:nth-child(2),
+.stats-col:nth-child(3) {
+  padding-left: 40px;
+}
+.stats-label {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-ink-ghost);
+  margin-bottom: 8px;
+}
+.stats-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 400;
+  color: #FFFFFF;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.stats-value sup {
+  font-size: 0.55em;
+  color: var(--c-volt-dim);
+  vertical-align: super;
+  font-weight: 400;
+}
+.stats-sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   SECTION 4 — TICKER (volt zone)
+   ============================================================ */
+.ticker-zone {
+  background: var(--c-zone-volt);
+  overflow: hidden;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(26, 23, 20, 0.08);
+}
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ticker-item {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--c-ink);
+  padding: 0 24px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ticker-sep {
+  color: rgba(26, 23, 20, 0.4);
+  padding: 0 8px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   SECTION 5 — NUMBER BREAK (3 col editorial)
+   ============================================================ */
+.number-break {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--hairline);
+}
+.nb-cell {
+  padding: 60px 48px;
+  border-right: 1px solid var(--hairline);
+}
+.nb-cell:last-child { border-right: none; }
+.nb-cell:first-child { background: var(--c-volt-pale); }
+.nb-number {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 12vw, 140px);
+  line-height: 0.85;
+  font-weight: 300;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
+}
+.nb-number sup {
+  font-size: 0.35em;
+  color: var(--c-volt);
+  vertical-align: super;
+  font-weight: 400;
+  font-style: normal;
+}
+.nb-caption {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--c-ink-muted);
+  margin-top: 16px;
+  max-width: 180px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   SECTION 6 — HOW IT WORKS
+   ============================================================ */
+.how-section {
+  padding: 100px 80px;
+}
+.how-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 48px;
+  align-items: end;
+}
+.section-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 300;
+  line-height: 1.0;
+  color: var(--c-ink);
+}
+.section-h2 em { font-style: italic; color: var(--c-ink-muted); }
+.how-body-text {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--c-ink-mid);
+  line-height: 1.7;
+}
+.steps-grid {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.step {
+  padding: 40px 32px;
+  border-right: 1px solid var(--hairline);
+  cursor: default;
+  transition: background 0.2s ease;
+}
+.step:last-child { border-right: none; }
+.step.volt-hover-line { padding-bottom: 44px; }
+.step:hover { background: var(--c-bg-warm); }
+.step-number {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 300;
+  color: var(--c-ink-ghost);
+  display: block;
+  margin-bottom: 24px;
+  line-height: 1;
+}
+.step-title {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin-bottom: 12px;
+}
+.step-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--c-ink-muted);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SECTION 7 — TRUST ZONE (forest)
+   ============================================================ */
+.trust-section {
+  background: var(--c-zone-forest);
+  padding: 100px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.trust-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-volt-dim);
+  margin-bottom: 24px;
+}
+.trust-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 300;
+  line-height: 0.95;
+  color: #FFFFFF;
+}
+.trust-h2 em {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.55);
+}
+.trust-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 24px;
+  line-height: 1.7;
+}
+.trust-watermark {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: 280px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.03);
+  bottom: -40px;
+  right: -20px;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.trust-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+}
+.trust-metric {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 32px 28px;
+}
+.trust-metric-value {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 400;
+  color: #FFFFFF;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.trust-metric-unit {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--c-volt-dim);
+}
+.trust-metric-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 8px;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   SECTION 8 — PRODUCT SURFACES (hub cards)
+   ============================================================ */
+.surfaces-section {
+  padding: 100px 80px;
+}
+.surfaces-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 60px;
+}
+.surfaces-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+  margin-bottom: 16px;
+}
+.surfaces-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--c-ink);
+}
+.surfaces-h2 em { font-style: italic; color: var(--c-ink-muted); }
+
+/* Card grid: 2fr / 1fr */
+.surfaces-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2px;
+  background: var(--hairline);
+}
+.surf-card {
+  background: var(--c-bg-paper);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s ease;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.surf-card:hover { border-color: var(--c-volt); background: var(--c-bg-warm); }
+.surf-card-sm-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.surf-card-sm {
+  background: var(--c-bg-paper);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  padding: 36px;
+  min-height: 200px;
+  position: relative;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.surf-card-sm:hover { border-color: var(--c-volt); background: var(--c-bg-warm); }
+
+/* Crosshair corners on big card */
+.surf-card::before,
+.surf-card::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border-color: var(--c-volt);
+  border-style: solid;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.surf-card::before {
+  top: 8px; left: 8px;
+  border-width: 2px 0 0 2px;
+}
+.surf-card::after {
+  bottom: 8px; right: 8px;
+  border-width: 0 2px 2px 0;
+}
+.surf-card:hover::before,
+.surf-card:hover::after { opacity: 1; }
+
+/* card header row */
+.surf-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.surf-tag {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+  background: var(--c-bg-warm);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  padding: 3px 8px;
+}
+.surf-arrow {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--hairline);
+  color: var(--c-ink-muted);
+  transition: transform 0.3s ease, border-color 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+.surf-card:hover .surf-arrow,
+.surf-card-sm:hover .surf-arrow {
+  transform: rotate(45deg);
+  border-color: var(--c-volt);
+  color: var(--c-ink);
+}
+.surf-card-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--c-ink);
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.surf-card-desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--c-ink-mid);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* Mini table inside CRM card */
+.surf-mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: auto;
+}
+.surf-mini-table th {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--c-bg);
+}
+.surf-mini-table td {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--c-ink-mid);
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--hairline);
+  font-variant-numeric: tabular-nums;
+}
+.surf-mini-table tr:last-child td { border-bottom: none; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  border: 1px solid;
+}
+.badge::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.badge-ok   { background: var(--badge-ok-bg);   color: var(--badge-ok-text);   border-color: var(--badge-ok-border); }
+.badge-ok::before   { background: var(--badge-ok-text); }
+.badge-warn { background: var(--badge-warn-bg); color: var(--badge-warn-text); border-color: var(--badge-warn-border); }
+.badge-warn::before { background: var(--badge-warn-text); }
+.badge-err  { background: var(--badge-err-bg);  color: var(--badge-err-text);  border-color: var(--badge-err-border); }
+.badge-err::before  { background: var(--badge-err-text); }
+
+/* small card content */
+.surf-card-sm-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--c-ink);
+  margin-bottom: 8px;
+  line-height: 1.1;
+  margin-top: auto;
+}
+.surf-card-sm-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--c-ink-mid);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   SECTION 9 — GIANT CTA
+   ============================================================ */
+.cta-section {
+  padding: 120px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  border-top: 1px solid var(--hairline);
+}
+.cta-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--c-ink);
+}
+.cta-h2 em {
+  font-style: italic;
+  color: var(--c-ink-muted);
+  display: block;
+}
+.cta-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--c-ink-mid);
+  max-width: 380px;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.cta-footnote {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--c-ink-muted);
+  margin-top: 20px;
+}
+
+/* ============================================================
+   SECTION 10 — FOOTER (ink zone)
+   ============================================================ */
+.footer {
+  background: var(--c-zone-ink);
+  padding: 60px 80px 40px;
+}
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 48px;
+  margin-bottom: 48px;
+}
+.footer-col-head {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 20px;
+}
+.footer-link {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 12px;
+  transition: color 0.15s;
+  text-decoration: none;
+}
+.footer-link:hover { color: rgba(255, 255, 255, 0.9); }
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+}
+.footer-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1280px) {
+  .nav { padding: 0 48px; }
+  .hero-left { padding: 60px 40px 60px 48px; }
+  .stats-bar { padding: 40px 48px; }
+  .how-section, .surfaces-section { padding: 80px 48px; }
+  .trust-section { padding: 80px 48px; }
+  .cta-section { padding: 80px 48px; }
+  .footer { padding: 60px 48px 40px; }
+}
+
+@media (max-width: 1024px) {
+  .nav { padding: 0 32px; }
+  .nav-anchors { display: none; }
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-left { padding: 64px 32px; border-right: none; border-bottom: 1px solid var(--hairline); }
+  .hero-right { height: 300px; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 32px; gap: 0; }
+  .stats-col:nth-child(2) { border-right: none; }
+  .stats-col:nth-child(3) { border-right: 1px solid rgba(255,255,255,0.1); padding-left: 0; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .step:nth-child(2) { border-right: none; }
+  .trust-section { grid-template-columns: 1fr; gap: 48px; padding: 64px 32px; }
+  .surfaces-grid { grid-template-columns: 1fr; }
+  .surf-card-sm-col { flex-direction: row; }
+  .cta-section { grid-template-columns: 1fr; gap: 40px; padding: 64px 32px; }
+  .footer-cols { grid-template-columns: repeat(2, 1fr); }
+  .how-section { padding: 64px 32px; }
+  .how-header { grid-template-columns: 1fr; }
+  .surfaces-section { padding: 64px 32px; }
+}
+
+@media (max-width: 768px) {
+  .nav { padding: 0 20px; height: 52px; }
+  .hero-left { padding: 48px 20px; }
+  .hero-body { font-size: 16px; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 24px 20px; }
+  .stats-col { padding: 12px; }
+  .stats-col:nth-child(2), .stats-col:nth-child(3) { padding-left: 12px; }
+  .number-break { grid-template-columns: 1fr; }
+  .nb-cell { border-right: none; border-bottom: 1px solid var(--hairline); padding: 40px 20px; }
+  .nb-cell:last-child { border-bottom: none; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .step { border-right: none; border-bottom: 1px solid var(--hairline); }
+  .step:last-child { border-bottom: none; }
+  .trust-section { padding: 48px 20px; }
+  .trust-metrics { grid-template-columns: 1fr; }
+  .surfaces-section { padding: 48px 20px; }
+  .surf-card { padding: 28px 20px; }
+  .surf-card-sm { padding: 24px 20px; }
+  .surf-card-sm-col { flex-direction: column; }
+  .how-section { padding: 48px 20px; }
+  .footer { padding: 40px 20px 32px; }
+  .footer-cols { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .cta-section { padding: 48px 20px; }
+}
+
+@media (max-width: 320px) {
+  .hero-h1 { font-size: 42px; }
+  .cta-buttons { flex-direction: column; align-items: flex-start; }
+  .footer-cols { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr; }
+  .stats-col { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.1); }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-logo" aria-label="VOLT">
+    <span>VOLT</span>
+    <span class="nav-logo-dot" aria-hidden="true"></span>
+  </div>
+  <nav class="nav-anchors" aria-label="Page sections">
+    <a href="#how" data-i18n="navHow">How it works</a>
+    <a href="#surfaces" data-i18n="navSurfaces">Products</a>
+    <a href="#trust" data-i18n="navTrust">Platform</a>
+  </nav>
+  <div class="nav-right">
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button class="lang-btn" data-setlang="en" aria-label="English">EN</button>
+      <span class="lang-sep" aria-hidden="true">|</span>
+      <button class="lang-btn" data-setlang="ru" aria-label="Russian">RU</button>
+      <span class="lang-sep" aria-hidden="true">|</span>
+      <button class="lang-btn" data-setlang="sw" aria-label="Swahili">SW</button>
+    </div>
+    <a href="app-mobile/index.html" class="btn-primary" data-i18n="navCta">Open the app</a>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-left">
+    <p class="eyebrow" data-i18n="heroEyebrow">Powerbank sharing · Dar es Salaam</p>
+    <h1 class="hero-h1">
+      <span data-i18n="h1line1">Charge</span>
+      <em data-i18n="h1em"> in every</em><br>
+      <span data-i18n="h1line2">neighbourhood</span>
+    </h1>
+    <p class="hero-body" data-i18n="heroBody">
+      Rent a powerbank in 30 seconds, return it at any station. A working prototype for DSM: client app, operator CRM, production architecture.
+    </p>
+    <div class="hero-cta">
+      <a href="app-mobile/index.html" class="btn-primary" data-i18n="heroCta">Open the app</a>
+      <a href="#surfaces" class="hero-ghost-link" data-i18n="heroGhost">Explore the platform</a>
+    </div>
+  </div>
+  <div class="hero-right" aria-hidden="true">
+    <div class="orbit-container">
+      <div class="orbit-ring orbit-ring-outer"></div>
+      <div class="orbit-ring orbit-ring-mid"></div>
+      <div class="orbit-ring orbit-ring-inner"></div>
+      <div class="orbit-center"></div>
+      <span class="orbit-center-label">VOLT</span>
+      <div class="pulse-ring"></div>
+      <!-- 5 station dots on outer orbit (r=160px, 72deg apart) -->
+      <!-- dot 0: 0deg   → translate(160,0)   -->
+      <div class="orbit-dot orbit-dot-active" style="transform:translate(calc(-50% + 160px), -50%);"></div>
+      <!-- dot 1: 72deg  -->
+      <div class="orbit-dot orbit-dot-active" style="transform:translate(calc(-50% + 49px), calc(-50% - 152px));"></div>
+      <!-- dot 2: 144deg -->
+      <div class="orbit-dot orbit-dot-active" style="transform:translate(calc(-50% - 129px), calc(-50% - 94px));"></div>
+      <!-- dot 3: 216deg -->
+      <div class="orbit-dot orbit-dot-off"    style="transform:translate(calc(-50% - 129px), calc(-50% + 94px));"></div>
+      <!-- dot 4: 288deg -->
+      <div class="orbit-dot orbit-dot-off"    style="transform:translate(calc(-50% + 49px), calc(-50% + 152px));"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATS BAR
+     ============================================================ -->
+<section class="stats-bar" aria-label="Key metrics">
+  <div class="stats-col">
+    <div class="stats-label" data-i18n="st1label">Stations · DSM</div>
+    <div class="stats-value num" id="sv-stations">5</div>
+    <div class="stats-sub" data-i18n="st1sub">active locations</div>
+  </div>
+  <div class="stats-col">
+    <div class="stats-label" data-i18n="st2label">Powerbanks</div>
+    <div class="stats-value num" id="sv-banks">64</div>
+    <div class="stats-sub" data-i18n="st2sub">in network</div>
+  </div>
+  <div class="stats-col">
+    <div class="stats-label" data-i18n="st3label">Active rentals</div>
+    <div class="stats-value num" id="sv-rentals">18</div>
+    <div class="stats-sub" data-i18n="st3sub">right now</div>
+  </div>
+  <div class="stats-col">
+    <div class="stats-label" data-i18n="st4label">First hour</div>
+    <div class="stats-value num" id="sv-price">1,500<sup>TZS</sup></div>
+    <div class="stats-sub" data-i18n="st4sub">7,000 TZS daily cap</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TICKER
+     ============================================================ -->
+<div class="ticker-zone" aria-hidden="true">
+  <div class="ticker-track">
+    <!-- duplicated for seamless loop -->
+    <span class="ticker-item" data-i18n="tick1">30 sec rent</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick2">10,000 mAh capacity</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick3">5 stations DSM</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick4">NFC + QR</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick5">always charged</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick6">3,000 TZS deposit</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick7">94% availability</span><span class="ticker-sep">·</span>
+    <!-- duplicate -->
+    <span class="ticker-item" data-i18n="tick1">30 sec rent</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick2">10,000 mAh capacity</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick3">5 stations DSM</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick4">NFC + QR</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick5">always charged</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick6">3,000 TZS deposit</span><span class="ticker-sep">·</span>
+    <span class="ticker-item" data-i18n="tick7">94% availability</span><span class="ticker-sep">·</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     NUMBER BREAK
+     ============================================================ -->
+<section class="number-break" aria-label="Editorial numbers">
+  <div class="nb-cell">
+    <div class="nb-number num">30<sup>sec</sup></div>
+    <p class="nb-caption" data-i18n="nb1caption">pick up time — scan to rent</p>
+  </div>
+  <div class="nb-cell">
+    <div class="nb-number num">10k<sup>mAh</sup></div>
+    <p class="nb-caption" data-i18n="nb2caption">max battery capacity per unit</p>
+  </div>
+  <div class="nb-cell">
+    <div class="nb-number num">5<sup>+</sup></div>
+    <p class="nb-caption" data-i18n="nb3caption">stations across Dar es Salaam</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section class="how-section" id="how" aria-labelledby="how-heading">
+  <div class="how-header">
+    <div>
+      <p class="eyebrow" data-i18n="howEyebrow">How it works</p>
+      <h2 class="section-h2" id="how-heading">
+        <span data-i18n="howH2a">Four steps</span><br>
+        <em data-i18n="howH2em">to full battery</em>
+      </h2>
+    </div>
+    <p class="how-body-text" data-i18n="howBody">
+      No cables. No waiting. Find the nearest station on the map, scan the QR code, take a powerbank and charge on the go. Return at any location in the network.
+    </p>
+  </div>
+  <div class="steps-grid">
+    <div class="step volt-hover-line">
+      <span class="step-number" aria-hidden="true">01</span>
+      <div class="step-title" data-i18n="step1title">Find a station</div>
+      <p class="step-body" data-i18n="step1body">Open the app and see all nearby stations with live availability counts.</p>
+    </div>
+    <div class="step volt-hover-line">
+      <span class="step-number" aria-hidden="true">02</span>
+      <div class="step-title" data-i18n="step2title">Scan & unlock</div>
+      <p class="step-body" data-i18n="step2body">Scan the station QR or tap NFC. A powerbank releases in under 30 seconds.</p>
+    </div>
+    <div class="step volt-hover-line">
+      <span class="step-number" aria-hidden="true">03</span>
+      <div class="step-title" data-i18n="step3title">Charge your device</div>
+      <p class="step-body" data-i18n="step3body">Up to 10,000 mAh. Keep it as long as you need — 1,500 TZS first hour, 7,000 TZS daily cap.</p>
+    </div>
+    <div class="step volt-hover-line">
+      <span class="step-number" aria-hidden="true">04</span>
+      <div class="step-title" data-i18n="step4title">Return anywhere</div>
+      <p class="step-body" data-i18n="step4body">Drop it at any VOLT station in DSM. Payment auto-collected on return.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TRUST ZONE (forest)
+     ============================================================ -->
+<section class="trust-section" id="trust" aria-label="Platform reliability">
+  <div class="trust-left">
+    <p class="trust-eyebrow" data-i18n="trustEyebrow">Built for Dar es Salaam</p>
+    <h2 class="trust-h2">
+      <span data-i18n="trustH2a">Reliable</span><br>
+      <em data-i18n="trustH2em">infrastructure</em><br>
+      <span data-i18n="trustH2b">for the city</span>
+    </h2>
+    <p class="trust-body" data-i18n="trustBody">
+      Production-grade Firebase backend, M-Pesa / Airtel / Tigo billing, real-time station monitoring and operator CRM — designed to scale across Tanzania.
+    </p>
+  </div>
+  <div class="trust-metrics" aria-label="Platform metrics">
+    <div class="trust-metric">
+      <div class="trust-metric-value num">94<span class="trust-metric-unit">%</span></div>
+      <div class="trust-metric-label" data-i18n="tm1">availability</div>
+    </div>
+    <div class="trust-metric">
+      <div class="trust-metric-value num">&lt;6<span class="trust-metric-unit">h</span></div>
+      <div class="trust-metric-label" data-i18n="tm2">full charge cycle</div>
+    </div>
+    <div class="trust-metric">
+      <div class="trust-metric-value num">5</div>
+      <div class="trust-metric-label" data-i18n="tm3">stations · DSM</div>
+    </div>
+    <div class="trust-metric">
+      <div class="trust-metric-value num">3<span class="trust-metric-unit">roles</span></div>
+      <div class="trust-metric-label" data-i18n="tm4">operator · manager · investor</div>
+    </div>
+  </div>
+  <div class="trust-watermark" aria-hidden="true">VOLT</div>
+</section>
+
+<!-- ============================================================
+     PRODUCT SURFACES (hub cards)
+     ============================================================ -->
+<section class="surfaces-section" id="surfaces" aria-labelledby="surfaces-heading">
+  <div class="surfaces-header">
+    <p class="surfaces-eyebrow" data-i18n="surfEyebrow">Prototype surfaces</p>
+    <h2 class="surfaces-h2" id="surfaces-heading">
+      <span data-i18n="surfH2a">Three views</span><br>
+      <em data-i18n="surfH2em">one platform</em>
+    </h2>
+  </div>
+  <div class="surfaces-grid" role="list">
+
+    <!-- CRM — big card -->
+    <a href="crm/index.html" class="surf-card" role="listitem" aria-label="Open Operator CRM">
+      <div class="surf-card-head">
+        <span class="surf-tag" data-i18n="surfTag1">Operator CRM</span>
+        <span class="surf-arrow" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 12L12 2M12 2H6M12 2v6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+      <div class="surf-card-title" data-i18n="surfCard1Title">Operator CRM</div>
+      <p class="surf-card-desc" data-i18n="surfCard1Desc">Real-time network monitoring: live KPIs, per-station slot grids, powerbank registry, rentals log. Roles: operator · manager · investor.</p>
+      <!-- mini preview table -->
+      <table class="surf-mini-table" aria-label="Station preview">
+        <thead>
+          <tr>
+            <th data-i18n="tblUnit">Unit</th>
+            <th data-i18n="tblStatus">Status</th>
+            <th data-i18n="tblCharge">Charge</th>
+            <th data-i18n="tblLocation">Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">PB-001</td>
+            <td><span class="badge badge-ok" data-i18n="badgeReady">Ready</span></td>
+            <td class="num">87%</td>
+            <td data-i18n="locKivukoni">Kivukoni</td>
+          </tr>
+          <tr>
+            <td class="num">PB-012</td>
+            <td><span class="badge badge-warn" data-i18n="badgeRented">Rented</span></td>
+            <td class="num">54%</td>
+            <td data-i18n="locMikocheni">Mikocheni</td>
+          </tr>
+          <tr>
+            <td class="num">PB-033</td>
+            <td><span class="badge badge-err" data-i18n="badgeLow">Low</span></td>
+            <td class="num">12%</td>
+            <td data-i18n="locMasaki">Masaki</td>
+          </tr>
+          <tr>
+            <td class="num">PB-047</td>
+            <td><span class="badge badge-ok" data-i18n="badgeReady">Ready</span></td>
+            <td class="num">100%</td>
+            <td data-i18n="locUpanga">Upanga</td>
+          </tr>
+        </tbody>
+      </table>
+    </a>
+
+    <!-- small cards column -->
+    <div class="surf-card-sm-col">
+
+      <!-- Client app -->
+      <a href="app-mobile/index.html" class="surf-card-sm" role="listitem" aria-label="Open Client App">
+        <div class="surf-card-head">
+          <span class="surf-tag" data-i18n="surfTag2">Client App</span>
+          <span class="surf-arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 12L12 2M12 2H6M12 2v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="surf-card-sm-title" data-i18n="surfCard2Title">Client App</div>
+        <p class="surf-card-sm-desc" data-i18n="surfCard2Desc">iOS-style prototype: map, QR scan, live rental timer in TZS. Three languages.</p>
+      </a>
+
+      <!-- Architecture docs -->
+      <a href="docs/" class="surf-card-sm" role="listitem" aria-label="Open Architecture docs">
+        <div class="surf-card-head">
+          <span class="surf-tag" data-i18n="surfTag3">Architecture</span>
+          <span class="surf-arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 12L12 2M12 2H6M12 2v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="surf-card-sm-title" data-i18n="surfCard3Title">Architecture</div>
+        <p class="surf-card-sm-desc" data-i18n="surfCard3Desc">Firebase, Flutter, M-Pesa billing, PDPA compliance. 3–4 week MVP plan.</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GIANT CTA
+     ============================================================ -->
+<section class="cta-section" aria-label="Call to action">
+  <div>
+    <h2 class="cta-h2">
+      <span data-i18n="ctaH2a">Power</span>
+      <em data-i18n="ctaH2em">on the go</em>
+    </h2>
+  </div>
+  <div>
+    <p class="cta-body" data-i18n="ctaBody">
+      A working prototype — open it, click through the full flow and see how powerbank sharing operates in Dar es Salaam. No install required.
+    </p>
+    <div class="cta-buttons">
+      <a href="app-mobile/index.html" class="btn-primary" data-i18n="ctaPrimary">Open the app</a>
+      <a href="crm/index.html" class="btn-ghost" data-i18n="ctaGhost">Operator CRM</a>
+    </div>
+    <p class="cta-footnote" data-i18n="ctaFootnote">Vanilla JS · no build step · EN / RU / Kiswahili</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-cols">
+    <div>
+      <div class="footer-col-head" data-i18n="ftCol1head">Product</div>
+      <a href="app-mobile/index.html" class="footer-link" data-i18n="ftLink1a">Client App</a>
+      <a href="crm/index.html" class="footer-link" data-i18n="ftLink1b">Operator CRM</a>
+      <a href="docs/" class="footer-link" data-i18n="ftLink1c">Architecture</a>
+    </div>
+    <div>
+      <div class="footer-col-head" data-i18n="ftCol2head">Pricing</div>
+      <span class="footer-link" data-i18n="ftLink2a">1,500 TZS / first hour</span>
+      <span class="footer-link" data-i18n="ftLink2b">7,000 TZS daily cap</span>
+      <span class="footer-link" data-i18n="ftLink2c">3,000 TZS deposit</span>
+    </div>
+    <div>
+      <div class="footer-col-head" data-i18n="ftCol3head">Tech</div>
+      <span class="footer-link">Firebase</span>
+      <span class="footer-link">Flutter</span>
+      <span class="footer-link">M-Pesa · Airtel · Tigo</span>
+    </div>
+    <div>
+      <div class="footer-col-head" data-i18n="ftCol4head">Locations</div>
+      <span class="footer-link" data-i18n="locKivukoni">Kivukoni</span>
+      <span class="footer-link" data-i18n="locMikocheni">Mikocheni</span>
+      <span class="footer-link" data-i18n="locMasaki">Masaki</span>
+      <span class="footer-link" data-i18n="locUpanga">Upanga</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy" data-i18n="footerCopy">© 2026 VOLT Systems · Dar es Salaam</span>
+    <span class="footer-tagline" data-i18n="footerTagline">Power, everywhere</span>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT: i18n + typewriter stats
+     ============================================================ -->
+<script>
+(function () {
+'use strict';
+
+/* ── i18n dictionary ── */
+var L = {
+  en: {
+    navHow: 'How it works',
+    navSurfaces: 'Products',
+    navTrust: 'Platform',
+    navCta: 'Open the app',
+    heroEyebrow: 'Powerbank sharing · Dar es Salaam',
+    h1line1: 'Charge',
+    h1em: ' in every',
+    h1line2: 'neighbourhood',
+    heroBody: 'Rent a powerbank in 30 seconds, return it at any station. A working prototype for DSM: client app, operator CRM, production architecture.',
+    heroCta: 'Open the app',
+    heroGhost: 'Explore the platform',
+    st1label: 'Stations · DSM', st1sub: 'active locations',
+    st2label: 'Powerbanks',     st2sub: 'in network',
+    st3label: 'Active rentals', st3sub: 'right now',
+    st4label: 'First hour',     st4sub: '7,000 TZS daily cap',
+    tick1: '30 sec rent',
+    tick2: '10,000 mAh capacity',
+    tick3: '5 stations DSM',
+    tick4: 'NFC + QR',
+    tick5: 'always charged',
+    tick6: '3,000 TZS deposit',
+    tick7: '94% availability',
+    nb1caption: 'pick up time — scan to rent',
+    nb2caption: 'max battery capacity per unit',
+    nb3caption: 'stations across Dar es Salaam',
+    howEyebrow: 'How it works',
+    howH2a: 'Four steps',
+    howH2em: 'to full battery',
+    howBody: 'No cables. No waiting. Find the nearest station on the map, scan the QR code, take a powerbank and charge on the go. Return at any location in the network.',
+    step1title: 'Find a station',
+    step1body: 'Open the app and see all nearby stations with live availability counts.',
+    step2title: 'Scan & unlock',
+    step2body: 'Scan the station QR or tap NFC. A powerbank releases in under 30 seconds.',
+    step3title: 'Charge your device',
+    step3body: 'Up to 10,000 mAh. Keep it as long as you need — 1,500 TZS first hour, 7,000 TZS daily cap.',
+    step4title: 'Return anywhere',
+    step4body: 'Drop it at any VOLT station in DSM. Payment auto-collected on return.',
+    trustEyebrow: 'Built for Dar es Salaam',
+    trustH2a: 'Reliable',
+    trustH2em: 'infrastructure',
+    trustH2b: 'for the city',
+    trustBody: 'Production-grade Firebase backend, M-Pesa / Airtel / Tigo billing, real-time station monitoring and operator CRM — designed to scale across Tanzania.',
+    tm1: 'availability',
+    tm2: 'full charge cycle',
+    tm3: 'stations · DSM',
+    tm4: 'operator · manager · investor',
+    surfEyebrow: 'Prototype surfaces',
+    surfH2a: 'Three views',
+    surfH2em: 'one platform',
+    surfTag1: 'Operator CRM',
+    surfCard1Title: 'Operator CRM',
+    surfCard1Desc: 'Real-time network monitoring: live KPIs, per-station slot grids, powerbank registry, rentals log. Roles: operator · manager · investor.',
+    tblUnit: 'Unit', tblStatus: 'Status', tblCharge: 'Charge', tblLocation: 'Location',
+    badgeReady: 'Ready', badgeRented: 'Rented', badgeLow: 'Low',
+    locKivukoni: 'Kivukoni', locMikocheni: 'Mikocheni', locMasaki: 'Masaki', locUpanga: 'Upanga',
+    surfTag2: 'Client App',
+    surfCard2Title: 'Client App',
+    surfCard2Desc: 'iOS-style prototype: map, QR scan, live rental timer in TZS. Three languages.',
+    surfTag3: 'Architecture',
+    surfCard3Title: 'Architecture',
+    surfCard3Desc: 'Firebase, Flutter, M-Pesa billing, PDPA compliance. 3–4 week MVP plan.',
+    ctaH2a: 'Power',
+    ctaH2em: 'on the go',
+    ctaBody: 'A working prototype — open it, click through the full flow and see how powerbank sharing operates in Dar es Salaam. No install required.',
+    ctaPrimary: 'Open the app',
+    ctaGhost: 'Operator CRM',
+    ctaFootnote: 'Vanilla JS · no build step · EN / RU / Kiswahili',
+    ftCol1head: 'Product',
+    ftLink1a: 'Client App', ftLink1b: 'Operator CRM', ftLink1c: 'Architecture',
+    ftCol2head: 'Pricing',
+    ftLink2a: '1,500 TZS / first hour', ftLink2b: '7,000 TZS daily cap', ftLink2c: '3,000 TZS deposit',
+    ftCol3head: 'Tech',
+    ftCol4head: 'Locations',
+    footerCopy: '© 2026 VOLT Systems · Dar es Salaam',
+    footerTagline: 'Power, everywhere'
+  },
+
+  ru: {
+    navHow: 'Как работает',
+    navSurfaces: 'Продукты',
+    navTrust: 'Платформа',
+    navCta: 'Открыть приложение',
+    heroEyebrow: 'Шеринг повербанков · Дар-эс-Салам',
+    h1line1: 'Заряд',
+    h1em: ' в каждом',
+    h1line2: 'районе',
+    heroBody: 'Арендуй повербанк за 30 секунд, верни на любой станции. Рабочий прототип для DSM: клиентское приложение, CRM оператора, production-архитектура.',
+    heroCta: 'Открыть приложение',
+    heroGhost: 'Изучить платформу',
+    st1label: 'Станции · DSM', st1sub: 'активные точки',
+    st2label: 'Повербанки',    st2sub: 'в сети',
+    st3label: 'Активные аренды', st3sub: 'прямо сейчас',
+    st4label: 'Первый час',    st4sub: 'кап 7 000 TZS в сутки',
+    tblStatus: 'Статус', tblCharge: 'Заряд', tblLocation: 'Локация',
+    badgeRented: 'Арендован', badgeLow: 'Низко',
+    locMikocheni: 'Микочени', locMasaki: 'Масаки', locUpanga: 'Упанга',
+    ftLink1b: 'CRM оператора', ftLink1c: 'Архитектура',
+    ftLink2b: 'кап 7 000 TZS в сутки', ftLink2c: 'залог 3 000 TZS',
+    tick1: '30 сек аренда',
+    tick2: '10 000 mAh ёмкость',
+    tick3: '5 станций DSM',
+    tick4: 'NFC + QR',
+    tick5: 'всегда заряжен',
+    tick6: 'залог 3 000 TZS',
+    tick7: 'доступность 94%',
+    nb1caption: 'время выдачи — скан и готово',
+    nb2caption: 'максимальная ёмкость батареи',
+    nb3caption: 'станций по Дар-эс-Саламу',
+    howEyebrow: 'Как это работает',
+    howH2a: 'Четыре шага',
+    howH2em: 'до полного заряда',
+    howBody: 'Без кабелей. Без ожидания. Найди ближайшую станцию на карте, отсканируй QR, возьми повербанк и заряжайся на ходу. Верни на любой точке сети.',
+    step1title: 'Найти станцию',
+    step1body: 'Открой приложение и смотри все ближайшие станции с числом доступных слотов.',
+    step2title: 'Скан и разблокировка',
+    step2body: 'Отсканируй QR станции или прикоснись NFC. Повербанк выдаётся менее чем за 30 секунд.',
+    step3title: 'Зарядить устройство',
+    step3body: 'До 10 000 mAh. Держи сколько нужно — 1 500 TZS первый час, кап 7 000 TZS в сутки.',
+    step4title: 'Вернуть где угодно',
+    step4body: 'Верни на любую станцию VOLT в DSM. Оплата списывается автоматически.',
+    trustEyebrow: 'Создано для Дар-эс-Салама',
+    trustH2a: 'Надёжная',
+    trustH2em: 'инфраструктура',
+    trustH2b: 'для города',
+    trustBody: 'Firebase-бэкенд production-класса, биллинг M-Pesa / Airtel / Tigo, мониторинг станций в реальном времени и CRM оператора — готово к масштабированию по всей Танзании.',
+    tm1: 'доступность',
+    tm2: 'полный цикл зарядки',
+    tm3: 'станции · DSM',
+    tm4: 'оператор · менеджер · инвестор',
+    surfEyebrow: 'Поверхности прототипа',
+    surfH2a: 'Три вида',
+    surfH2em: 'одна платформа',
+    surfTag1: 'CRM оператора',
+    surfCard1Title: 'CRM оператора',
+    surfCard1Desc: 'Мониторинг сети в реальном времени: живые KPI, слот-гриды станций, реестр повербанков, журнал аренд. Роли: оператор · менеджер · инвестор.',
+    tblUnit: 'Устройство', tblStatus: 'Статус', tblCharge: 'Заряд', tblLocation: 'Локация',
+    badgeReady: 'Готов', badgeRented: 'Арендован', badgeLow: 'Низко',
+    locKivukoni: 'Кивукони', locMikocheni: 'Микочени', locMasaki: 'Масаки', locUpanga: 'Упанга',
+    surfTag2: 'Приложение клиента',
+    surfCard2Title: 'Приложение клиента',
+    surfCard2Desc: 'Прототип в стиле iOS: карта, скан QR, живой таймер аренды в TZS. Три языка.',
+    surfTag3: 'Архитектура',
+    surfCard3Title: 'Архитектура',
+    surfCard3Desc: 'Firebase, Flutter, биллинг M-Pesa, PDPA. План MVP на 3–4 недели.',
+    ctaH2a: 'Заряд',
+    ctaH2em: 'на ходу',
+    ctaBody: 'Рабочий прототип — открой, пройди полный сценарий и посмотри как работает шеринг повербанков в Дар-эс-Саламе. Установка не нужна.',
+    ctaPrimary: 'Открыть приложение',
+    ctaGhost: 'CRM оператора',
+    ctaFootnote: 'Vanilla JS · без сборки · EN / RU / суахили',
+    ftCol1head: 'Продукт',
+    ftLink1a: 'Приложение клиента', ftLink1b: 'CRM оператора', ftLink1c: 'Архитектура',
+    ftCol2head: 'Тарифы',
+    ftLink2a: '1 500 TZS / первый час', ftLink2b: 'кап 7 000 TZS в сутки', ftLink2c: 'залог 3 000 TZS',
+    ftCol3head: 'Технологии',
+    ftCol4head: 'Локации',
+    footerCopy: '© 2026 VOLT Systems · Дар-эс-Салам',
+    footerTagline: 'Заряд везде'
+  },
+
+  sw: {
+    navHow: 'Jinsi inavyofanya kazi',
+    navSurfaces: 'Bidhaa',
+    navTrust: 'Jukwaa',
+    navCta: 'Fungua programu',
+    heroEyebrow: 'Kushiriki betri · Dar es Salaam',
+    h1line1: 'Chaji',
+    h1em: ' kila',
+    h1line2: 'mtaa',
+    heroBody: 'Kodisha betri kwa sekunde 30, rudisha kwenye kituo chochote. Prototip inayofanya kazi kwa DSM: programu ya mteja, CRM ya opereta, usanifu wa uzalishaji.',
+    heroCta: 'Fungua programu',
+    heroGhost: 'Chunguza jukwaa',
+    st1label: 'Vituo · DSM', st1sub: 'maeneo yenye shughuli',
+    st2label: 'Betri',          st2sub: 'kwenye mtandao',
+    st3label: 'Ukodishaji hai', st3sub: 'sasa hivi',
+    st4label: 'Saa ya kwanza', st4sub: 'kiwango cha juu TZS 7,000 kwa siku',
+    tblStatus: 'Hali', tblCharge: 'Chaji', tblLocation: 'Mahali',
+    badgeRented: 'Imekodishwa', badgeLow: 'Chini',
+    locMikocheni: 'Mikocheni', locMasaki: 'Masaki', locUpanga: 'Upanga',
+    ftLink1b: 'CRM ya Opereta', ftLink1c: 'Usanifu',
+    ftLink2b: 'kiwango cha juu TZS 7,000 kwa siku', ftLink2c: 'amana TZS 3,000',
+    tick1: 'ukodishaji wa sekunde 30',
+    tick2: 'uwezo wa mAh 10,000',
+    tick3: 'vituo 5 DSM',
+    tick4: 'NFC + QR',
+    tick5: 'imechajwa daima',
+    tick6: 'amana ya TZS 3,000',
+    tick7: 'upatikanaji 94%',
+    nb1caption: 'muda wa kupokea — skani na kodisha',
+    nb2caption: 'uwezo wa juu wa betri kwa kila kifaa',
+    nb3caption: 'vituo kote Dar es Salaam',
+    howEyebrow: 'Jinsi inavyofanya kazi',
+    howH2a: 'Hatua nne',
+    howH2em: 'hadi betri kamili',
+    howBody: 'Hakuna nyaya. Hakuna kusubiri. Pata kituo kilicho karibu kwenye ramani, skani msimbo wa QR, chukua betri na ujichaji ukiwa njiani. Rudisha mahali popote kwenye mtandao.',
+    step1title: 'Tafuta kituo',
+    step1body: 'Fungua programu uone vituo vyote vya karibu na idadi ya nafasi zinazopatikana.',
+    step2title: 'Skani na fungua',
+    step2body: 'Skani QR ya kituo au gusa NFC. Betri hutolewa ndani ya sekunde 30.',
+    step3title: 'Chaji kifaa chako',
+    step3body: 'Hadi mAh 10,000. Shika kadri unavyohitaji — TZS 1,500 saa ya kwanza, kiwango cha juu TZS 7,000 kwa siku.',
+    step4title: 'Rudisha popote',
+    step4body: 'Rudisha kwenye kituo chochote cha VOLT DSM. Malipo yanakusanywa kiotomatiki.',
+    trustEyebrow: 'Imejengwa kwa Dar es Salaam',
+    trustH2a: 'Miundombinu',
+    trustH2em: 'ya kuaminika',
+    trustH2b: 'kwa mji',
+    trustBody: 'Mfumo wa Firebase wa kiwango cha uzalishaji, malipo ya M-Pesa / Airtel / Tigo, ufuatiliaji wa vituo kwa wakati halisi na CRM ya opereta — imeundwa kupanuka kote Tanzania.',
+    tm1: 'upatikanaji',
+    tm2: 'mzunguko kamili wa kuchaji',
+    tm3: 'vituo · DSM',
+    tm4: 'opereta · meneja · mwekezaji',
+    surfEyebrow: 'Nyuso za prototip',
+    surfH2a: 'Maoni matatu',
+    surfH2em: 'jukwaa moja',
+    surfTag1: 'CRM ya Opereta',
+    surfCard1Title: 'CRM ya Opereta',
+    surfCard1Desc: 'Ufuatiliaji wa mtandao kwa wakati halisi: KPI hai, gridi za nafasi, rejista ya betri, kumbukumbu za ukodishaji. Majukumu: opereta · meneja · mwekezaji.',
+    tblUnit: 'Kifaa', tblStatus: 'Hali', tblCharge: 'Chaji', tblLocation: 'Mahali',
+    badgeReady: 'Tayari', badgeRented: 'Imekodishwa', badgeLow: 'Chini',
+    locKivukoni: 'Kivukoni', locMikocheni: 'Mikocheni', locMasaki: 'Masaki', locUpanga: 'Upanga',
+    surfTag2: 'Programu ya Mteja',
+    surfCard2Title: 'Programu ya Mteja',
+    surfCard2Desc: 'Prototip ya mtindo wa iOS: ramani, skani QR, kipima muda hai cha TZS. Lugha tatu.',
+    surfTag3: 'Usanifu',
+    surfCard3Title: 'Usanifu',
+    surfCard3Desc: 'Firebase, Flutter, malipo ya M-Pesa, PDPA. Mpango wa MVP wa wiki 3–4.',
+    ctaH2a: 'Nguvu',
+    ctaH2em: 'ukiwa njiani',
+    ctaBody: 'Prototip inayofanya kazi — ifungue, pita mwendo mzima na uone jinsi ushirikiano wa betri unavyofanya kazi Dar es Salaam. Hakuna usakinishaji unaohitajika.',
+    ctaPrimary: 'Fungua programu',
+    ctaGhost: 'CRM ya Opereta',
+    ctaFootnote: 'Vanilla JS · bila ujenzi · EN / RU / Kiswahili',
+    ftCol1head: 'Bidhaa',
+    ftLink1a: 'Programu ya Mteja', ftLink1b: 'CRM ya Opereta', ftLink1c: 'Usanifu',
+    ftCol2head: 'Bei',
+    ftLink2a: 'TZS 1,500 / saa ya kwanza', ftLink2b: 'kiwango cha juu TZS 7,000 kwa siku', ftLink2c: 'amana TZS 3,000',
+    ftCol3head: 'Teknolojia',
+    ftCol4head: 'Maeneo',
+    footerCopy: '© 2026 VOLT Systems · Dar es Salaam',
+    footerTagline: 'Nguvu, kila mahali'
+  }
+};
+
+/* ── Apply translations ── */
+function applyLang(lang) {
+  var d = L[lang] || L['en'];
+  document.querySelectorAll('[data-i18n]').forEach(function (el) {
+    var k = el.getAttribute('data-i18n');
+    if (d[k] !== undefined) {
+      /* hero h1em uses innerHTML for italic wrapping */
+      if (k === 'h1em') {
+        el.innerHTML = d[k];
+      } else {
+        el.textContent = d[k];
+      }
+    }
+  });
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(function (b) {
+    b.classList.toggle('active', b.getAttribute('data-setlang') === lang);
+  });
+  /* Save to all three keys */
+  try {
+    localStorage.setItem('volt_landing_lang', lang);
+    localStorage.setItem('volt_lang', lang);
+    localStorage.setItem('volt_crm_lang', lang);
+  } catch (e) {}
+}
+
+/* ── Language detection & init ── */
+var savedLang;
+try { savedLang = localStorage.getItem('volt_landing_lang'); } catch (e) {}
+var navLang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+var initLang = savedLang || (L[navLang] ? navLang : 'en');
+applyLang(initLang);
+
+/* ── Language switcher buttons ── */
+document.querySelectorAll('.lang-btn').forEach(function (b) {
+  b.addEventListener('click', function () {
+    applyLang(b.getAttribute('data-setlang'));
+  });
+});
+
+/* ── Typewriter effect for stats values ── */
+var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Stats data: id → display string (static, already shown as text) */
+/* We only do typewriter on first visible encounter */
+var statsTypewriter = [
+  { id: 'sv-stations', text: '5' },
+  { id: 'sv-banks',    text: '64' },
+  { id: 'sv-rentals',  text: '18' }
+  /* sv-price has sup so we skip typewriter to avoid HTML mangling */
+];
+
+var twDone = false;
+function runTypewriter() {
+  if (twDone || reduce) return;
+  twDone = true;
+  statsTypewriter.forEach(function (item, idx) {
+    var el = document.getElementById(item.id);
+    if (!el) return;
+    var chars = item.text.split('');
+    el.textContent = '';
+    /* cursor blink el */
+    el.style.borderRight = '2px solid var(--c-volt)';
+    var startDelay = idx * 400;
+    chars.forEach(function (ch, i) {
+      setTimeout(function () {
+        el.textContent += ch;
+      }, startDelay + i * 30);
+    });
+    /* remove cursor after typing */
+    setTimeout(function () {
+      el.style.borderRight = '';
+    }, startDelay + chars.length * 30 + 800);
+  });
+}
+
+/* Trigger typewriter when stats bar enters viewport */
+var statsBar = document.querySelector('.stats-bar');
+if (statsBar) {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        runTypewriter();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  observer.observe(statsBar);
+}
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VOLT · Powerbank Sharing — Tanzania</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Golos Text',system-ui,sans-serif;
+  background:#0D0F13;
+  color:#fff;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* noise */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:80px 28px 80px;
+  position:relative;z-index:1;
+}
+
+/* header */
+.header{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:56px;
+}
+
+.logo-box{
+  width:44px;height:44px;border-radius:12px;
+  background:#45C278;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+.logo-word{
+  font-family:'JetBrains Mono',monospace;
+  font-size:28px;font-weight:700;
+  color:#fff;letter-spacing:-0.5px;
+}
+
+.logo-tag{
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.35);
+  border:1px solid rgba(255,255,255,.12);
+  padding:3px 9px;border-radius:6px;
+  letter-spacing:.5px;
+  margin-left:2px;
+}
+
+/* hero */
+.hero-label{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(168,255,62,.1);
+  border:1px solid rgba(168,255,62,.25);
+  font-size:12px;font-weight:600;color:#45C278;
+  letter-spacing:.4px;
+  margin-bottom:20px;
+}
+
+.hero-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#45C278;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+h1{
+  font-size:clamp(32px,5vw,52px);
+  font-weight:700;
+  letter-spacing:-1px;
+  line-height:1.1;
+  margin-bottom:16px;
+  color:#fff;
+}
+
+h1 span{color:#45C278;}
+
+.hero-sub{
+  font-size:16px;
+  color:rgba(255,255,255,.5);
+  line-height:1.6;
+  max-width:520px;
+  margin-bottom:48px;
+}
+
+/* cards grid */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+  margin-bottom:56px;
+}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:28px;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  transition:background 200ms,border-color 200ms,transform 200ms;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(168,255,62,.06) 0%,transparent 60%);
+  opacity:0;
+  transition:opacity 200ms;
+}
+
+.card:hover{
+  background:rgba(255,255,255,.07);
+  border-color:rgba(168,255,62,.3);
+  transform:translateY(-2px);
+}
+
+.card:hover::before{opacity:1;}
+.card:active{transform:scale(.98);}
+
+.card-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:600;
+  color:rgba(168,255,62,.5);
+  letter-spacing:.5px;
+  margin-bottom:16px;
+}
+
+.card-icon{
+  width:44px;height:44px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+  flex-shrink:0;
+}
+
+.ci-app { background:rgba(168,255,62,.15); color:#45C278; }
+.ci-crm { background:rgba(0,212,255,.12);  color:#47A8C8; }
+.ci-doc { background:rgba(255,176,32,.12); color:#C9882E; }
+
+.card-title{
+  font-size:18px;font-weight:700;
+  color:#fff;letter-spacing:-.25px;
+  margin-bottom:6px;
+}
+
+.card-desc{
+  font-size:13.5px;
+  color:rgba(255,255,255,.62);
+  line-height:1.6;
+  flex:1;
+  margin-bottom:20px;
+}
+
+.card-tags{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-bottom:20px;
+}
+
+.tag{
+  padding:3px 9px;border-radius:6px;
+  font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.07);
+  color:rgba(255,255,255,.45);
+  letter-spacing:.2px;
+}
+
+.card-cta{
+  display:flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.6);
+  margin-top:auto;
+  transition:color 200ms;
+}
+
+.card:hover .card-cta{color:#fff;}
+
+.cta-arrow{
+  width:22px;height:22px;border-radius:7px;
+  background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  transition:background 200ms,transform 200ms;
+}
+
+.card:hover .cta-arrow{
+  background:rgba(168,255,62,.2);
+  transform:translateX(3px);
+}
+
+/* divider */
+.divider{
+  height:1px;
+  background:rgba(255,255,255,.07);
+  margin:48px 0;
+}
+
+/* canon data table */
+.data-section-label{
+  margin-top:40px;
+  font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.3);
+  text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:16px;
+}
+
+.data-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+  margin-bottom:40px;
+}
+
+.data-item{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  padding:14px 16px;
+}
+
+.data-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:20px;font-weight:600;
+  color:#fff;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.5px;
+  margin-bottom:3px;
+}
+
+.data-label{
+  font-size:11px;color:rgba(255,255,255,.4);
+  font-weight:500;
+}
+
+/* stack */
+.stack-row{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:8px;
+}
+
+.stack-pill{
+  padding:5px 12px;border-radius:8px;
+  font-size:12px;font-weight:600;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.55);
+  letter-spacing:.2px;
+}
+
+/* footer */
+.footer{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+  padding-top:32px;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:12px;color:rgba(255,255,255,.25);
+}
+
+.footer a{color:rgba(255,255,255,.35);text-decoration:none;}
+.footer a:hover{color:rgba(255,255,255,.6);}
+
+.lang-pills{display:flex;gap:4px;margin-left:auto;}
+.lang-pill{padding:5px 11px;border:1px solid rgba(255,255,255,.12);border-radius:999px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;background:none;
+  font-family:inherit;transition:all .15s;}
+.lang-pill:hover{color:rgba(255,255,255,.75);}
+.lang-pill.on{color:#45C278;border-color:rgba(69,194,120,.4);background:rgba(69,194,120,.08);}
+
+@media(max-width:600px){
+  .wrap{padding:48px 20px 60px;}
+  h1{font-size:28px;}
+  .cards{grid-template-columns:1fr;}
+  .data-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-box" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M14 2L6 14h6l-2 8 10-12h-6l2-8z" fill="#0D0F13"/>
+      </svg>
+    </div>
+    <span class="logo-word">VOLT</span>
+    <span class="logo-tag">Tanzania · Dar es Salaam</span>
+    <div class="lang-pills" role="group" aria-label="Language">
+      <button class="lang-pill" data-setlang="en">EN</button>
+      <button class="lang-pill" data-setlang="ru">RU</button>
+      <button class="lang-pill" data-setlang="sw">SW</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-label">
+    <span class="hero-dot" aria-hidden="true"></span>
+    <span data-i18n="heroLabel">Live prototype · no install required</span>
+  </div>
+  <h1 data-i18n-html="h1">Powerbank sharing<br/>for <span>Tanzania</span></h1>
+  <p class="hero-sub">
+    <span data-i18n="heroSub">Full clickable prototype: mobile client app in EN / RU / Kiswahili, operator CRM with live simulation, production-grade architecture. Click any card below to open.</span>
+  </p>
+
+  <!-- Cards -->
+  <div class="cards">
+
+    <a class="card" href="app-mobile/index.html">
+      <div class="card-num">01</div>
+      <div class="card-icon ci-app" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="5" y="2" width="12" height="18" rx="3"/>
+          <path d="M9 5h4M11 16v.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-title" data-i18n="c1t">Client Application</div>
+      <p class="card-desc" data-i18n="c1d">Full iOS-style clickable prototype. Dar es Salaam map, 5 stations with slots, QR scan → active rental with live TZS timer. Switches between EN / RU / Kiswahili.</p>
+      <div class="card-tags">
+        <span class="tag">5 screens</span>
+        <span class="tag">Live timer · TZS</span>
+        <span class="tag">DSM map</span>
+        <span class="tag">EN / RU / SW</span>
+      </div>
+      <div class="card-cta">
+        <span data-i18n="open">Open</span>
+        <span class="cta-arrow" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="crm/index.html">
+      <div class="card-num">02</div>
+      <div class="card-icon ci-crm" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="3" width="18" height="14" rx="2.5"/>
+          <path d="M7 19h8M11 17v2" stroke-linecap="round"/>
+          <path d="M6 8h10M6 11.5h6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-title" data-i18n="c2t">Operator CRM</div>
+      <p class="card-desc" data-i18n="c2d">Real-time network monitoring: live KPIs, per-station slot grids, powerbank registry with QR codes, rentals log. Roles: Admin · Operator · Manager.</p>
+      <div class="card-tags">
+        <span class="tag">Live simulation</span>
+        <span class="tag">3 roles</span>
+        <span class="tag">QR codes</span>
+        <span class="tag">Analytics</span>
+      </div>
+      <div class="card-cta">
+        <span data-i18n="open">Open</span>
+        <span class="cta-arrow" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="card" href="docs/">
+      <div class="card-num">03</div>
+      <div class="card-icon ci-doc" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 3H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7L14 3z"/>
+          <path d="M14 3v4h4M8 13h6M8 9h4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="card-title" data-i18n="c3t">Architecture</div>
+      <p class="card-desc" data-i18n="c3d">Production architecture: Firebase, Firestore, Cloud Functions, Flutter client, billing (M-Pesa / Airtel / Tigo), roles, 3–4 week MVP plan.</p>
+      <div class="card-tags">
+        <span class="tag">Firebase</span>
+        <span class="tag">Flutter</span>
+        <span class="tag">M-Pesa</span>
+        <span class="tag">MVP plan</span>
+      </div>
+      <div class="card-cta">
+        <span data-i18n="read">Read</span>
+        <span class="cta-arrow" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Divider + canon data -->
+  <div class="divider"></div>
+
+  <div class="data-section-label" data-i18n="canon">Demo canonical data · consistent across CRM and mobile app</div>
+  <div class="data-grid">
+    <div class="data-item">
+      <div class="data-val">5</div>
+      <div class="data-label" data-i18n="d1">Stations · DSM</div>
+    </div>
+    <div class="data-item">
+      <div class="data-val">64</div>
+      <div class="data-label" data-i18n="d2">Powerbanks total</div>
+    </div>
+    <div class="data-item">
+      <div class="data-val">18</div>
+      <div class="data-label" data-i18n="d3">Active rentals</div>
+    </div>
+    <div class="data-item">
+      <div class="data-val">1,500 TZS</div>
+      <div class="data-label" data-i18n="d4">First hour</div>
+    </div>
+    <div class="data-item">
+      <div class="data-val">7,000 TZS</div>
+      <div class="data-label" data-i18n="d5">Max per day</div>
+    </div>
+    <div class="data-item">
+      <div class="data-val">15,400 TZS</div>
+      <div class="data-label" data-i18n="d6">June history</div>
+    </div>
+  </div>
+
+  <div class="data-section-label" data-i18n="stack">Production stack</div>
+  <div class="stack-row">
+    <span class="stack-pill">React + TypeScript</span>
+    <span class="stack-pill">Flutter</span>
+    <span class="stack-pill">Firebase Auth</span>
+    <span class="stack-pill">Firestore</span>
+    <span class="stack-pill">Cloud Functions</span>
+    <span class="stack-pill">M-Pesa / Airtel / Tigo</span>
+    <span class="stack-pill">FCM Push</span>
+    <span class="stack-pill">MapLibre / OpenStreetMap</span>
+  </div>
+
+  <!-- Footer -->
+  <div class="divider"></div>
+  <div class="footer">
+    <span data-i18n="f1">VOLT Tanzania · Powerbank sharing prototype · 2026</span>
+    <span data-i18n="f2">Vanilla JS · no build required · EN / RU / Kiswahili</span>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var L = {
+    en: { heroLabel:"Live prototype · no install required",
+      h1:"Powerbank sharing<br/>for <span>Tanzania</span>",
+      heroSub:"Full clickable prototype: mobile client app in EN / RU / Kiswahili, operator CRM with live simulation, production-grade architecture. Click any card below to open.",
+      c1t:"Client Application", c1d:"Full iOS-style clickable prototype. Dar es Salaam map, 5 stations with slots, QR scan → active rental with live TZS timer. Switches between EN / RU / Kiswahili.",
+      c2t:"Operator CRM", c2d:"Real-time network monitoring: live KPIs, per-station slot grids, powerbank registry with QR codes, rentals log. Roles: Admin · Operator · Manager.",
+      c3t:"Architecture", c3d:"Production architecture: Firebase, Firestore, Cloud Functions, Flutter client, billing (M-Pesa / Airtel / Tigo), roles, 3–4 week MVP plan.",
+      open:"Open", read:"Read",
+      canon:"Demo canonical data · consistent across CRM and mobile app",
+      d1:"Stations · DSM", d2:"Powerbanks total", d3:"Active rentals", d4:"First hour", d5:"Max per day", d6:"June history",
+      stack:"Production stack",
+      f1:"VOLT Tanzania · Powerbank sharing prototype · 2026", f2:"Vanilla JS · no build required · EN / RU / Kiswahili" },
+    ru: { heroLabel:"Живой прототип · без установки",
+      h1:"Шеринг повербанков<br/>для <span>Танзании</span>",
+      heroSub:"Полный кликабельный прототип: мобильное приложение на EN / RU / суахили, CRM оператора с live-симуляцией, production-архитектура. Нажмите на любую карточку.",
+      c1t:"Клиентское приложение", c1d:"Кликабельный прототип в стиле iOS. Карта Дар-эс-Салама, 5 станций со слотами, скан QR → активная аренда с живым таймером в TZS. Переключение EN / RU / суахили.",
+      c2t:"CRM оператора", c2d:"Мониторинг сети в реальном времени: живые KPI, слот-гриды станций, реестр повербанков с QR-кодами, журнал аренд. Роли: админ · оператор · менеджер.",
+      c3t:"Архитектура", c3d:"Production-архитектура: Firebase, Firestore, Cloud Functions, Flutter-клиент, биллинг (M-Pesa / Airtel / Tigo), роли, план MVP на 3–4 недели.",
+      open:"Открыть", read:"Читать",
+      canon:"Канонические данные демо · сходятся между CRM и приложением",
+      d1:"Станции · DSM", d2:"Всего повербанков", d3:"Активные аренды", d4:"Первый час", d5:"Максимум в сутки", d6:"История за июнь",
+      stack:"Технологический стек",
+      f1:"VOLT Танзания · прототип шеринга повербанков · 2026", f2:"Vanilla JS · без сборки · EN / RU / суахили" },
+    sw: { heroLabel:"Prototip hai · hakuna usakinishaji",
+      h1:"Kushiriki powerbank<br/>kwa <span>Tanzania</span>",
+      heroSub:"Prototip kamili inayobofyeka: programu ya simu kwa EN / RU / Kiswahili, CRM ya opereta na uigaji hai, usanifu wa uzalishaji. Bofya kadi yoyote hapa chini.",
+      c1t:"Programu ya Mteja", c1d:"Prototip ya mtindo wa iOS. Ramani ya Dar es Salaam, vituo 5 vyenye sloti, skani QR → ukodishaji hai na kipima muda cha TZS. Lugha: EN / RU / Kiswahili.",
+      c2t:"CRM ya Opereta", c2d:"Ufuatiliaji wa mtandao kwa wakati halisi: KPI hai, gridi za sloti kwa kila kituo, rejista ya betri na misimbo ya QR, kumbukumbu za ukodishaji. Majukumu: Msimamizi · Opereta · Meneja.",
+      c3t:"Usanifu", c3d:"Usanifu wa uzalishaji: Firebase, Firestore, Cloud Functions, programu ya Flutter, malipo (M-Pesa / Airtel / Tigo), majukumu, mpango wa MVP wa wiki 3–4.",
+      open:"Fungua", read:"Soma",
+      canon:"Data ya msingi ya demo · inalingana kati ya CRM na programu",
+      d1:"Vituo · DSM", d2:"Jumla ya betri", d3:"Ukodishaji hai", d4:"Saa ya kwanza", d5:"Kiwango cha juu kwa siku", d6:"Historia ya Juni",
+      stack:"Production stack",
+      f1:"VOLT Tanzania · prototip ya kushiriki powerbank · 2026", f2:"Vanilla JS · bila build · EN / RU / Kiswahili" }
+  };
+  function apply(lang) {
+    var d = L[lang] || L.en;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n");
+      if (d[k]) el.textContent = d[k];
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n-html");
+      if (d[k]) el.innerHTML = d[k]; // словарные строки, не пользовательский ввод
+    });
+    document.documentElement.lang = lang;
+    document.querySelectorAll(".lang-pill").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-setlang") === lang);
+    });
+    // выбор пробрасывается в приложение и CRM
+    try {
+      localStorage.setItem("volt_landing_lang", lang);
+      localStorage.setItem("volt_lang", lang);
+      localStorage.setItem("volt_crm_lang", lang);
+    } catch (e) {}
+  }
+  document.querySelectorAll(".lang-pill").forEach(function (b) {
+    b.addEventListener("click", function () { apply(b.getAttribute("data-setlang")); });
+  });
+  var saved;
+  try { saved = localStorage.getItem("volt_landing_lang"); } catch (e) {}
+  var nav = (navigator.language || "en").slice(0, 2);
+  apply(saved || (L[nav] ? nav : "en"));
+})();
+</script>
+</body>
+</html>

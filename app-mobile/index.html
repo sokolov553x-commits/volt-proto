@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VOLT · Powerbank Sharing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css?v=7"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23329E60'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
+</head>
+<body>
+
+<div class="canvas" id="canvas">
+
+  <!-- ── Canvas sidebar ── -->
+  <aside class="canvas-meta" id="canvasMeta" aria-label="Prototype info">
+    <div class="cm-brand">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="#E8A020"/>
+        <path d="M18.5 4.5L10 17H16L13.5 27.5L22 15H16L18.5 4.5Z" fill="#1A1714" stroke="#1A1714" stroke-width=".5" stroke-linejoin="round"/>
+      </svg>
+      <span class="cm-wordmark">VOLT</span>
+    </div>
+    <p class="cm-desc" data-i18n="protoLabel">Client Application</p>
+    <p class="cm-sub" data-i18n="protoSub">Clickable prototype · 5 screens</p>
+    <div class="cm-screens">
+      <div class="cm-screen-item" data-jump="map">
+        <span class="cm-screen-num">01</span>
+        <span class="cm-screen-name" data-i18n-screen="0">Station map</span>
+      </div>
+      <div class="cm-screen-item" data-jump="station">
+        <span class="cm-screen-num">02</span>
+        <span class="cm-screen-name" data-i18n-screen="1">Station · slots</span>
+      </div>
+      <div class="cm-screen-item" data-jump="rent">
+        <span class="cm-screen-num">03</span>
+        <span class="cm-screen-name" data-i18n-screen="2">Scan · rental</span>
+      </div>
+      <div class="cm-screen-item" data-jump="history">
+        <span class="cm-screen-num">04</span>
+        <span class="cm-screen-name" data-i18n-screen="3">History &amp; wallet</span>
+      </div>
+      <div class="cm-screen-item" data-jump="profile">
+        <span class="cm-screen-num">05</span>
+        <span class="cm-screen-name" data-i18n-screen="4">Profile</span>
+      </div>
+    </div>
+    <div class="cm-tokens">
+      <span class="cm-token" style="background:#E8A020;color:#1A1714">Accent</span>
+      <span class="cm-token" style="background:#3B6FB8;color:#1A1714">Cyan</span>
+      <span class="cm-token" style="background:#22C55E;color:#fff">Success</span>
+      <span class="cm-token" style="background:#111318;color:#fff">Text</span>
+    </div>
+    <!-- Market badge -->
+    <div class="cm-market-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="6.5" stroke="#E8A020" stroke-opacity=".4"/>
+        <path d="M4.5 7.5l2 2 3-4" stroke="#E8A020" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Tanzania · Dar es Salaam
+    </div>
+  </aside>
+
+  <!-- ── iPhone frame ── -->
+  <div class="device" id="device">
+
+    <div class="device-btn-vol-up"   aria-hidden="true"></div>
+    <div class="device-btn-vol-down" aria-hidden="true"></div>
+    <div class="device-btn-power"    aria-hidden="true"></div>
+
+    <div class="screen-wrap" id="screenWrap">
+
+      <!-- Dynamic Island -->
+      <div class="dynamic-island" aria-hidden="true">
+        <div class="di-camera"></div>
+      </div>
+
+      <!-- Status bar -->
+      <header class="status-bar" id="statusBar" aria-label="Status bar">
+        <time class="sb-time">9:41</time>
+        <div class="sb-icons" aria-hidden="true">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+            <rect x="0"  y="8" width="3" height="4" rx="1" fill="currentColor"/>
+            <rect x="5"  y="5" width="3" height="7" rx="1" fill="currentColor"/>
+            <rect x="10" y="2" width="3" height="10" rx="1" fill="currentColor"/>
+            <rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/>
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <circle cx="8" cy="10.5" r="1.5" fill="currentColor"/>
+            <path d="M4 7.5a5.65 5.65 0 018 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <path d="M1 4.5a10 10 0 0114 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none" opacity=".4"/>
+          </svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+            <rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity=".35"/>
+            <rect x="2"  y="2"  width="17" height="8" rx="2" fill="currentColor"/>
+            <path d="M24 4.5v3a1.5 1.5 0 000-3z" fill="currentColor" opacity=".4"/>
+          </svg>
+        </div>
+      </header>
+
+      <!-- ════════════════════════════════════════════════
+           SCREEN: MAP — Dar es Salaam
+           ════════════════════════════════════════════════ -->
+      <section class="screen active" id="screen-map" aria-label="Station map">
+
+        <!-- Map SVG — Dar es Salaam city centre -->
+        <div class="map-wrap" aria-hidden="true">
+          <svg id="mapSvg" viewBox="0 0 390 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="f-pin-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="2.5"/>
+                <feOffset dx="0" dy="3"/>
+                <feComposite in2="SourceGraphic"/>
+              </filter>
+              <filter id="f-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <radialGradient id="g-location" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#3B82F6" stop-opacity=".25"/>
+                <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
+              </radialGradient>
+              <!-- Ocean gradient -->
+              <linearGradient id="g-ocean" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#B8DCEF"/>
+                <stop offset="100%" stop-color="#9DCCE3"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Ground — warm sandy tone for Tanzania -->
+            <rect width="390" height="760" fill="#EEE8DC"/>
+
+            <!-- Indian Ocean / harbour (eastern side) -->
+            <path d="M310 0 L390 0 L390 760 L310 760 Q330 600 320 450 Q340 300 310 0Z" fill="url(#g-ocean)"/>
+            <!-- Ocean ripple lines -->
+            <path d="M330 100 Q360 120 350 160" stroke="#A0C8DE" stroke-width="1" fill="none" opacity=".5"/>
+            <path d="M340 220 Q370 250 355 290" stroke="#A0C8DE" stroke-width="1" fill="none" opacity=".4"/>
+            <path d="M325 380 Q358 400 345 440" stroke="#A0C8DE" stroke-width="1" fill="none" opacity=".5"/>
+            <text x="336" y="520" font-family="system-ui,sans-serif" font-size="9" font-weight="500" fill="#5A9DC0" letter-spacing=".5" transform="rotate(90,336,520)">Indian Ocean</text>
+
+            <!-- Dar es Salaam harbour -->
+            <path d="M260 340 Q290 320 320 340 Q340 360 320 380 Q290 395 260 380Z" fill="#C5DFEE" opacity=".7"/>
+            <text x="268" y="362" font-family="system-ui,sans-serif" font-size="8" font-weight="500" fill="#4A8AB0" letter-spacing=".3">Harbour</text>
+
+            <!-- Parks / green areas -->
+            <rect x="0"   y="60"  width="110" height="80"  rx="6" fill="#D4EBC8"/>
+            <rect x="200" y="160" width="100" height="90"  rx="6" fill="#D4EBC8"/>
+            <rect x="60"  y="430" width="90"  height="70"  rx="6" fill="#D4EBC8"/>
+            <rect x="0"   y="560" width="80"  height="70"  rx="6" fill="#D4EBC8"/>
+            <rect x="145" y="50"  width="55"  height="45"  rx="4" fill="#D4EBC8" opacity=".7"/>
+
+            <!-- Park trees -->
+            <circle cx="40"  cy="95"  r="11" fill="#BBE0A8" opacity=".8"/>
+            <circle cx="75"  cy="105" r="8"  fill="#BBE0A8" opacity=".7"/>
+            <circle cx="20"  cy="115" r="9"  fill="#BBE0A8" opacity=".6"/>
+            <circle cx="240" cy="195" r="13" fill="#BBE0A8" opacity=".8"/>
+            <circle cx="275" cy="225" r="9"  fill="#BBE0A8" opacity=".7"/>
+            <circle cx="220" cy="230" r="10" fill="#BBE0A8" opacity=".6"/>
+            <circle cx="95"  cy="458" r="10" fill="#BBE0A8" opacity=".7"/>
+            <circle cx="65"  cy="475" r="8"  fill="#BBE0A8" opacity=".6"/>
+            <text x="22"  y="102" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#4A8A3A" letter-spacing=".3">Mnazi Mmoja</text>
+            <text x="210" y="208" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#4A8A3A" letter-spacing=".3">Gymkhana</text>
+
+            <!-- City blocks -->
+            <rect x="10"  y="158" width="64"  height="48" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="10"  y="214" width="64"  height="42" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="10"  y="264" width="64"  height="48" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="84"  y="158" width="70"  height="44" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="84"  y="210" width="70"  height="46" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="84"  y="264" width="70"  height="50" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="165" y="58"  width="58"  height="40" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="165" y="108" width="58"  height="42" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="165" y="260" width="58"  height="46" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="233" y="58"  width="70"  height="46" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="233" y="112" width="70"  height="40" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="233" y="260" width="70"  height="48" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="10"  y="395" width="50"  height="64" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="70"  y="514" width="54"  height="52" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="144" y="390" width="72"  height="50" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="144" y="448" width="72"  height="55" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="226" y="390" width="64"  height="55" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="226" y="453" width="64"  height="50" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="10"  y="530" width="52"  height="60" rx="3" fill="#FFF8EF" opacity=".88"/>
+            <rect x="144" y="520" width="72"  height="58" rx="3" fill="#FFF8EF" opacity=".92"/>
+            <rect x="226" y="520" width="64"  height="58" rx="3" fill="#FFF8EF" opacity=".88"/>
+
+            <!-- Windows detail -->
+            <rect x="18"  y="168" width="10" height="8" rx="1" fill="#E8DDD0" opacity=".7"/>
+            <rect x="32"  y="168" width="10" height="8" rx="1" fill="#E8DDD0" opacity=".5"/>
+            <rect x="46"  y="168" width="10" height="8" rx="1" fill="#E8DDD0" opacity=".7"/>
+            <rect x="243" y="68"  width="12" height="9" rx="1" fill="#E8DDD0" opacity=".6"/>
+            <rect x="262" y="68"  width="12" height="9" rx="1" fill="#E8DDD0" opacity=".5"/>
+            <rect x="281" y="68"  width="12" height="9" rx="1" fill="#E8DDD0" opacity=".6"/>
+
+            <!-- Main arteries — Dar es Salaam roads -->
+            <line x1="0" y1="152" x2="310" y2="152" stroke="#FFF8EF" stroke-width="9"/>
+            <line x1="0" y1="390" x2="310" y2="390" stroke="#FFF8EF" stroke-width="9"/>
+            <line x1="160" y1="0" x2="160" y2="760" stroke="#FFF8EF" stroke-width="9"/>
+            <line x1="310" y1="0" x2="310" y2="760" stroke="#FFF8EF" stroke-width="7" opacity=".6"/>
+
+            <!-- Secondary roads -->
+            <line x1="0"   y1="200" x2="160" y2="200" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="0"   y1="258" x2="160" y2="258" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="160" y1="100" x2="310" y2="100" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="160" y1="156" x2="310" y2="156" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="160" y1="306" x2="310" y2="306" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="0"   y1="445" x2="310" y2="445" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="0"   y1="510" x2="310" y2="510" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="70"  y1="152" x2="70"  y2="390" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="230" y1="0"   x2="230" y2="390" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="70"  y1="390" x2="70"  y2="600" stroke="#FFF8EF" stroke-width="5.5"/>
+            <line x1="224" y1="390" x2="224" y2="600" stroke="#FFF8EF" stroke-width="5.5"/>
+
+            <!-- Tertiary roads -->
+            <line x1="0"   y1="128" x2="160" y2="128" stroke="#EDE5D8" stroke-width="3"/>
+            <line x1="160" y1="80"  x2="310" y2="80"  stroke="#EDE5D8" stroke-width="3"/>
+            <line x1="160" y1="232" x2="310" y2="232" stroke="#EDE5D8" stroke-width="3"/>
+            <line x1="0"   y1="590" x2="310" y2="590" stroke="#EDE5D8" stroke-width="3"/>
+            <line x1="130" y1="390" x2="130" y2="600" stroke="#EDE5D8" stroke-width="3"/>
+            <line x1="304" y1="390" x2="304" y2="600" stroke="#EDE5D8" stroke-width="3"/>
+
+            <!-- Road labels -->
+            <text x="70"  y="146" font-family="system-ui,sans-serif" font-size="8" fill="#A89680" font-weight="500" letter-spacing=".2">Samora Ave</text>
+            <text x="180" y="146" font-family="system-ui,sans-serif" font-size="8" fill="#A89680" font-weight="500" letter-spacing=".2">Bibi Titi Mohamed St</text>
+            <text x="8"   y="384" font-family="system-ui,sans-serif" font-size="8" fill="#A89680" font-weight="500" letter-spacing=".2">Morogoro Rd</text>
+            <text x="166" y="200" font-family="system-ui,sans-serif" font-size="7.5" fill="#A89680" transform="rotate(90,166,200)" letter-spacing=".2">Ali Hassan Mwinyi</text>
+            <text x="236" y="195" font-family="system-ui,sans-serif" font-size="7.5" fill="#A89680" transform="rotate(90,236,195)" letter-spacing=".2">Old Bagamoyo Rd</text>
+
+            <!-- USER LOCATION -->
+            <circle cx="185" cy="388" r="22" fill="url(#g-location)"/>
+            <circle cx="185" cy="388" r="9"  fill="rgba(59,130,246,.18)"/>
+            <circle cx="185" cy="388" r="5.5" fill="#3B82F6"/>
+            <circle cx="185" cy="388" r="2.5" fill="white"/>
+
+            <!-- ══ STATION PINS ══ -->
+
+            <!-- PIN 0 · Mlimani City Mall · GREEN · 9 -->
+            <g id="pin-0" class="map-pin" data-station="0" tabindex="0" role="button" aria-label="Mlimani City Mall, 9 available">
+              <g filter="url(#f-pin-shadow)">
+                <path d="M185 454 Q177 445 177 436 a9 9 0 1 1 16 0 Q193 445 185 454Z" fill="#22C55E"/>
+                <circle cx="185" cy="436" r="5.5" fill="rgba(255,255,255,.9)"/>
+                <path d="M182 434h6M185 432v4" stroke="#22C55E" stroke-width="1.4" stroke-linecap="round"/>
+              </g>
+              <circle cx="195" cy="429" r="8" fill="#111318"/>
+              <text x="195" y="432.5" font-family="system-ui" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">9</text>
+            </g>
+
+            <!-- PIN 1 · Kariakoo Market · GREEN · 6 -->
+            <g id="pin-1" class="map-pin" data-station="1" tabindex="0" role="button" aria-label="Kariakoo Market, 6 available">
+              <g filter="url(#f-pin-shadow)">
+                <path d="M95 200 Q87 191 87 182 a9 9 0 1 1 16 0 Q103 191 95 200Z" fill="#22C55E"/>
+                <circle cx="95" cy="182" r="5.5" fill="rgba(255,255,255,.9)"/>
+                <path d="M92 180h6M95 178v4" stroke="#22C55E" stroke-width="1.4" stroke-linecap="round"/>
+              </g>
+              <circle cx="105" cy="175" r="8" fill="#111318"/>
+              <text x="105" y="178.5" font-family="system-ui" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">6</text>
+            </g>
+
+            <!-- PIN 2 · Msasani Mall · GREEN · 7 -->
+            <g id="pin-2" class="map-pin" data-station="2" tabindex="0" role="button" aria-label="Msasani Mall, 7 available">
+              <g filter="url(#f-pin-shadow)">
+                <path d="M270 195 Q262 186 262 177 a9 9 0 1 1 16 0 Q278 186 270 195Z" fill="#22C55E"/>
+                <circle cx="270" cy="177" r="5.5" fill="rgba(255,255,255,.9)"/>
+                <path d="M267 175h6M270 173v4" stroke="#22C55E" stroke-width="1.4" stroke-linecap="round"/>
+              </g>
+              <circle cx="280" cy="170" r="8" fill="#111318"/>
+              <text x="280" y="173.5" font-family="system-ui" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">7</text>
+            </g>
+
+            <!-- PIN 3 · JNIA Airport · GRAY · 0 -->
+            <g id="pin-3" class="map-pin" data-station="3" tabindex="0" role="button" aria-label="JNIA Airport, under maintenance">
+              <g filter="url(#f-pin-shadow)">
+                <path d="M278 290 Q270 281 270 272 a9 9 0 1 1 16 0 Q286 281 278 290Z" fill="#9CA3AF"/>
+                <circle cx="278" cy="272" r="5.5" fill="rgba(255,255,255,.9)"/>
+                <path d="M275 272h6" stroke="#9CA3AF" stroke-width="1.4" stroke-linecap="round"/>
+              </g>
+              <circle cx="288" cy="265" r="8" fill="#6B7280"/>
+              <text x="288" y="268.5" font-family="system-ui" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">0</text>
+            </g>
+
+            <!-- PIN 4 · Ubungo Terminal · YELLOW · 6 -->
+            <g id="pin-4" class="map-pin" data-station="4" tabindex="0" role="button" aria-label="Ubungo Terminal, 6 available">
+              <g filter="url(#f-pin-shadow)">
+                <path d="M60 115 Q52 106 52 97 a9 9 0 1 1 16 0 Q68 106 60 115Z" fill="#92580A"/>
+                <circle cx="60" cy="97" r="5.5" fill="rgba(255,255,255,.9)"/>
+                <path d="M57 95h6M60 93v4" stroke="#92580A" stroke-width="1.4" stroke-linecap="round"/>
+              </g>
+              <circle cx="70" cy="90" r="8" fill="#111318"/>
+              <text x="70" y="93.5" font-family="system-ui" font-size="7.5" fill="white" text-anchor="middle" font-weight="700">6</text>
+            </g>
+
+          </svg>
+        </div>
+
+        <!-- Top bar: home + lang switcher -->
+        <div class="map-topbar">
+          <a class="map-home-btn" href="../" aria-label="Back to overview">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M2 6.5L8 2l6 4.5V14a1 1 0 01-1 1H5a1 1 0 01-1-1V9H5v5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 15V9h4v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <div class="map-lang-row" role="group" aria-label="Language">
+            <button class="map-lang-btn" data-map-lang="en" aria-label="English">EN</button>
+            <button class="map-lang-btn" data-map-lang="ru" aria-label="Русский">RU</button>
+            <button class="map-lang-btn" data-map-lang="sw" aria-label="Kiswahili">SW</button>
+          </div>
+        </div>
+
+        <!-- Search bar -->
+        <div class="map-search-row">
+          <button class="map-search-pill" id="mapSearchBtn" aria-label="Find station">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="6.5" cy="6.5" r="4.5"/><path d="M10.5 10.5l3 3" stroke-linecap="round"/>
+            </svg>
+            <span data-i18n="searchPlh">Find a station...</span>
+          </button>
+          <button class="map-geo-btn" id="mapGeoBtn" aria-label="My location">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="9" cy="9" r="3"/><path d="M9 1v3M9 14v3M1 9h3M14 9h3" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Filter chips -->
+        <div class="map-chips" role="group" aria-label="Filters">
+          <button class="chip chip-active" data-filter="all"       data-filter-label="filterAll">All</button>
+          <button class="chip"             data-filter="available" data-filter-label="filterAvail">Available</button>
+          <button class="chip"             data-filter="nearby"    data-filter-label="filterNearby">Nearby</button>
+        </div>
+
+        <!-- Bottom sheet -->
+        <div class="bottom-sheet" id="mapSheet" role="region" aria-label="Station list">
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <div class="sheet-header">
+            <span class="sheet-title" data-i18n="allStations">Nearest stations</span>
+            <span class="sheet-count" data-i18n="stationCount">5 stations</span>
+          </div>
+          <div class="sheet-scroll">
+
+            <!-- Station 0: Mlimani City Mall -->
+            <button class="station-row" data-station="0" aria-label="Mlimani City Mall, 420m, 9 available">
+              <div class="station-row-icon icon-green">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="4" y="5.5" width="10" height="9" rx="2"/><path d="M7 5.5V4a2.5 2.5 0 015 0v1.5" stroke-linecap="round"/><path d="M6.5 10h5M9 8.5v3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="station-row-body">
+                <span class="station-row-name" data-station-name="0">Mlimani City Mall · 1st floor</span>
+                <span class="station-row-sub"  data-station-sub="0">420 m · Mlimani City</span>
+              </div>
+              <div class="station-row-right">
+                <span class="badge badge-green">9 <span data-i18n="available">free</span></span>
+                <svg class="row-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </button>
+
+            <!-- Station 1: Kariakoo Market -->
+            <button class="station-row" data-station="1" aria-label="Kariakoo Market, 850m, 6 available">
+              <div class="station-row-icon icon-green">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="4" y="5.5" width="10" height="9" rx="2"/><path d="M7 5.5V4a2.5 2.5 0 015 0v1.5" stroke-linecap="round"/><path d="M6.5 10h5M9 8.5v3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="station-row-body">
+                <span class="station-row-name" data-station-name="1">Kariakoo Market · main entrance</span>
+                <span class="station-row-sub"  data-station-sub="1">850 m · Kariakoo</span>
+              </div>
+              <div class="station-row-right">
+                <span class="badge badge-green">6 <span data-i18n="available">free</span></span>
+                <svg class="row-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </button>
+
+            <!-- Station 2: Msasani Mall -->
+            <button class="station-row" data-station="2" aria-label="Msasani Mall, 1.4km, 7 available">
+              <div class="station-row-icon icon-green">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="4" y="5.5" width="10" height="9" rx="2"/><path d="M7 5.5V4a2.5 2.5 0 015 0v1.5" stroke-linecap="round"/><path d="M6.5 10h5M9 8.5v3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="station-row-body">
+                <span class="station-row-name" data-station-name="2">Msasani Mall · lobby</span>
+                <span class="station-row-sub"  data-station-sub="2">1.4 km · Msasani Peninsula</span>
+              </div>
+              <div class="station-row-right">
+                <span class="badge badge-green">7 <span data-i18n="available">free</span></span>
+                <svg class="row-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </button>
+
+            <!-- Station 3: JNIA Airport (offline) -->
+            <button class="station-row" data-station="3" aria-label="JNIA Airport, under maintenance">
+              <div class="station-row-icon icon-gray">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="4" y="5.5" width="10" height="9" rx="2"/><path d="M7 5.5V4a2.5 2.5 0 015 0v1.5" stroke-linecap="round"/><path d="M6.5 10h5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="station-row-body">
+                <span class="station-row-name" data-station-name="3">JNIA Airport · arrivals hall</span>
+                <span class="station-row-sub"  data-station-sub="3">18 km · Departure zone</span>
+              </div>
+              <div class="station-row-right">
+                <span class="badge badge-gray" data-i18n="closed">Closed</span>
+                <svg class="row-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </button>
+
+            <!-- Station 4: Ubungo Terminal -->
+            <button class="station-row" data-station="4" aria-label="Ubungo Terminal, 3.8km, 6 available">
+              <div class="station-row-icon icon-yellow">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="4" y="5.5" width="10" height="9" rx="2"/><path d="M7 5.5V4a2.5 2.5 0 015 0v1.5" stroke-linecap="round"/><path d="M6.5 10h5M9 8.5v3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="station-row-body">
+                <span class="station-row-name" data-station-name="4">Ubungo Terminal · bus hub</span>
+                <span class="station-row-sub"  data-station-sub="4">3.8 km · Ubungo</span>
+              </div>
+              <div class="station-row-right">
+                <span class="badge badge-yellow">6 <span data-i18n="available">free</span></span>
+                <svg class="row-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </button>
+
+            <!-- Ad slot -->
+            <div class="ad-slot ad-50" role="presentation" aria-hidden="true">
+              <span data-i18n="adSlot50">Ad slot · 320×50</span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SCREEN: STATION — Mlimani City Mall
+           ════════════════════════════════════════════════ -->
+      <section class="screen" id="screen-station" aria-label="Station detail">
+
+        <div class="station-hero">
+          <div class="sh-grid"  aria-hidden="true"></div>
+          <div class="sh-glow"  aria-hidden="true"></div>
+          <button class="sh-back" id="stationBack" data-i18n-aria="backMap" aria-label="Back to map">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="sh-share-btn" id="shareBtn" role="button" tabindex="0" data-i18n-aria="shareStation" aria-label="Share station">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="13" cy="3" r="1.5"/><circle cx="3" cy="8" r="1.5"/><circle cx="13" cy="13" r="1.5"/>
+              <path d="M4.5 7.25L11.5 3.75M4.5 8.75L11.5 12.25" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="sh-content">
+            <div class="sh-status">
+              <span class="sh-status-dot" aria-hidden="true"></span>
+              <span data-i18n="stationStatus">Open · 9:00–21:00</span>
+            </div>
+            <h1 class="sh-name" data-station-name="0">Mlimani City Mall · 1st floor</h1>
+            <p class="sh-address" data-station-sub="0">420 m · Mlimani City</p>
+          </div>
+          <div class="sh-stats">
+            <div class="sh-stat">
+              <span class="sh-stat-val">9</span>
+              <span class="sh-stat-lbl" data-i18n="available">free</span>
+            </div>
+            <div class="sh-stat-div" aria-hidden="true"></div>
+            <div class="sh-stat">
+              <span class="sh-stat-val">16</span>
+              <span class="sh-stat-lbl">slots</span>
+            </div>
+            <div class="sh-stat-div" aria-hidden="true"></div>
+            <div class="sh-stat">
+              <span class="sh-stat-val" id="shStatFirst">1,500 TZS</span>
+              <span class="sh-stat-lbl" id="shStatFirstLbl">1st hour</span>
+            </div>
+          </div>
+          <div class="sh-accent-bar" aria-hidden="true"></div>
+        </div>
+
+        <div class="station-scroll">
+
+          <div class="section-row">
+            <span class="section-label" data-i18n="slotsLabel">Charging slots</span>
+            <span class="section-meta" data-i18n="slotsMeta">9 charged · 2 charging · 5 empty</span>
+          </div>
+
+          <div class="slot-grid" id="slotGrid" role="grid" aria-label="Station slots">
+            <!-- injected by JS -->
+          </div>
+
+          <div class="slot-panel" id="slotPanel" aria-live="polite">
+            <div class="slot-panel-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="3" y="6" width="12" height="10" rx="2.5"/><path d="M7 6V4.5a3 3 0 016 0V6" stroke-linecap="round"/>
+                <path d="M7 11.5h6M10 9.5v4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="slot-panel-info">
+              <div class="slot-panel-serial" id="slotSerial">VT-2603-00417</div>
+              <div class="slot-panel-meta"   id="slotMeta">100% · ~14h life · 10,000 mAh</div>
+            </div>
+            <button class="slot-panel-btn" id="slotTakeBtn" data-i18n-aria="takeThis" aria-label="Take this one">
+              <span data-i18n="takeThis">Take this one</span>
+            </button>
+          </div>
+
+          <!-- Tariff card -->
+          <div class="tariff-card">
+            <div class="tariff-row">
+              <span class="tariff-label" data-i18n="tariffFirst">First hour</span>
+              <span class="tariff-val"   data-tariff="first">1,500 TZS</span>
+            </div>
+            <div class="tariff-divider" aria-hidden="true"></div>
+            <div class="tariff-row">
+              <span class="tariff-label" data-i18n="tariffNext">After</span>
+              <span class="tariff-val"   data-tariff="next">800 TZS/hr</span>
+            </div>
+            <div class="tariff-divider" aria-hidden="true"></div>
+            <div class="tariff-row">
+              <span class="tariff-label" data-i18n="tariffMax">Max per day</span>
+              <span class="tariff-val tariff-val-accent" data-tariff="max">7,000 TZS</span>
+            </div>
+            <div class="tariff-deposit" data-tariff="deposit">Hold deposit 3,000 TZS · returned on return</div>
+          </div>
+
+          <!-- Reviews -->
+          <div class="section-row section-row-mt">
+            <span class="section-label" data-i18n="reviewsLabel">Reviews</span>
+            <button class="section-link" data-i18n="reviewsAll">All</button>
+          </div>
+          <div class="reviews-row" id="reviewsRow">
+            <!-- injected by JS / renderReviews() -->
+          </div>
+
+        </div>
+
+        <div class="station-cta">
+          <button class="btn btn-accent" id="stationScanBtn" data-i18n-aria="scanBtn" aria-label="Scan QR">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="2" y="2" width="5" height="5" rx="1"/><rect x="13" y="2" width="5" height="5" rx="1"/>
+              <rect x="2" y="13" width="5" height="5" rx="1"/>
+              <rect x="3" y="3" width="3" height="3" fill="currentColor"/><rect x="14" y="3" width="3" height="3" fill="currentColor"/>
+              <rect x="3" y="14" width="3" height="3" fill="currentColor"/>
+              <path d="M13 13h2v2h-2zM15 13h2M13 15v2M15 15h2v2M17 15v2" stroke-linecap="round"/>
+            </svg>
+            <span data-i18n="scanBtn">Scan QR</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SCREEN: RENT / QR
+           ════════════════════════════════════════════════ -->
+      <section class="screen" id="screen-rent" aria-label="Scan and rent">
+
+        <!-- QR view -->
+        <div id="qrView" class="qr-view">
+          <div class="qr-topbar">
+            <button class="back-btn" id="rentBack" data-i18n-aria="backStation" aria-label="Back to station">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <h1 class="screen-title" data-i18n="scanTitle">Scan QR</h1>
+            <div style="width:36px"></div>
+          </div>
+
+          <div class="qr-area">
+            <div class="qr-finder" id="qrFinder" aria-label="Camera viewfinder for QR code">
+              <div class="qf-grid"   aria-hidden="true"></div>
+              <div class="qf-corner qf-tl" aria-hidden="true"></div>
+              <div class="qf-corner qf-tr" aria-hidden="true"></div>
+              <div class="qf-corner qf-bl" aria-hidden="true"></div>
+              <div class="qf-corner qf-br" aria-hidden="true"></div>
+              <div class="qf-line" id="scanLine" aria-hidden="true"></div>
+              <div class="qf-hint-inner" aria-hidden="true" data-i18n="scanHint">Point at the QR code on the station body</div>
+            </div>
+            <p class="qr-hint" data-i18n="scanHintOut">Point camera at the QR code on the station</p>
+            <button class="qr-manual-btn" id="manualBtn" aria-label="Enter code manually">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="1" y="2" width="12" height="10" rx="2"/><path d="M4 7h6M4 5h4" stroke-linecap="round"/>
+              </svg>
+              <span data-i18n="scanManual">Enter code manually</span>
+            </button>
+            <div class="qr-scan-status" id="scanStatus" aria-live="polite">
+              <div class="qss-dot" aria-hidden="true"></div>
+              <span data-i18n="scanStatus">Scanning...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm sheet -->
+        <div class="confirm-sheet" id="confirmSheet" role="dialog" aria-modal="true" aria-label="Confirm rental" hidden>
+          <div class="cs-handle" aria-hidden="true"></div>
+          <div class="cs-header">
+            <div class="cs-icon-wrap" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 11l5 5L18 6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="cs-serial">VT-2603-00417</div>
+              <div class="cs-location" data-station-name="0">Mlimani City Mall · slot 6</div>
+            </div>
+            <div class="cs-charge-badge" aria-label="Charge 100%">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M7 1.5L4 6.5h3l-2 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              100%
+            </div>
+          </div>
+          <div class="cs-rows">
+            <div class="cs-row">
+              <span class="cs-row-label" data-i18n="capacity">Capacity</span>
+              <span class="cs-row-val">10,000 mAh</span>
+            </div>
+            <div class="cs-row">
+              <span class="cs-row-label" data-i18n="cables">Cables included</span>
+              <span class="cs-row-val">USB-C · Lightning · Micro-USB</span>
+            </div>
+          </div>
+          <div class="cs-tariff">
+            <div class="cst-main">
+              <span class="cst-price" id="cstPrice">1,500 TZS</span>
+              <span class="cst-per" data-i18n="tariffFirst">first hour</span>
+            </div>
+            <div class="cst-sub" id="cstSub">Then 800 TZS/hr · max 7,000 TZS/day</div>
+          </div>
+          <p class="cs-deposit" id="csDeposit">Hold deposit: 3,000 TZS — returned within 10 min after return</p>
+          <button class="btn btn-accent" id="confirmBtn" aria-label="Confirm and take powerbank">
+            <span data-i18n="confirmBtn">Confirm &amp; take</span>
+          </button>
+          <button class="btn btn-ghost cs-cancel-btn" id="cancelConfirmBtn" aria-label="Cancel">
+            <span data-i18n="cancelBtn">Cancel</span>
+          </button>
+        </div>
+
+        <!-- Active rental -->
+        <div class="rental-active" id="rentalView" hidden>
+          <div class="ra-topbar">
+            <div class="ra-brand" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <rect width="22" height="22" rx="6" fill="#E8A020"/>
+                <path d="M13 3L7.5 11.5H12L10 19L15.5 10.5H11L13 3Z" fill="#1A1714"/>
+              </svg>
+              <span>VOLT</span>
+            </div>
+            <span class="badge badge-green-dot" aria-label="Rental active">
+              <span class="badge-dot-pulse" aria-hidden="true"></span>
+              <span data-i18n="rentalActive">Renting</span>
+            </span>
+          </div>
+
+          <div class="ra-timer-card">
+            <div class="ra-timer-label" data-i18n="timerLabel">Rental time</div>
+            <div class="ra-timer" id="rentalTimer" role="timer" aria-live="off">00:00</div>
+            <div class="ra-cost-row">
+              <span class="ra-cost" id="rentalCost">1,500 TZS</span>
+              <span class="ra-cost-hint" data-i18n="costHint">will be charged</span>
+            </div>
+            <div class="ra-cost-bar">
+              <div class="ra-cost-bar-fill" id="costBarFill" style="width:21%"></div>
+            </div>
+            <div class="ra-cost-bar-labels" id="costBarLabels">
+              <span>1,500 TZS · 1h</span>
+              <span>2,300 TZS · 2h</span>
+              <span class="ra-cb-max">7,000 TZS · day</span>
+            </div>
+          </div>
+
+          <div class="ra-info-card">
+            <div class="ra-info-row">
+              <span class="ra-info-label">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x="1" y="3.5" width="9" height="8" rx="2"/><path d="M3.5 3.5V3a2.5 2.5 0 015 0v.5" stroke-linecap="round"/>
+                </svg>
+                <span data-i18n="serialLabel">Serial number</span>
+              </span>
+              <span class="ra-info-val mono">VT-2603-00417</span>
+            </div>
+            <div class="ra-info-row">
+              <span class="ra-info-label">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 3.5v3l2 1.5" stroke-linecap="round"/>
+                </svg>
+                <span data-i18n="takenFrom">Taken from</span>
+              </span>
+              <span class="ra-info-val" data-station-name="0">Mlimani City Mall</span>
+            </div>
+            <div class="ra-info-row">
+              <span class="ra-info-label">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M6.5 1.5L4.5 6.5h4l-2.5 5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span data-i18n="chargeLabel">Charge at pickup</span>
+              </span>
+              <span class="ra-info-val">100%</span>
+            </div>
+          </div>
+
+          <div class="ra-actions">
+            <button class="btn btn-ghost ra-return-btn" id="howReturnBtn" aria-label="How to return">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <circle cx="8.5" cy="8.5" r="6.5"/><path d="M8.5 5.5v4l2.5 1.5" stroke-linecap="round"/>
+              </svg>
+              <span data-i18n="howReturn">How to return</span>
+            </button>
+            <button class="btn btn-secondary ra-map-btn" id="findReturnBtn" aria-label="Find return point">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M8.5 2a5 5 0 00-5 5c0 4 5 9 5 9s5-5 5-9a5 5 0 00-5-5z"/><circle cx="8.5" cy="7" r="2"/>
+              </svg>
+              <span data-i18n="findReturn">Find return point</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Return sheet -->
+        <div class="return-sheet" id="returnSheet" role="dialog" aria-modal="true" aria-label="Return instructions" hidden>
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <h2 class="return-title" data-i18n="returnTitle">How to return the powerbank</h2>
+          <div class="return-steps">
+            <div class="return-step">
+              <div class="rs-num">1</div>
+              <div class="rs-body">
+                <div class="rs-title" data-i18n="returnStep1t">Find any VOLT station</div>
+                <div class="rs-desc"  data-i18n="returnStep1d">You can return at any station in the city — not necessarily where you took it.</div>
+              </div>
+            </div>
+            <div class="return-step">
+              <div class="rs-num">2</div>
+              <div class="rs-body">
+                <div class="rs-title" data-i18n="returnStep2t">Insert powerbank into a free slot</div>
+                <div class="rs-desc"  data-i18n="returnStep2d">Any empty slot. You'll hear a click — the powerbank is locked in.</div>
+              </div>
+            </div>
+            <div class="return-step">
+              <div class="rs-num">3</div>
+              <div class="rs-body">
+                <div class="rs-title" data-i18n="returnStep3t">Rental ends automatically</div>
+                <div class="rs-desc"  id="rs3desc">Billed by actual usage. Deposit 3,000 TZS returned within 10 minutes.</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" id="closeReturn" aria-label="Close">
+            <span data-i18n="understood">Got it</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SCREEN: HISTORY
+           ════════════════════════════════════════════════ -->
+      <section class="screen" id="screen-history" aria-label="History and wallet">
+        <div class="history-topbar">
+          <h1 class="history-title" data-i18n="histTitle">History &amp; wallet</h1>
+          <div class="history-tabs" role="tablist">
+            <button class="htab htab-active" id="htabCurrent" role="tab" aria-selected="true" aria-controls="history-content">
+              <span data-i18n="histCurrent">Current</span>
+            </button>
+            <button class="htab" id="htabHistory" role="tab" aria-selected="false" aria-controls="history-content">
+              <span data-i18n="histHistory">History</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="history-scroll" id="history-content">
+
+          <div id="panel-current">
+            <div class="current-rental-card">
+              <div class="crc-top">
+                <span class="crc-label" data-i18n="activeRental">Active rental</span>
+                <span class="active-dot-badge">
+                  <span class="badge-dot-pulse" aria-hidden="true"></span>
+                  <span data-i18n="inProgress">In progress</span>
+                </span>
+              </div>
+              <div class="crc-serial">VT-2603-00417</div>
+              <div class="crc-station" data-station-name="0">Mlimani City Mall</div>
+              <div class="crc-timer" id="histTimer" role="timer" aria-live="off">00:00</div>
+              <div class="crc-cost" id="histCost">1,500 TZS</div>
+              <button class="crc-go-btn" id="crcGoBtn" aria-label="Go to rental">
+                <span data-i18n="goToRental">Go to rental</span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M3 7h8M8 4l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="panel-history" hidden>
+
+            <!-- Card 0 -->
+            <div class="hist-card">
+              <div class="hc-top">
+                <span class="hc-date" data-hist-date="0">8 Jun 2026</span>
+                <span class="badge badge-green" data-i18n="paid">Paid</span>
+              </div>
+              <div class="hc-route">
+                <span class="hc-station" data-hist-from="0">Mlimani City Mall</span>
+                <svg class="hc-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="hc-station" data-hist-to="0">Kariakoo Market</span>
+              </div>
+              <div class="hc-bottom">
+                <span class="hc-dur" data-hist-dur="0">2h 15min</span>
+                <span class="hc-amount" data-hist-amount="0">3,100 TZS</span>
+              </div>
+            </div>
+
+            <!-- Card 1 -->
+            <div class="hist-card">
+              <div class="hc-top">
+                <span class="hc-date" data-hist-date="1">6 Jun 2026</span>
+                <span class="badge badge-green" data-i18n="paid">Paid</span>
+              </div>
+              <div class="hc-route">
+                <span class="hc-station" data-hist-from="1">Kariakoo Market</span>
+                <svg class="hc-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="hc-station" data-hist-to="1">Kariakoo Market</span>
+              </div>
+              <div class="hc-bottom">
+                <span class="hc-dur" data-hist-dur="1">48min</span>
+                <span class="hc-amount" data-hist-amount="1">1,500 TZS</span>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="hist-card">
+              <div class="hc-top">
+                <span class="hc-date" data-hist-date="2">4 Jun 2026</span>
+                <span class="badge badge-green" data-i18n="paid">Paid</span>
+              </div>
+              <div class="hc-route">
+                <span class="hc-station" data-hist-from="2">Msasani Mall</span>
+                <svg class="hc-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="hc-station" data-hist-to="2">Mlimani City Mall</span>
+              </div>
+              <div class="hc-bottom">
+                <span class="hc-dur" data-hist-dur="2">24h 00min</span>
+                <span class="hc-amount" data-hist-amount="2">7,000 TZS</span>
+              </div>
+            </div>
+
+            <!-- Ad slot between card 2 and 3 -->
+            <div class="ad-slot ad-80" role="presentation" aria-hidden="true">
+              <span data-i18n="adSlot80">Ad slot · 320×80</span>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="hist-card">
+              <div class="hc-top">
+                <span class="hc-date" data-hist-date="3">2 Jun 2026</span>
+                <span class="badge badge-green" data-i18n="paid">Paid</span>
+              </div>
+              <div class="hc-route">
+                <span class="hc-station" data-hist-from="3">JNIA Airport</span>
+                <svg class="hc-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="hc-station" data-hist-to="3">JNIA Airport</span>
+              </div>
+              <div class="hc-bottom">
+                <span class="hc-dur" data-hist-dur="3">1h 40min</span>
+                <span class="hc-amount" data-hist-amount="3">2,300 TZS</span>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="hist-card">
+              <div class="hc-top">
+                <span class="hc-date" data-hist-date="4">30 May 2026</span>
+                <span class="badge badge-green" data-i18n="paid">Paid</span>
+              </div>
+              <div class="hc-route">
+                <span class="hc-station" data-hist-from="4">Kariakoo Market</span>
+                <svg class="hc-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="hc-station" data-hist-to="4">Kariakoo Market</span>
+              </div>
+              <div class="hc-bottom">
+                <span class="hc-dur" data-hist-dur="4">42min</span>
+                <span class="hc-amount" data-hist-amount="4">1,500 TZS</span>
+              </div>
+            </div>
+
+            <!-- Summary: 3100+1500+7000+2300+1500 = 15400 -->
+            <div class="hist-summary">
+              <div class="hs-item">
+                <span class="hs-label" data-i18n="totalRentals">Total rentals</span>
+                <span class="hs-val">23</span>
+              </div>
+              <div class="hs-div" aria-hidden="true"></div>
+              <div class="hs-item">
+                <span class="hs-label" data-i18n="spentJune">Spent in June</span>
+                <span class="hs-val" id="hsSummaryVal">15,400 TZS</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SCREEN: PROFILE
+           ════════════════════════════════════════════════ -->
+      <section class="screen" id="screen-profile" aria-label="Profile">
+        <div class="profile-topbar">
+          <h1 class="profile-title" data-i18n="profileTitle">Profile</h1>
+        </div>
+        <div class="profile-scroll">
+
+          <!-- User card -->
+          <div class="user-card">
+            <div class="uc-avatar" aria-hidden="true">AS</div>
+            <div class="uc-info">
+              <div class="uc-name">Aleksandr S.</div>
+              <div class="uc-phone">+255 744 123 456</div>
+            </div>
+            <button class="uc-edit" aria-label="Edit profile">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M10.5 2.5l2 2L4.5 12.5l-2.5.5.5-2.5L10.5 2.5z" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Balance card -->
+          <div class="balance-card">
+            <div class="bc-left">
+              <span class="bc-label" data-i18n="walletBalance">Wallet balance</span>
+              <span class="bc-amount" id="bcAmount">18,500 TZS</span>
+            </div>
+            <button class="bc-topup" aria-label="Top up wallet">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M7 2v10M2 7h10" stroke-linecap="round"/>
+              </svg>
+              <span data-i18n="topUp">Top up</span>
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div class="profile-stats">
+            <div class="ps-item">
+              <span class="ps-val">23</span>
+              <span class="ps-label" data-i18n="totalRentals">Total rentals</span>
+            </div>
+            <div class="ps-div" aria-hidden="true"></div>
+            <div class="ps-item">
+              <span class="ps-val" id="psSpentVal">15,400 TZS</span>
+              <span class="ps-label" data-i18n="spentJune">Spent in June</span>
+            </div>
+            <div class="ps-div" aria-hidden="true"></div>
+            <div class="ps-item">
+              <span class="ps-val">4.9</span>
+              <span class="ps-label">Rating</span>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="settings-section-label" data-i18n="paymentSection">Payment</div>
+          <div class="settings-group">
+            <!-- M-Pesa primary -->
+            <button class="settings-row" aria-label="M-Pesa primary">
+              <div class="sr-icon icon-green">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <rect x=".5" y="2.5" width="14" height="10" rx="2"/><path d="M.5 6.5h14M3 9.5h3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="sr-body">
+                <span class="sr-name" id="mpesaLabel">M-Pesa · +255 744 ···· 4321</span>
+                <span class="sr-sub sr-sub-accent">
+                  <span class="sr-badge-dot" aria-hidden="true"></span>
+                  Primary
+                </span>
+              </div>
+              <svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="settings-row" aria-label="Add payment method">
+              <div class="sr-icon icon-muted">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M7.5 2v11M2 7.5h11" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="sr-body">
+                <span class="sr-name" data-i18n="addPayment">Add payment method</span>
+              </div>
+              <svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Settings -->
+          <div class="settings-section-label" data-i18n="settingsSection">Settings</div>
+          <div class="settings-group">
+            <button class="settings-row" aria-label="Notifications">
+              <div class="sr-icon icon-orange">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M7.5 1.5a5 5 0 00-5 5v3L1 11h13l-1.5-1.5v-3a5 5 0 00-5-5z"/>
+                  <path d="M5.5 11.5a2 2 0 004 0" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="sr-body">
+                <span class="sr-name" data-i18n="notifLabel">Notifications</span>
+                <span class="sr-sub"  data-i18n="notifEnabled">Enabled</span>
+              </div>
+              <svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <!-- Language row — opens inline picker -->
+            <button class="settings-row settings-row-lang" id="langRow" aria-label="Language" aria-expanded="false" aria-controls="langPicker">
+              <div class="sr-icon icon-purple">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <circle cx="7.5" cy="7.5" r="5.5"/>
+                  <path d="M7.5 2c-2 1.5-3 3.5-3 5.5s1 4 3 5.5M7.5 2c2 1.5 3 3.5 3 5.5s-1 4-3 5.5M2 7.5h11" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="sr-body">
+                <span class="sr-name" data-i18n="langLabel">Language</span>
+                <span class="sr-sub" id="langSub">English</span>
+              </div>
+              <svg class="sr-arrow" id="langArrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <!-- Language picker inline -->
+            <div class="lang-picker" id="langPicker" hidden>
+              <button class="lang-opt lang-opt-active" data-lang-opt="en" role="radio" aria-checked="true">
+                <span class="lang-opt-flag">🇬🇧</span>
+                <span class="lang-opt-name">English</span>
+                <svg class="lang-opt-check" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M2.5 7l3 3 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="lang-opt" data-lang-opt="ru" role="radio" aria-checked="false">
+                <span class="lang-opt-flag">🇷🇺</span>
+                <span class="lang-opt-name">Русский</span>
+                <svg class="lang-opt-check" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M2.5 7l3 3 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="lang-opt" data-lang-opt="sw" role="radio" aria-checked="false">
+                <span class="lang-opt-flag">🇹🇿</span>
+                <span class="lang-opt-name">Kiswahili</span>
+                <svg class="lang-opt-check" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M2.5 7l3 3 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <button class="settings-row" aria-label="Privacy">
+              <div class="sr-icon icon-green-soft">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M7.5 1.5L2 3.5v4c0 3 2.5 5.5 5.5 6 3-.5 5.5-3 5.5-6v-4L7.5 1.5z"/>
+                </svg>
+              </div>
+              <div class="sr-body">
+                <span class="sr-name" data-i18n="privacyLabel">Privacy</span>
+              </div>
+              <svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Support -->
+          <div class="settings-section-label" data-i18n="supportSection">Support</div>
+          <div class="settings-group">
+            <button class="settings-row" aria-label="Help and FAQ">
+              <div class="sr-icon icon-muted">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <circle cx="7.5" cy="7.5" r="5.5"/>
+                  <path d="M5.5 6a2 2 0 013 1.7c0 1.3-2 1.5-2 3M7.5 12.5v-.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="sr-body"><span class="sr-name" data-i18n="helpLabel">Help &amp; FAQ</span></div>
+              <svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="settings-row" aria-label="Contact support">
+              <div class="sr-icon icon-muted">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M13 1.5H2a1 1 0 00-1 1v7a1 1 0 001 1h4l1.5 2 1.5-2H13a1 1 0 001-1v-7a1 1 0 00-1-1z"/>
+                </svg>
+              </div>
+              <div class="sr-body"><span class="sr-name" data-i18n="supportLabel">Contact support</span></div>
+              <svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- About -->
+          <div class="settings-section-label" data-i18n="aboutSection">About</div>
+          <div class="settings-group">
+            <div class="settings-row settings-row-static">
+              <div class="sr-icon">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                  <rect width="15" height="15" rx="4" fill="#E8A020"/>
+                  <path d="M9 2.5L5.5 8.5H8.5L7 12.5L10.5 6.5H7.5L9 2.5Z" fill="#1A1714"/>
+                </svg>
+              </div>
+              <div class="sr-body">
+                <span class="sr-name">VOLT Tanzania</span>
+                <span class="sr-sub" data-i18n="verBeta">v1.0.0 · Beta</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="logout-btn" data-i18n="logoutBtn" aria-label="Sign out">Sign out</button>
+
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           TAB BAR
+           ════════════════════════════════════════════════ -->
+      <nav class="tab-bar" role="tablist" aria-label="Navigation">
+        <button class="tab-item active" data-screen="map" id="tab-map" role="tab" aria-selected="true">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M11 2C7.69 2 5 4.69 5 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z"/>
+              <circle cx="11" cy="8" r="2.5"/>
+            </svg>
+            <span class="ti-dot" aria-hidden="true"></span>
+          </div>
+          <span class="ti-label" data-i18n="tabMap">Map</span>
+        </button>
+        <button class="tab-item" data-screen="rent" id="tab-rent" role="tab" aria-selected="false">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="4" y="6" width="14" height="12" rx="2.5"/>
+              <path d="M8 6V5a3 3 0 016 0v1" stroke-linecap="round"/>
+              <path d="M8.5 13h5M11 11v4" stroke-linecap="round"/>
+            </svg>
+            <span class="ti-dot" aria-hidden="true"></span>
+          </div>
+          <span class="ti-label" data-i18n="tabRent">Rent</span>
+        </button>
+        <button class="tab-item" data-screen="history" id="tab-history" role="tab" aria-selected="false">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M11 7v4l3 2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="ti-dot" aria-hidden="true"></span>
+          </div>
+          <span class="ti-label" data-i18n="tabHistory">History</span>
+        </button>
+        <button class="tab-item" data-screen="profile" id="tab-profile" role="tab" aria-selected="false">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="11" cy="8.5" r="3.5"/>
+              <path d="M4 19c0-3.87 3.13-7 7-7h0c3.87 0 7 3.13 7 7" stroke-linecap="round"/>
+            </svg>
+            <span class="ti-dot" aria-hidden="true"></span>
+          </div>
+          <span class="ti-label" data-i18n="tabProfile">Profile</span>
+        </button>
+      </nav>
+
+    </div><!-- /screen-wrap -->
+  </div><!-- /device -->
+
+</div><!-- /canvas -->
+
+<!-- Toast -->
+<div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+<script src="app.js?v=6"></script>
+</body>
+</html>
