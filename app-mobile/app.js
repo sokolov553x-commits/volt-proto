@@ -494,7 +494,7 @@ function renderReviews() {
     svg.setAttribute('width','56'); svg.setAttribute('height','10'); svg.setAttribute('viewBox','0 0 56 10'); svg.setAttribute('aria-hidden','true');
     STAR_PATHS.forEach((d,i) => {
       const p = document.createElementNS(SVG_NS,'path');
-      p.setAttribute('d',d); p.setAttribute('fill', i<r.stars ? '#92580A' : '#DDE2EC');
+      p.setAttribute('d',d); p.setAttribute('fill', i<r.stars ? '#7CA3FF' : '#DDE2EC');
       svg.appendChild(p);
     });
     sd.appendChild(svg); card.appendChild(sd);

@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VOLT · Architecture — Powerbank Sharing Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2345C278'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B8CFF'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
 <style>
 :root {
-  --bg: #F7F4EF; --surface: #FFFFFF; --surface-2: #F0EBE2;
-  --border: #DCD5C8; --border-subtle: #E7E1D4;
-  --text: #1A1714; --text-muted: #8A8278;
-  --accent: #92580A; --accent-soft: rgba(232,160,32,.16);
+  --bg: #0A0B11; --surface: #131521; --surface-2: #181B29;
+  --border: #262B3D; --border-subtle: #1B1F2E;
+  --text: #F2F4FA; --text-muted: #8B93AC;
+  --accent: #7CA3FF; --accent-soft: rgba(91,140,255,.15);
   --mono: "JetBrains Mono", ui-monospace, monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   background: var(--bg); color: var(--text);
-  font-family: "Onest", -apple-system, sans-serif;
+  font-family: "Manrope", -apple-system, sans-serif;
   font-size: 15px; line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
@@ -26,7 +26,7 @@ body {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; gap: 14px;
   padding: 14px 28px;
-  background: rgba(247,244,239,.92); backdrop-filter: blur(8px);
+  background: rgba(10,11,17,.85); backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-subtle);
 }
 .back {
@@ -43,8 +43,8 @@ body {
 .loading { color: var(--text-muted); padding: 60px 0; text-align: center; }
 
 /* markdown */
-.md h1 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 500; font-size: 38px; line-height: 1.2; margin: 8px 0 18px; }
-.md h2 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; font-size: 26px; margin: 42px 0 14px; padding-top: 18px; border-top: 1px solid var(--border-subtle); }
+.md h1 { font-weight: 800; letter-spacing: -.02em; font-size: 32px; line-height: 1.2; margin: 8px 0 18px; }
+.md h2 { font-weight: 800; letter-spacing: -.01em; font-size: 22px; margin: 42px 0 14px; padding-top: 18px; border-top: 1px solid var(--border-subtle); }
 .md h3 { font-size: 16.5px; margin: 28px 0 10px; }
 .md h4 { font-size: 14.5px; margin: 20px 0 8px; color: var(--text); }
 .md p { margin: 0 0 12px; }
@@ -119,9 +119,9 @@ body {
     code.closest("pre").replaceWith(div);
   });
   if (typeof mermaid !== "undefined") {
-    mermaid.initialize({ startOnLoad: false, theme: "neutral", themeVariables: {
-      primaryColor: "#F0EBE2", primaryBorderColor: "#DCD5C8", primaryTextColor: "#1A1714",
-      lineColor: "#8A8278", fontFamily: "Onest, sans-serif", fontSize: "13px",
+    mermaid.initialize({ startOnLoad: false, theme: "dark", themeVariables: {
+      primaryColor: "#181B29", primaryBorderColor: "#262B3D", primaryTextColor: "#F2F4FA",
+      lineColor: "#8B93AC", fontFamily: "Manrope, sans-serif", fontSize: "13px",
     }});
     try { await mermaid.run({ querySelector: ".mermaid" }); } catch (e) { /* диаграмма с ошибкой остаётся текстом */ }
   }

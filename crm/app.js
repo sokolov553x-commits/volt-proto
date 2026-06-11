@@ -528,7 +528,7 @@
     const s = BANK_STATUS[b.status];
     return `<span class="badge ${s.cls}"><span class="dot"></span>${t(s.key)}</span>`;
   }
-  function chargeColor(p) { return p >= 50 ? "#1A6B2E" : p >= 20 ? "#E8A020" : "#8B1A1A"; }
+  function chargeColor(p) { return p >= 50 ? "#3DDC97" : p >= 20 ? "#FFB454" : "#FF6678"; }
   function chargeCell(p) {
     return `<div class="charge-cell">
       <div class="charge-bar"><div class="charge-fill" style="width:${p}%;background:${chargeColor(p)}"></div></div>
@@ -614,11 +614,11 @@
     const labels = days.map((d, i) => i % 2 === 1 ? "" :
       `<text x="${x(i)}" y="${H - 6}" text-anchor="middle" font-size="9" fill="var(--text-disabled)">${fmtDate(d.date.getTime())}</text>`).join("");
     const dots = days.map((d, i) =>
-      `<circle cx="${x(i).toFixed(1)}" cy="${y(d.count).toFixed(1)}" r="2.6" fill="#F7F4EF" stroke="#E8A020" stroke-width="1.6">
+      `<circle cx="${x(i).toFixed(1)}" cy="${y(d.count).toFixed(1)}" r="2.6" fill="#07080E" stroke="#5B8CFF" stroke-width="1.6">
         <title>${t("chartDotTitle", fmtDate(d.date.getTime()), d.count, fmtMoney(d.revenue))}</title></circle>`).join("");
     return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t("chartAriaLabel")}">
-      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#E8A020"/><stop offset="100%" stop-color="#C77E10"/></linearGradient><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="rgba(232,160,32,.22)"/><stop offset="100%" stop-color="rgba(232,160,32,0)"/>
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8CFF"/><stop offset="100%" stop-color="#A06BFF"/></linearGradient><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(91,140,255,.25)"/><stop offset="100%" stop-color="rgba(160,107,255,0)"/>
       </linearGradient></defs>
       ${grid}
       <path d="${area}" class="chart-area" fill="url(#ag)"/>
@@ -638,7 +638,7 @@
       html += `<div class="hm-lab">${dows[d]}</div>`;
       row.forEach((v, h) => {
         const op = v ? 0.15 + 0.85 * (v / max) : 0;
-        html += `<div class="hm-cell" data-tip="${t("rentalsHeatTip", dows[d], h, v)}" style="${v ? `background:rgba(232,160,32,${op.toFixed(2)})` : ""}"></div>`;
+        html += `<div class="hm-cell" data-tip="${t("rentalsHeatTip", dows[d], h, v)}" style="${v ? `background:rgba(91,140,255,${op.toFixed(2)})` : ""}"></div>`;
       });
     });
     return html + "</div>";
