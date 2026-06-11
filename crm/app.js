@@ -1544,6 +1544,60 @@
     t.style.setProperty("--my", (e.clientY - r.top) + "px");
   }, { passive: true });
 
+  /* ── ⌘K командная палитра ── */
+  const cmdkKeys = { en: "Search: sections, stations, serials, clients…", ru: "Поиск: разделы, станции, серийники, клиенты…", sw: "Tafuta: sehemu, vituo, betri, wateja…" };
+  function cmdkData() {
+    const items = [];
+    role().nav.forEach((k) => {
+      const d = navDef()[k]; if (!d || d.soon) return;
+      items.push({ label: d.t, kind: "section", ico: "chevR", run: () => { state.view = k; state.stationId = null; render(); } });
+    });
+    visibleStations().forEach((st) => items.push({
+      label: st.name, kind: "station", ico: "station",
+      run: () => { state.view = "stations"; state.stationId = st.id; render(); } }));
+    visibleBanks().slice(0, 200).forEach((b) => items.push({
+      label: b.serial, kind: "powerbank", ico: "battery", mono: true,
+      run: () => { state.view = "banks"; state.stationId = null; render(); openBankDrawer(b.id); } }));
+    if (role().pii) V.clients.forEach((c) => items.push({
+      label: c.name, kind: "client", ico: "users",
+      run: () => { state.view = "clients"; state.stationId = null; render(); } }));
+    return items;
+  }
+  let ckSel = 0, ckItems = [];
+  function cmdkRender(q) {
+    const list = $("#cmdkList");
+    const all = cmdkData();
+    ckItems = q ? all.filter((i) => i.label.toLowerCase().includes(q.toLowerCase())) : all.slice(0, 12);
+    ckSel = Math.min(ckSel, Math.max(0, ckItems.length - 1));
+    list.innerHTML = ckItems.length ? ckItems.map((i, n) =>
+      `<div class="cmdk-item ${n === ckSel ? "sel" : ""}" data-ck="${n}">${ico(i.ico)}<span class="${i.mono ? "serial" : ""}">${i.label}</span><span class="ck-kind">${i.kind}</span></div>`
+    ).join("") : `<div class="cmdk-empty">—</div>`;
+  }
+  function cmdkOpen() {
+    const r = $("#cmdkRoot"); r.hidden = false;
+    const inp = $("#cmdkInput");
+    inp.value = ""; inp.placeholder = cmdkKeys[LANG] || cmdkKeys.en;
+    ckSel = 0; cmdkRender("");
+    setTimeout(() => inp.focus(), 30);
+  }
+  function cmdkClose() { $("#cmdkRoot").hidden = true; }
+  $("#cmdkBtn").addEventListener("click", cmdkOpen);
+  $("#cmdkInput").addEventListener("input", (e) => { ckSel = 0; cmdkRender(e.target.value); });
+  $("#cmdkInput").addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") { e.preventDefault(); ckSel = Math.min(ckSel + 1, ckItems.length - 1); cmdkRender(e.target.value); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); ckSel = Math.max(ckSel - 1, 0); cmdkRender(e.target.value); }
+    else if (e.key === "Enter" && ckItems[ckSel]) { cmdkClose(); ckItems[ckSel].run(); }
+  });
+  document.addEventListener("click", (e) => {
+    const it = e.target.closest("[data-ck]");
+    if (it) { const i = ckItems[+it.dataset.ck]; cmdkClose(); if (i) i.run(); }
+    if (e.target.closest("[data-cmdk-close]")) cmdkClose();
+  });
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); cmdkOpen(); }
+    if (e.key === "Escape") cmdkClose();
+  });
+
   $("#liveBtn").addEventListener("click", toggleLive);
   $("#bellBtn").addEventListener("click", () => {
     if (role().nav.includes("alerts")) { state.view = "alerts"; state.stationId = null; render(); }

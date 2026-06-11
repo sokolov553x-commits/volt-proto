@@ -38,7 +38,7 @@
   --danger-soft:  #2C1518;
   --danger-text:  #FF6678;
 
-  --canvas:       #F2F4FA;
+  --canvas:       #05060B;
 
   --r-sm:    8px;
   --r-md:    12px;
@@ -2442,7 +2442,7 @@ button:focus:not(:focus-visible) { outline: none; }
 /* ── Electric Glass mobile ── */
 .btn-accent { background: linear-gradient(115deg,#5B8CFF,#A06BFF) !important; color: #fff !important;
   clip-path: none !important; border-radius: 14px !important; box-shadow: 0 6px 24px rgba(122,124,255,.4); }
-.map-svg-container svg { filter: invert(.93) hue-rotate(198deg) saturate(1.15) brightness(.86); }
+
 .ra-timer-card::after, .current-rental-card::after { background: linear-gradient(135deg,rgba(91,140,255,.7),rgba(160,107,255,.3)); }
 .tab-item.active span { color: #7CA3FF; }
 .tab-item.active .tab-dot { background: linear-gradient(115deg,#5B8CFF,#A06BFF); }
@@ -2453,3 +2453,28 @@ button:focus:not(:focus-visible) { outline: none; }
 #rentalCost { color: #7CA3FF !important; }
 /* и текущая карточка в истории */
 #crcTimer { background: linear-gradient(115deg,#7CA3FF,#B07CFF); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+
+/* ── карта: неоновые пины и стеклянные элементы ── */
+.map-svg-container { background: #0E1119; }
+.map-pin circle[fill="#5B8CFF"] { filter: drop-shadow(0 0 8px rgba(91,140,255,.8)); }
+.map-search-input { background: rgba(19,21,33,.85); border-color: rgba(255,255,255,.1); backdrop-filter: blur(12px); }
+.map-chips .chip, .map-chip { background: rgba(19,21,33,.8) !important; color: #C7CDE0 !important; border: 1px solid rgba(255,255,255,.1) !important; backdrop-filter: blur(10px); }
+.map-chips .chip.active, .map-chip.active { background: linear-gradient(115deg,#5B8CFF,#A06BFF) !important; color: #fff !important; border-color: transparent !important; }
+.map-lang-row { top: 56px !important; right: 14px !important; }
+.map-lang-btn { background: rgba(19,21,33,.8); border: 1px solid rgba(255,255,255,.1); color: #8B93AC; backdrop-filter: blur(10px); }
+.map-lang-btn.active, .map-lang-btn[aria-pressed="true"] { background: linear-gradient(115deg,#5B8CFF,#A06BFF); color: #fff; border-color: transparent; }
+/* стеклянный таб-бар */
+.tab-bar { background: rgba(10,11,17,.78) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,.08) !important; }
+/* нижний лист — стекло */
+.bottom-sheet, .sheet { background: rgba(15,17,26,.92) !important; backdrop-filter: blur(14px); border-top: 1px solid rgba(255,255,255,.09); }
+/* canvas-меню экранов — аккуратное, без призраков */
+.cm-screen-item { opacity: .55; }
+.cm-screen-item.active { opacity: 1; }
+
+/* канвас вокруг рамки — как лендинг, меню экранов читаемое на тёмном */
+.canvas-wrapper, body { background: radial-gradient(700px 420px at 78% 8%, rgba(160,107,255,.10), transparent 60%),
+  radial-gradient(640px 380px at 12% 16%, rgba(91,140,255,.10), transparent 60%), #05060B; }
+.cm-screen-item { color: #8B93AC; border-color: rgba(255,255,255,.08) !important; background: rgba(255,255,255,.03) !important; }
+.cm-screen-item.active { color: #F2F4FA; background: rgba(91,140,255,.12) !important; border-color: rgba(91,140,255,.35) !important; }
+.canvas-label .brand-name, .canvas-label .app-title { color: #F2F4FA; }
+.canvas-label .app-hint, .canvas-label .tab-hint-item { color: rgba(242,244,250,.4); }

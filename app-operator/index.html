@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLT Ops · Operator App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root {
+  --bg:          #0A0B11;
+  --surface:     #131521;
+  --surface-2:   #181B29;
+  --surface-3:   #1C2030;
+  --border:      rgba(255,255,255,.09);
+  --border-hi:   rgba(255,255,255,.16);
+  --text:        #F2F4FA;
+  --text-2:      #C7CDE0;
+  --text-muted:  #8B93AC;
+  --text-faint:  #5A6178;
+
+  --blue:   #5B8CFF;
+  --violet: #A06BFF;
+  --cyan:   #3FD9FF;
+  --grad:   linear-gradient(115deg,#5B8CFF 0%,#A06BFF 50%,#3FD9FF 100%);
+  --green:  #3DDC97;
+  --amber:  #FFB454;
+  --red:    #FF6678;
+
+  --green-soft:  rgba(61,220,151,.12);
+  --amber-soft:  rgba(255,180,84,.12);
+  --red-soft:    rgba(255,102,120,.12);
+  --blue-soft:   rgba(91,140,255,.10);
+  --cyan-soft:   rgba(63,217,255,.10);
+
+  --font:  'Manrope', -apple-system, sans-serif;
+  --mono:  'JetBrains Mono', monospace;
+
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  20px;
+
+  --ease-out:    cubic-bezier(.25,.46,.45,.94);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+
+  --shadow-frame: 0 40px 100px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.05);
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; }
+body {
+  font-family: var(--font);
+  background: #04050A;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  color: var(--text);
+  overflow-x: hidden;
+}
+button { font-family: var(--font); cursor: pointer; border: none; outline: none; -webkit-tap-highlight-color: transparent; }
+input  { font-family: var(--font); }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+button:focus:not(:focus-visible) { outline: none; }
+
+/* ══════════════════════════════════════════
+   CANVAS (desktop layout)
+══════════════════════════════════════════ */
+.canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  min-height: 100vh;
+  padding: 48px 32px;
+  position: relative;
+}
+
+/* canvas label */
+.canvas-label {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 188px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.cl-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cl-logo {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: var(--grad);
+  display: grid; place-items: center;
+  box-shadow: 0 0 20px rgba(91,140,255,.5);
+  flex-shrink: 0;
+}
+.cl-logo svg { width:16px; height:16px; }
+.cl-wordmark {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.cl-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.55);
+  line-height: 1.5;
+}
+.cl-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,.28);
+  line-height: 1.6;
+}
+.cl-screens {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+.cl-screen-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 150ms;
+  user-select: none;
+  border-left: 2px solid transparent;
+}
+.cl-screen-item:hover { background: rgba(255,255,255,.05); }
+.cl-screen-item.active {
+  background: rgba(91,140,255,.08);
+  border-left-color: rgba(91,140,255,.6);
+}
+.cl-screen-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(91,140,255,.6);
+  font-weight: 600;
+  flex-shrink: 0;
+  width: 14px;
+}
+.cl-screen-name {
+  font-size: 12px;
+  color: rgba(255,255,255,.4);
+  font-weight: 500;
+}
+.cl-screen-item.active .cl-screen-name { color: rgba(255,255,255,.72); }
+
+/* ══════════════════════════════════════════
+   DEVICE FRAME
+══════════════════════════════════════════ */
+.device {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  background: #161618;
+  border-radius: 55px;
+  box-shadow: var(--shadow-frame);
+  padding: 14px 11px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+/* inner bezel highlight */
+.device::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 55px;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.09);
+  pointer-events: none;
+  z-index: 10;
+}
+/* side buttons */
+.device::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: 155px;
+  width: 4px; height: 68px;
+  background: #242424;
+  border-radius: 0 2px 2px 0;
+}
+.dev-vol-up, .dev-vol-dn {
+  position: absolute;
+  left: -4px;
+  width: 4px;
+  background: #242424;
+  border-radius: 2px 0 0 2px;
+}
+.dev-vol-up { top: 125px; height: 36px; }
+.dev-vol-dn { top: 174px; height: 36px; }
+
+/* screen wrap */
+.screen-wrap {
+  width: 371px;
+  height: 824px;
+  border-radius: 44px;
+  overflow: hidden;
+  background: var(--bg);
+  position: relative;
+}
+
+/* Dynamic Island */
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 34px;
+  background: #08080A;
+  border-radius: 20px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 13px;
+}
+.di-cam {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #1a1a20;
+  border: 2px solid #222228;
+}
+
+/* status bar */
+.status-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 54px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 26px 8px;
+  z-index: 150;
+  pointer-events: none;
+  color: var(--text);
+}
+.sb-time { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+.sb-icons { display: flex; align-items: center; gap: 5px; }
+
+/* ══════════════════════════════════════════
+   SCREEN SYSTEM
+══════════════════════════════════════════ */
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(20px);
+  transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+.screen.exit {
+  opacity: 0;
+  transform: translateX(-20px);
+  pointer-events: none;
+}
+
+/* scrollable content area */
+.screen-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 64px 16px 96px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.screen-scroll::-webkit-scrollbar { display: none; }
+
+/* ══════════════════════════════════════════
+   TAB BAR
+══════════════════════════════════════════ */
+.tab-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 82px;
+  background: rgba(13,15,22,.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 0 0;
+  z-index: 190;
+}
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 0;
+  background: none;
+  color: var(--text-muted);
+  transition: color 200ms;
+  user-select: none;
+  min-height: 44px;
+  justify-content: center;
+  position: relative;
+}
+.tab-item.active { color: var(--text); }
+.ti-icon {
+  position: relative;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ti-badge {
+  position: absolute;
+  top: -4px; right: -6px;
+  min-width: 16px; height: 16px;
+  background: var(--red);
+  border-radius: 999px;
+  font-size: 9px; font-weight: 700;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+}
+.ti-dot {
+  position: absolute;
+  bottom: -4px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.tab-item.active .ti-dot { opacity: 1; }
+.ti-label { font-size: 10px; font-weight: 500; }
+
+/* ══════════════════════════════════════════
+   SHARED COMPONENTS
+══════════════════════════════════════════ */
+
+/* glass card */
+.card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* section label */
+.sec-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+
+/* gradient text */
+.gx {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* status pill */
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px; font-weight: 600;
+}
+.pill-green { background: var(--green-soft); color: var(--green); }
+.pill-amber { background: var(--amber-soft); color: var(--amber); }
+.pill-red   { background: var(--red-soft);   color: var(--red);   }
+.pill-blue  { background: var(--blue-soft);  color: var(--blue);  }
+.pill-cyan  { background: var(--cyan-soft);  color: var(--cyan);  }
+.pill i { width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+
+/* gradient button */
+.btn-grad {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  background: var(--grad);
+  color: #fff;
+  font: 700 14px var(--font);
+  transition: transform .2s var(--ease-spring), box-shadow .2s;
+  box-shadow: 0 4px 20px rgba(91,140,255,.4);
+  cursor: pointer;
+  border: none;
+  min-height: 44px;
+}
+.btn-grad:hover  { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(91,140,255,.55); }
+.btn-grad:active { transform: scale(.97); }
+
+/* ghost button */
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font: 600 14px var(--font);
+  transition: background .15s, border-color .15s;
+  cursor: pointer;
+  min-height: 44px;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.08); border-color: var(--border-hi); }
+.btn-ghost:active { transform: scale(.97); }
+
+/* danger button */
+.btn-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  background: var(--red-soft);
+  border: 1px solid rgba(255,102,120,.25);
+  color: var(--red);
+  font: 600 14px var(--font);
+  transition: background .15s;
+  cursor: pointer;
+  min-height: 44px;
+}
+.btn-danger:hover { background: rgba(255,102,120,.2); }
+
+/* ── gradient avatar ── */
+.avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--grad);
+  display: grid; place-items: center;
+  font-weight: 800;
+  font-size: 15px;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 18px rgba(91,140,255,.45);
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 1: SHIFT (СМЕНА)
+══════════════════════════════════════════ */
+/* shift header */
+.shift-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.shift-header-info { flex: 1; }
+.shift-name { font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+.shift-status { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.shift-status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot { 50% { opacity: .4; } }
+.shift-status-text { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+/* stat row */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.stat-mini {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px 10px;
+  text-align: center;
+}
+.stat-mini-val {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat-mini-lbl {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* task checklist */
+.task-list { display: flex; flex-direction: column; gap: 8px; }
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 52px;
+}
+.task-item:hover { background: rgba(255,255,255,.065); border-color: var(--border-hi); }
+.task-item.done { opacity: .6; }
+
+/* custom checkbox */
+.task-cb {
+  width: 22px; height: 22px;
+  border-radius: 7px;
+  border: 2px solid var(--border-hi);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .2s var(--ease-spring), border-color .2s, transform .25s var(--ease-spring);
+}
+.task-item.done .task-cb {
+  background: var(--grad);
+  border-color: transparent;
+  transform: scale(1.08);
+}
+.task-cb-check {
+  width: 12px; height: 12px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.task-item.done .task-cb-check { opacity: 1; }
+
+.task-text { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-2); }
+.task-item.done .task-text { text-decoration: line-through; color: var(--text-faint); }
+.task-badge { flex-shrink: 0; }
+
+/* ══════════════════════════════════════════
+   SCREEN 2: STATION / INVENTORY
+══════════════════════════════════════════ */
+.station-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.station-name { font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+.station-sub  { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+/* progress bar */
+.progress-wrap { margin-bottom: 20px; }
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.progress-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.progress-count {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue);
+}
+.progress-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--grad);
+  transition: width .6s var(--ease-spring);
+  width: 0;
+}
+
+/* slot grid 4×4 */
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.slot {
+  aspect-ratio: 1;
+  border-radius: var(--r-md);
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  transition: transform .18s var(--ease-spring), box-shadow .18s;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  min-height: 44px;
+}
+.slot:active { transform: scale(.94); }
+.slot.selected { box-shadow: 0 0 0 2px var(--blue); }
+
+/* charged slot: green fill */
+.slot-charged {
+  background: rgba(61,220,151,.08);
+  border-color: rgba(61,220,151,.2);
+  color: var(--green);
+}
+.slot-charged-fill {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(61,220,151,.15);
+  transition: height .5s var(--ease-out);
+}
+
+/* charging slot: cyan with pulse */
+.slot-charging {
+  background: rgba(63,217,255,.06);
+  border-color: rgba(63,217,255,.2);
+  color: var(--cyan);
+  animation: slot-pulse 2.4s ease-in-out infinite;
+}
+@keyframes slot-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(63,217,255,.0); }
+  50%      { box-shadow: 0 0 10px 3px rgba(63,217,255,.18); }
+}
+
+/* empty slot: hatched */
+.slot-empty {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,255,.025) 0, rgba(255,255,255,.025) 2px,
+    transparent 2px, transparent 10px
+  );
+  border-color: rgba(255,255,255,.07);
+  color: var(--text-faint);
+}
+
+/* checked slot */
+.slot-checked {
+  background: rgba(91,140,255,.07);
+  border-color: rgba(91,140,255,.25);
+  color: var(--blue);
+}
+
+/* slot detail panel */
+.slot-panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  margin-top: 4px;
+  display: none;
+  animation: panel-in .22s var(--ease-out) both;
+}
+.slot-panel.open { display: block; }
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.sp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.sp-serial {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cyan);
+}
+.sp-health-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  margin: 8px 0 14px;
+}
+.sp-health-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--green);
+}
+.sp-actions { display: flex; gap: 8px; }
+.sp-actions button { flex: 1; font-size: 13px; padding: 10px 14px; min-height: 44px; }
+
+/* defect sheet */
+.defect-sheet {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  margin-top: 8px;
+  display: none;
+  animation: panel-in .22s var(--ease-out) both;
+}
+.defect-sheet.open { display: block; }
+.defect-sheet h4 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.defect-types { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.defect-type {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  font-size: 12px; font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .15s;
+  min-height: 44px;
+  display: flex; align-items: center;
+}
+.defect-type:hover { border-color: rgba(255,102,120,.4); color: var(--red); background: var(--red-soft); }
+.defect-type.selected { border-color: rgba(255,102,120,.45); color: var(--red); background: var(--red-soft); }
+
+/* photo attach */
+.photo-attach {
+  border: 1.5px dashed rgba(255,255,255,.14);
+  border-radius: var(--r-md);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: border-color .15s, background .15s;
+  min-height: 44px;
+}
+.photo-attach:hover { border-color: rgba(91,140,255,.4); background: rgba(91,140,255,.05); }
+.photo-preview {
+  display: none;
+  height: 72px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, rgba(91,140,255,.3), rgba(160,107,255,.3));
+  border: 1.5px solid rgba(91,140,255,.35);
+  align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 12px; font-weight: 600;
+  gap: 6px;
+}
+.photo-preview.visible { display: flex; margin-bottom: 14px; }
+
+/* ══════════════════════════════════════════
+   SCREEN 3: ALERTS
+══════════════════════════════════════════ */
+.alert-list { display: flex; flex-direction: column; gap: 10px; }
+.alert-card {
+  display: flex;
+  gap: 0;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: background .15s;
+  position: relative;
+}
+.alert-card:hover { background: rgba(255,255,255,.065); }
+.alert-card.dismissed { opacity: .45; }
+
+/* colored left stripe */
+.alert-stripe {
+  width: 4px;
+  flex-shrink: 0;
+}
+.alert-stripe.critical { background: var(--red); }
+.alert-stripe.warning  { background: var(--amber); }
+
+.alert-body { padding: 14px; flex: 1; }
+.alert-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.alert-title { font-size: 14px; font-weight: 700; }
+.alert-time { font-size: 11px; color: var(--text-faint); font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+.alert-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+.alert-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+.alert-actions { display: flex; gap: 6px; }
+.alert-actions button { font-size: 12px; padding: 10px 14px; min-height: 44px; }
+
+/* pulse on critical */
+.alert-pulse {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.alert-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--red);
+  opacity: .3;
+  animation: alert-ring 1.8s ease-out infinite;
+}
+@keyframes alert-ring {
+  0%   { transform: scale(.5); opacity: .6; }
+  100% { transform: scale(2);  opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   SCREEN 4: PROFILE
+══════════════════════════════════════════ */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.profile-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--grad);
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 20px; color: #fff;
+  box-shadow: 0 0 24px rgba(91,140,255,.5);
+  flex-shrink: 0;
+}
+.profile-name { font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+.profile-role { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.stat-block {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 10px;
+  text-align: center;
+}
+.stat-block-val {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.stat-block-lbl {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* language switcher */
+.lang-row {
+  display: flex;
+  gap: 6px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+.lang-btn {
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: calc(var(--r-md) - 2px);
+  font: 700 13px var(--mono);
+  color: var(--text-muted);
+  background: none;
+  transition: background .15s, color .15s;
+  letter-spacing: .5px;
+  min-height: 44px;
+}
+.lang-btn:hover { color: var(--text-2); background: rgba(255,255,255,.05); }
+.lang-btn.active {
+  background: var(--grad);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(91,140,255,.4);
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+.toast-container {
+  position: absolute;
+  top: 70px; left: 16px; right: 16px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(19,21,33,.95);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  animation: toast-in .28s var(--ease-spring) both;
+  box-shadow: 0 8px 28px rgba(0,0,0,.45);
+}
+.toast.out { animation: toast-out .22s var(--ease-out) both; }
+@keyframes toast-in  { from { opacity:0; transform:translateY(-12px) scale(.96); } to { opacity:1; transform:none; } }
+@keyframes toast-out { from { opacity:1; transform:none; } to { opacity:0; transform:translateY(-8px) scale(.97); } }
+.toast-icon { width:20px; height:20px; flex-shrink:0; border-radius:50%; display:grid; place-items:center; }
+.toast-icon.green { background:var(--green-soft); color:var(--green); }
+.toast-icon.amber { background:var(--amber-soft); color:var(--amber); }
+.toast-icon.red   { background:var(--red-soft);   color:var(--red); }
+
+/* ══════════════════════════════════════════
+   SCREEN HEADERS (in-screen)
+══════════════════════════════════════════ */
+.screen-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.screen-title { font-size: 20px; font-weight: 800; letter-spacing: -.025em; }
+
+/* ══════════════════════════════════════════
+   CARD CASCADE ANIMATION
+══════════════════════════════════════════ */
+.cascade {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .4s var(--ease-out), transform .4s var(--ease-out);
+}
+.cascade.visible { opacity: 1; transform: none; }
+
+/* ══════════════════════════════════════════
+   MOBILE: full screen (no frame)
+══════════════════════════════════════════ */
+@media (max-width: 479px) {
+  body { background: var(--bg); }
+  .canvas { padding: 0; gap: 0; justify-content: flex-start; align-items: flex-start; min-height: 100dvh; }
+  .canvas-label { display: none; }
+  .device {
+    width: 100%; height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    background: var(--bg);
+  }
+  .device::before, .device::after, .dev-vol-up, .dev-vol-dn { display: none; }
+  .screen-wrap {
+    width: 100%; height: 100dvh;
+    border-radius: 0;
+  }
+  .dynamic-island { display: none; }
+  .status-bar { padding: 12px 20px 8px; height: 48px; }
+}
+
+/* ══════════════════════════════════════════
+   REDUCED MOTION
+══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="canvas">
+  <!-- Sidebar label -->
+  <aside class="canvas-label" aria-label="Navigation">
+    <div class="cl-brand">
+      <div class="cl-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+      </div>
+      <span class="cl-wordmark">VOLT</span>
+    </div>
+    <div class="cl-title" id="canvas-subtitle">VOLT Ops<br>сервисное приложение<br>оператора</div>
+    <div class="cl-screens" role="list">
+      <div class="cl-screen-item active" data-tab="shift" role="listitem" tabindex="0">
+        <span class="cl-screen-num">01</span>
+        <span class="cl-screen-name" data-i18n="tab_shift">Смена</span>
+      </div>
+      <div class="cl-screen-item" data-tab="station" role="listitem" tabindex="0">
+        <span class="cl-screen-num">02</span>
+        <span class="cl-screen-name" data-i18n="tab_station">Станция</span>
+      </div>
+      <div class="cl-screen-item" data-tab="alerts" role="listitem" tabindex="0">
+        <span class="cl-screen-num">03</span>
+        <span class="cl-screen-name" data-i18n="tab_alerts">Алерты</span>
+      </div>
+      <div class="cl-screen-item" data-tab="profile" role="listitem" tabindex="0">
+        <span class="cl-screen-num">04</span>
+        <span class="cl-screen-name" data-i18n="tab_profile">Профиль</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Device Frame -->
+  <div class="device" role="main">
+    <div class="dev-vol-up" aria-hidden="true"></div>
+    <div class="dev-vol-dn" aria-hidden="true"></div>
+
+    <div class="screen-wrap">
+      <!-- Dynamic Island -->
+      <div class="dynamic-island" aria-hidden="true"><div class="di-cam"></div></div>
+
+      <!-- Status Bar -->
+      <div class="status-bar" aria-hidden="true">
+        <span class="sb-time" id="status-time">9:41</span>
+        <div class="sb-icons">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="3" width="3" height="9" rx="1" opacity=".4"/><rect x="4" y="2" width="3" height="10" rx="1" opacity=".6"/><rect x="8" y="1" width="3" height="11" rx="1" opacity=".8"/><rect x="12" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2a9 9 0 0 1 6 2.3l1.4-1.4A11 11 0 0 0 8 0a11 11 0 0 0-7.4 2.9L2 4.3A9 9 0 0 1 8 2zm0 4a5 5 0 0 1 3.5 1.4L13 5.8A7 7 0 0 0 8 4a7 7 0 0 0-5 2.1l1.5 1.4A5 5 0 0 1 8 6zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="1.5" y="2.5" width="15" height="7" rx="1.5" fill="currentColor"/><rect x="23" y="3.5" width="2.5" height="5" rx="1" fill="currentColor" opacity=".45"/></svg>
+        </div>
+      </div>
+
+      <!-- Toast container -->
+      <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+      <!-- ═══════════════════════════════
+           SCREEN 1: SHIFT
+      ═══════════════════════════════ -->
+      <section class="screen active" id="screen-shift" aria-label="Смена">
+        <div class="screen-scroll">
+
+          <!-- shift header -->
+          <div class="shift-header cascade" style="--d:0ms">
+            <div class="avatar" aria-hidden="true">AM</div>
+            <div class="shift-header-info">
+              <div class="shift-name">Amani Mwanga</div>
+              <div class="shift-status">
+                <div class="shift-status-dot"></div>
+                <span class="shift-status-text" data-i18n="shift_active">на смене <span id="shift-time">3 ч 12 мин</span></span>
+              </div>
+            </div>
+            <div class="pill pill-green"><i></i><span data-i18n="status_on">Активна</span></div>
+          </div>
+
+          <!-- mini stats -->
+          <div class="stat-row cascade" style="--d:60ms">
+            <div class="stat-mini">
+              <div class="stat-mini-val">2</div>
+              <div class="stat-mini-lbl" data-i18n="stat_stations">Станции</div>
+            </div>
+            <div class="stat-mini">
+              <div class="stat-mini-val" id="alert-count-badge">4</div>
+              <div class="stat-mini-lbl" data-i18n="stat_alerts">Алерты</div>
+            </div>
+            <div class="stat-mini">
+              <div class="stat-mini-val">14</div>
+              <div class="stat-mini-lbl" data-i18n="stat_checked">Проверено</div>
+            </div>
+          </div>
+
+          <!-- task checklist -->
+          <div class="cascade" style="--d:120ms">
+            <div class="sec-label" data-i18n="tasks_label">Задачи смены</div>
+            <div class="task-list" role="list">
+
+              <div class="task-item done" role="listitem" data-task="0" tabindex="0" aria-checked="true" role="checkbox">
+                <div class="task-cb" aria-hidden="true">
+                  <svg class="task-cb-check" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <span class="task-text" data-i18n="task_1">Инвентаризация Mlimani</span>
+                <span class="pill pill-green task-badge"><span data-i18n="done">Готово</span></span>
+              </div>
+
+              <div class="task-item" role="listitem" data-task="1" tabindex="0" aria-checked="false" role="checkbox">
+                <div class="task-cb" aria-hidden="true">
+                  <svg class="task-cb-check" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <span class="task-text" data-i18n="task_2">Заменить PB-2410-00031</span>
+                <span class="pill pill-amber task-badge"><span data-i18n="in_progress">В работе</span></span>
+              </div>
+
+              <div class="task-item" role="listitem" data-task="2" tabindex="0" aria-checked="false" role="checkbox">
+                <div class="task-cb" aria-hidden="true">
+                  <svg class="task-cb-check" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <span class="task-text" data-i18n="task_3">Проверить слот 11 Ubungo</span>
+              </div>
+
+              <div class="task-item" role="listitem" data-task="3" tabindex="0" aria-checked="false" role="checkbox">
+                <div class="task-cb" aria-hidden="true">
+                  <svg class="task-cb-check" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <span class="task-text" data-i18n="task_4">Фото витрины Kariakoo</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════
+           SCREEN 2: STATION
+      ═══════════════════════════════ -->
+      <section class="screen" id="screen-station" aria-label="Станция">
+        <div class="screen-scroll">
+
+          <div class="cascade" style="--d:0ms">
+            <div class="screen-title-bar">
+              <div>
+                <div class="screen-title">Mlimani City Mall</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:3px" data-i18n="slots_count">16 слотов</div>
+              </div>
+              <div class="pill pill-blue"><i></i><span data-i18n="active">Активна</span></div>
+            </div>
+
+            <!-- progress -->
+            <div class="progress-wrap">
+              <div class="progress-meta">
+                <span class="progress-label" data-i18n="inv_progress">Инвентаризация</span>
+                <span class="progress-count"><span id="inv-done">9</span> / 16</span>
+              </div>
+              <div class="progress-track" role="progressbar" aria-valuenow="9" aria-valuemin="0" aria-valuemax="16">
+                <div class="progress-fill" id="inv-bar" style="width:56.25%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- slot grid -->
+          <div class="slot-grid cascade" style="--d:60ms" id="slot-grid" role="grid" aria-label="Слоты станции">
+            <!-- generated by JS -->
+          </div>
+
+          <!-- slot detail panel -->
+          <div class="slot-panel" id="slot-panel" role="region" aria-label="Детали слота">
+            <div class="sp-row">
+              <div>
+                <div style="font-size:11px;color:var(--text-faint);margin-bottom:2px" data-i18n="serial">Серийник</div>
+                <div class="sp-serial" id="sp-serial">PB-2503-00388</div>
+              </div>
+              <div class="pill" id="sp-status-pill">—</div>
+            </div>
+            <div class="sp-row">
+              <span style="font-size:12px;color:var(--text-muted)" data-i18n="charge">Заряд</span>
+              <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--green)" id="sp-charge">87%</span>
+            </div>
+            <div class="sp-health-bar">
+              <div class="sp-health-fill" id="sp-health-fill" style="width:87%"></div>
+            </div>
+            <div class="sp-row" style="margin-bottom:14px">
+              <span style="font-size:12px;color:var(--text-muted)" data-i18n="health">Состояние</span>
+              <span style="font-family:var(--mono);font-size:13px;font-weight:700" id="sp-health">93%</span>
+            </div>
+            <div class="sp-actions">
+              <button class="btn-grad" id="btn-confirm-slot" data-i18n="confirm">Подтвердить ✓</button>
+              <button class="btn-danger" id="btn-defect" data-i18n="defect">Дефект</button>
+            </div>
+          </div>
+
+          <!-- defect sheet -->
+          <div class="defect-sheet" id="defect-sheet">
+            <h4 data-i18n="defect_type">Тип дефекта</h4>
+            <div class="defect-types">
+              <button class="defect-type" data-defect="bulge" data-i18n="defect_bulge">Вздутие</button>
+              <button class="defect-type" data-defect="crack" data-i18n="defect_crack">Скол</button>
+              <button class="defect-type" data-defect="nocharge" data-i18n="defect_nocharge">Не заряжается</button>
+            </div>
+
+            <div class="photo-preview" id="photo-preview" aria-label="Фото прикреплено">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span data-i18n="photo_attached">Фото прикреплено</span>
+            </div>
+
+            <div class="photo-attach" id="btn-photo" role="button" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span style="font-size:13px;color:var(--text-muted);font-weight:600" data-i18n="attach_photo">Прикрепить фото</span>
+            </div>
+
+            <button class="btn-danger" id="btn-send-service" style="width:100%" data-i18n="send_service">Отправить в сервис</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════
+           SCREEN 3: ALERTS
+      ═══════════════════════════════ -->
+      <section class="screen" id="screen-alerts" aria-label="Алерты">
+        <div class="screen-scroll">
+
+          <div class="cascade" style="--d:0ms">
+            <div class="screen-title-bar">
+              <div class="screen-title" data-i18n="alerts_title">Алерты</div>
+              <div class="pill pill-red" id="alerts-count-pill"><i></i><span id="alerts-open-count">4</span> <span data-i18n="open">открыт.</span></div>
+            </div>
+          </div>
+
+          <div class="alert-list cascade" style="--d:60ms" id="alert-list" role="list">
+            <!-- generated by JS -->
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════
+           SCREEN 4: PROFILE
+      ═══════════════════════════════ -->
+      <section class="screen" id="screen-profile" aria-label="Профиль">
+        <div class="screen-scroll">
+
+          <div class="cascade" style="--d:0ms">
+            <div class="profile-header">
+              <div class="profile-avatar" aria-hidden="true">AM</div>
+              <div>
+                <div class="profile-name">Amani Mwanga</div>
+                <div class="profile-role" data-i18n="role">Оператор · Dar es Salaam</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- shift stats -->
+          <div class="cascade" style="--d:60ms">
+            <div class="sec-label" data-i18n="shift_stats">Статистика смены</div>
+            <div class="stats-grid">
+              <div class="stat-block">
+                <div class="stat-block-val" id="prof-hours">3.2</div>
+                <div class="stat-block-lbl" data-i18n="hours">Часы</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-block-val" id="prof-checked">14</div>
+                <div class="stat-block-lbl" data-i18n="checked">Проверено</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-block-val" id="prof-defects">2</div>
+                <div class="stat-block-lbl" data-i18n="defects">Дефекты</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- language switcher -->
+          <div class="cascade" style="--d:120ms">
+            <div class="sec-label" data-i18n="language">Язык</div>
+            <div class="lang-row" role="group" aria-label="Language selector">
+              <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+              <button class="lang-btn" data-lang="ru" aria-pressed="false">RU</button>
+              <button class="lang-btn" data-lang="sw" aria-pressed="false">SW</button>
+            </div>
+          </div>
+
+          <!-- end shift -->
+          <div class="cascade" style="--d:180ms">
+            <button class="btn-danger" id="btn-end-shift" style="width:100%" data-i18n="end_shift">Завершить смену</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Tab Bar -->
+      <nav class="tab-bar" aria-label="Навигация">
+        <button class="tab-item active" data-tab="shift" aria-label="Смена">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <div class="ti-dot"></div>
+          </div>
+          <span class="ti-label" data-i18n="tab_shift">Смена</span>
+        </button>
+        <button class="tab-item" data-tab="station" aria-label="Станция">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="18" rx="3"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="16" y2="21"/>
+            </svg>
+            <div class="ti-dot"></div>
+          </div>
+          <span class="ti-label" data-i18n="tab_station">Станция</span>
+        </button>
+        <button class="tab-item" data-tab="alerts" aria-label="Алерты" id="tab-alerts-btn">
+          <div class="ti-icon" id="tab-alerts-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <div class="ti-dot"></div>
+            <span class="ti-badge" id="alert-tab-badge">4</span>
+          </div>
+          <span class="ti-label" data-i18n="tab_alerts">Алерты</span>
+        </button>
+        <button class="tab-item" data-tab="profile" aria-label="Профиль">
+          <div class="ti-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <div class="ti-dot"></div>
+          </div>
+          <span class="ti-label" data-i18n="tab_profile">Профиль</span>
+        </button>
+      </nav>
+
+    </div><!-- /screen-wrap -->
+  </div><!-- /device -->
+</div><!-- /canvas -->
+
+<script>
+/* ══════════════════════════════════════════
+   i18n
+══════════════════════════════════════════ */
+const I18N = {
+  en: {
+    tab_shift:       'Shift',
+    tab_station:     'Station',
+    tab_alerts:      'Alerts',
+    tab_profile:     'Profile',
+    shift_active:    'on shift ',
+    status_on:       'Active',
+    stat_stations:   'Stations',
+    stat_alerts:     'Alerts',
+    stat_checked:    'Checked',
+    tasks_label:     'Shift tasks',
+    task_1:          'Inventory Mlimani',
+    task_2:          'Replace PB-2410-00031',
+    task_3:          'Check slot 11 Ubungo',
+    task_4:          'Photo display Kariakoo',
+    done:            'Done',
+    in_progress:     'In progress',
+    slots_count:     '16 slots',
+    inv_progress:    'Inventory',
+    serial:          'Serial',
+    charge:          'Charge',
+    health:          'Health',
+    confirm:         'Confirm ✓',
+    defect:          'Defect',
+    defect_type:     'Defect type',
+    defect_bulge:    'Bulge',
+    defect_crack:    'Crack',
+    defect_nocharge: 'No charge',
+    attach_photo:    'Attach photo',
+    photo_attached:  'Photo attached',
+    send_service:    'Send to service',
+    alerts_title:    'Alerts',
+    open:            'open',
+    role:            'Operator · Dar es Salaam',
+    shift_stats:     'Shift statistics',
+    hours:           'Hours',
+    checked:         'Checked',
+    defects:         'Defects',
+    language:        'Language',
+    end_shift:       'End shift',
+    active:          'Active',
+    toast_task_done:   'Task marked as done',
+    toast_task_undone: 'Task unmarked',
+    toast_confirmed:   'Slot confirmed',
+    toast_service:     'Sent to service',
+    toast_closed:      'Alert closed',
+    toast_taken:       'Alert taken',
+    toast_shift_ended: 'Shift ended',
+    toast_photo:       'Photo attached',
+    slot_charged:      'Charged',
+    slot_charging:     'Charging',
+    slot_empty:        'Empty',
+    slot_checked:      'Checked',
+    alert_low_bat_1:   'Charge < 20%',
+    alert_low_bat_2:   'Charge < 20%',
+    alert_blocked:     'Slot blocked',
+    alert_long_rent:   'Rental > 24h',
+    alert_desc_low_bat:'PowerBank needs charging or replacement',
+    alert_desc_blocked:'Slot does not open — manual intervention required',
+    alert_desc_long_rent:'Rental exceeds 24 hours — verify with user',
+    btn_take:          'Take',
+    btn_close:         'Close',
+  },
+  ru: {
+    tab_shift:       'Смена',
+    tab_station:     'Станция',
+    tab_alerts:      'Алерты',
+    tab_profile:     'Профиль',
+    shift_active:    'на смене ',
+    status_on:       'Активна',
+    stat_stations:   'Станции',
+    stat_alerts:     'Алерты',
+    stat_checked:    'Проверено',
+    tasks_label:     'Задачи смены',
+    task_1:          'Инвентаризация Mlimani',
+    task_2:          'Заменить PB-2410-00031',
+    task_3:          'Проверить слот 11 Ubungo',
+    task_4:          'Фото витрины Kariakoo',
+    done:            'Готово',
+    in_progress:     'В работе',
+    slots_count:     '16 слотов',
+    inv_progress:    'Инвентаризация',
+    serial:          'Серийник',
+    charge:          'Заряд',
+    health:          'Состояние',
+    confirm:         'Подтвердить ✓',
+    defect:          'Дефект',
+    defect_type:     'Тип дефекта',
+    defect_bulge:    'Вздутие',
+    defect_crack:    'Скол',
+    defect_nocharge: 'Не заряжается',
+    attach_photo:    'Прикрепить фото',
+    photo_attached:  'Фото прикреплено',
+    send_service:    'Отправить в сервис',
+    alerts_title:    'Алерты',
+    open:            'открыт.',
+    role:            'Оператор · Дар-эс-Салам',
+    shift_stats:     'Статистика смены',
+    hours:           'Часы',
+    checked:         'Проверено',
+    defects:         'Дефекты',
+    language:        'Язык',
+    end_shift:       'Завершить смену',
+    active:          'Активна',
+    toast_task_done:   'Задача выполнена',
+    toast_task_undone: 'Задача снята',
+    toast_confirmed:   'Слот подтверждён',
+    toast_service:     'Отправлено в сервис',
+    toast_closed:      'Алерт закрыт',
+    toast_taken:       'Алерт принят',
+    toast_shift_ended: 'Смена завершена',
+    toast_photo:       'Фото прикреплено',
+    slot_charged:      'Заряжен',
+    slot_charging:     'Заряжается',
+    slot_empty:        'Пуст',
+    slot_checked:      'Проверен',
+    alert_low_bat_1:   'Заряд < 20%',
+    alert_low_bat_2:   'Заряд < 20%',
+    alert_blocked:     'Слот заблокирован',
+    alert_long_rent:   'Аренда > 24ч',
+    alert_desc_low_bat:'Повербанк требует зарядки или замены',
+    alert_desc_blocked:'Слот не открывается — требуется ручное вмешательство',
+    alert_desc_long_rent:'Аренда превышает 24 часа — уточнить у пользователя',
+    btn_take:          'Взять',
+    btn_close:         'Закрыто',
+  },
+  sw: {
+    tab_shift:       'Zamu',
+    tab_station:     'Kituo',
+    tab_alerts:      'Tahadhari',
+    tab_profile:     'Wasifu',
+    shift_active:    'zamu inayoendelea ',
+    status_on:       'Hai',
+    stat_stations:   'Vituo',
+    stat_alerts:     'Tahadhari',
+    stat_checked:    'Hakikiwa',
+    tasks_label:     'Kazi za zamu',
+    task_1:          'Hesabu Mlimani',
+    task_2:          'Badilisha PB-2410-00031',
+    task_3:          'Angalia nafasi 11 Ubungo',
+    task_4:          'Picha ya duka Kariakoo',
+    done:            'Imekamilika',
+    in_progress:     'Inaendelea',
+    slots_count:     'nafasi 16',
+    inv_progress:    'Hesabu',
+    serial:          'Nambari',
+    charge:          'Chaji',
+    health:          'Hali',
+    confirm:         'Thibitisha ✓',
+    defect:          'Hitilafu',
+    defect_type:     'Aina ya hitilafu',
+    defect_bulge:    'Uvimbe',
+    defect_crack:    'Kupasuka',
+    defect_nocharge: 'Haichaji',
+    attach_photo:    'Ambatisha picha',
+    photo_attached:  'Picha imeambatishwa',
+    send_service:    'Tuma kwa huduma',
+    alerts_title:    'Tahadhari',
+    open:            'wazi',
+    role:            'Opereta · Dar es Salaam',
+    shift_stats:     'Takwimu za zamu',
+    hours:           'Masaa',
+    checked:         'Hakikiwa',
+    defects:         'Hitilafu',
+    language:        'Lugha',
+    end_shift:       'Maliza zamu',
+    active:          'Hai',
+    toast_task_done:   'Kazi imekamilika',
+    toast_task_undone: 'Kazi imefutwa',
+    toast_confirmed:   'Nafasi imethibitishwa',
+    toast_service:     'Imetumwa kwa huduma',
+    toast_closed:      'Tahadhari imefungwa',
+    toast_taken:       'Tahadhari imechukuliwa',
+    toast_shift_ended: 'Zamu imekwisha',
+    toast_photo:       'Picha imeambatishwa',
+    slot_charged:      'Imechajwa',
+    slot_charging:     'Inachaja',
+    slot_empty:        'Tupu',
+    slot_checked:      'Hakikiwa',
+    alert_low_bat_1:   'Chaji < 20%',
+    alert_low_bat_2:   'Chaji < 20%',
+    alert_blocked:     'Nafasi imezuiwa',
+    alert_long_rent:   'Kukodisha > 24h',
+    alert_desc_low_bat:'PowerBank inahitaji kuchajwa au kubadilishwa',
+    alert_desc_blocked:'Nafasi haifunguki — inahitaji uingiliaji wa mkono',
+    alert_desc_long_rent:'Kukodisha kumezidi masaa 24 — thibitisha na mtumiaji',
+    btn_take:          'Chukua',
+    btn_close:         'Imefungwa',
+  }
+};
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const STATE = {
+  activeTab: 'shift',
+  lang: 'ru',
+
+  tasks: [
+    { id: 0, done: true },
+    { id: 1, done: false },
+    { id: 2, done: false },
+    { id: 3, done: false },
+  ],
+
+  // 16 slots: type = 'charged'|'charging'|'empty'|'checked'
+  slots: [
+    { id:1,  type:'checked',  serial:'PB-2503-00388', charge:87, health:93 },
+    { id:2,  type:'charged',  serial:'PB-2503-00412', charge:94, health:96 },
+    { id:3,  type:'charging', serial:'PB-2504-00201', charge:42, health:88 },
+    { id:4,  type:'checked',  serial:'PB-2503-00399', charge:78, health:91 },
+    { id:5,  type:'empty',    serial:null,            charge:0,  health:0  },
+    { id:6,  type:'charged',  serial:'PB-2504-00055', charge:99, health:97 },
+    { id:7,  type:'checking', serial:'PB-2410-00031', charge:18, health:72 },
+    { id:8,  type:'charging', serial:'PB-2505-00103', charge:31, health:85 },
+    { id:9,  type:'checked',  serial:'PB-2504-00067', charge:82, health:90 },
+    { id:10, type:'charged',  serial:'PB-2504-00088', charge:91, health:95 },
+    { id:11, type:'empty',    serial:null,            charge:0,  health:0  },
+    { id:12, type:'charged',  serial:'PB-2505-00021', charge:88, health:92 },
+    { id:13, type:'checking', serial:'PB-2503-00445', charge:65, health:87 },
+    { id:14, type:'charged',  serial:'PB-2504-00119', charge:96, health:98 },
+    { id:15, type:'empty',    serial:null,            charge:0,  health:0  },
+    { id:16, type:'charging', serial:'PB-2505-00077', charge:58, health:89 },
+  ],
+
+  selectedSlot: null,
+  defectSheetOpen: false,
+  selectedDefect: null,
+  photoAttached: false,
+
+  alerts: [
+    { id:'a1', severity:'critical', titleKey:'alert_low_bat_1', descKey:'alert_desc_low_bat',
+      serial:'PB-2410-00031', station:'Mlimani City Mall', time:'08:12', open:true },
+    { id:'a2', severity:'critical', titleKey:'alert_low_bat_2', descKey:'alert_desc_low_bat',
+      serial:'PB-2503-00445', station:'Ubungo Terminal', time:'08:47', open:true },
+    { id:'a3', severity:'warning',  titleKey:'alert_blocked',   descKey:'alert_desc_blocked',
+      serial:null, station:'Kariakoo Market · slot 7', time:'09:03', open:true },
+    { id:'a4', severity:'warning',  titleKey:'alert_long_rent', descKey:'alert_desc_long_rent',
+      serial:'PB-2504-00055', station:'Mlimani City Mall', time:'06:30', open:true },
+  ],
+};
+
+/* ══════════════════════════════════════════
+   LANGUAGE
+══════════════════════════════════════════ */
+function t(key) {
+  return (I18N[STATE.lang] || I18N.ru)[key] || key;
+}
+
+function detectLang() {
+  const stored = localStorage.getItem('volt_lang');
+  if (stored && I18N[stored]) return stored;
+  const nav = (navigator.language || '').toLowerCase().split('-')[0];
+  if (nav === 'sw') return 'sw';
+  if (nav === 'ru') return 'ru';
+  return 'en';
+}
+
+function applyLang(lang) {
+  STATE.lang = lang;
+  localStorage.setItem('volt_lang', lang);
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = t(key);
+  });
+
+  // Re-render dynamic content
+  renderAlerts();
+  renderSlotGrid();
+
+  // Update lang buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const active = btn.dataset.lang === lang;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active);
+  });
+
+  // Update sidebar screen names
+  const keys = ['tab_shift','tab_station','tab_alerts','tab_profile'];
+  document.querySelectorAll('.cl-screen-name').forEach((el, i) => {
+    if (keys[i]) el.textContent = t(keys[i]);
+  });
+
+  // Re-render tasks (badges)
+  renderTasks();
+}
+
+/* ══════════════════════════════════════════
+   STATUS BAR CLOCK
+══════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('status-time').textContent = h + ':' + m;
+}
+setInterval(updateClock, 10000);
+updateClock();
+
+/* ══════════════════════════════════════════
+   TAB NAVIGATION
+══════════════════════════════════════════ */
+function switchTab(tab) {
+  if (tab === STATE.activeTab) return;
+
+  const prevScreen = document.getElementById('screen-' + STATE.activeTab);
+  const nextScreen = document.getElementById('screen-' + tab);
+
+  prevScreen.classList.remove('active');
+  prevScreen.classList.add('exit');
+  setTimeout(() => prevScreen.classList.remove('exit'), 300);
+
+  nextScreen.classList.add('active');
+
+  STATE.activeTab = tab;
+
+  // Tab bar
+  document.querySelectorAll('.tab-item').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  // Sidebar
+  document.querySelectorAll('.cl-screen-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.tab === tab);
+  });
+
+  // Trigger cascade animations
+  triggerCascade(nextScreen);
+
+  // Init progress bar on station tab
+  if (tab === 'station') {
+    setTimeout(() => initProgressBar(), 80);
+  }
+}
+
+function triggerCascade(screenEl) {
+  const items = screenEl.querySelectorAll('.cascade');
+  items.forEach((el, i) => {
+    el.classList.remove('visible');
+    const delay = parseInt(el.style.getPropertyValue('--d') || '0', 10) + i * 30;
+    setTimeout(() => el.classList.add('visible'), delay + 60);
+  });
+}
+
+/* ══════════════════════════════════════════
+   TASKS
+══════════════════════════════════════════ */
+function renderTasks() {
+  const items = document.querySelectorAll('.task-item');
+  items.forEach(item => {
+    const id = parseInt(item.dataset.task, 10);
+    const task = STATE.tasks[id];
+    if (!task) return;
+    item.classList.toggle('done', task.done);
+    item.setAttribute('aria-checked', task.done);
+    const badge = item.querySelector('.task-badge');
+    if (badge) {
+      if (id === 0 && task.done) {
+        badge.className = 'pill pill-green task-badge';
+        badge.innerHTML = '<span>' + t('done') + '</span>';
+      } else if (id === 1 && !task.done) {
+        badge.className = 'pill pill-amber task-badge';
+        badge.innerHTML = '<span>' + t('in_progress') + '</span>';
+      } else if (task.done) {
+        badge.className = 'pill pill-green task-badge';
+        badge.innerHTML = '<span>' + t('done') + '</span>';
+      } else {
+        badge.className = 'task-badge';
+        badge.innerHTML = '';
+      }
+    }
+  });
+}
+
+function toggleTask(id) {
+  STATE.tasks[id].done = !STATE.tasks[id].done;
+  renderTasks();
+  showToast(
+    STATE.tasks[id].done ? t('toast_task_done') : t('toast_task_undone'),
+    STATE.tasks[id].done ? 'green' : 'amber'
+  );
+}
+
+document.querySelectorAll('.task-item').forEach(item => {
+  function handleToggle() { toggleTask(parseInt(item.dataset.task, 10)); }
+  item.addEventListener('click', handleToggle);
+  item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleToggle(); } });
+});
+
+/* ══════════════════════════════════════════
+   SLOT GRID
+══════════════════════════════════════════ */
+function slotTypeClass(type) {
+  if (type === 'charged')  return 'slot-charged';
+  if (type === 'charging') return 'slot-charging';
+  if (type === 'checked')  return 'slot-checked';
+  if (type === 'checking') return 'slot-charged'; // in progress → show as charged
+  return 'slot-empty';
+}
+
+function slotLabel(slot) {
+  if (slot.type === 'empty') return '';
+  if (slot.type === 'charging') return slot.charge + '%';
+  if (slot.type === 'charged' || slot.type === 'checking') return slot.charge + '%';
+  if (slot.type === 'checked') return '✓';
+  return '';
+}
+
+function renderSlotGrid() {
+  const grid = document.getElementById('slot-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  STATE.slots.forEach(slot => {
+    const btn = document.createElement('button');
+    btn.className = 'slot ' + slotTypeClass(slot.type);
+    btn.setAttribute('aria-label', 'Слот ' + slot.id + (slot.serial ? ' · ' + slot.serial : ''));
+    if (STATE.selectedSlot === slot.id) btn.classList.add('selected');
+
+    // charge fill bar for charged/checking
+    if ((slot.type === 'charged' || slot.type === 'checking') && slot.charge > 0) {
+      const fill = document.createElement('div');
+      fill.className = 'slot-charged-fill';
+      fill.style.height = slot.charge + '%';
+      btn.appendChild(fill);
+    }
+
+    // slot number
+    const num = document.createElement('span');
+    num.style.cssText = 'position:relative;z-index:1;font-size:10px;font-weight:700;';
+    num.textContent = slot.id;
+    btn.appendChild(num);
+
+    // charge label
+    if (slotLabel(slot)) {
+      const lbl = document.createElement('span');
+      lbl.style.cssText = 'position:relative;z-index:1;font-size:9px;font-weight:600;opacity:.8;';
+      lbl.textContent = slotLabel(slot);
+      btn.appendChild(lbl);
+    }
+
+    btn.addEventListener('click', () => selectSlot(slot.id));
+    grid.appendChild(btn);
+  });
+}
+
+function selectSlot(id) {
+  const slot = STATE.slots.find(s => s.id === id);
+  if (!slot) return;
+
+  STATE.selectedSlot = id;
+  STATE.defectSheetOpen = false;
+  STATE.selectedDefect = null;
+  STATE.photoAttached = false;
+
+  renderSlotGrid();
+
+  const panel = document.getElementById('slot-panel');
+  panel.classList.add('open');
+
+  const defectSheet = document.getElementById('defect-sheet');
+  defectSheet.classList.remove('open');
+
+  document.getElementById('photo-preview').classList.remove('visible');
+  document.getElementById('btn-photo').style.display = '';
+
+  document.querySelectorAll('.defect-type').forEach(b => b.classList.remove('selected'));
+
+  document.getElementById('sp-serial').textContent = slot.serial || '—';
+
+  const chEl = document.getElementById('sp-charge');
+  chEl.textContent = slot.charge + '%';
+  chEl.style.color = slot.charge < 20 ? 'var(--red)' : slot.charge < 50 ? 'var(--amber)' : 'var(--green)';
+
+  document.getElementById('sp-health').textContent = slot.health + '%';
+  document.getElementById('sp-health-fill').style.width = slot.health + '%';
+  document.getElementById('sp-health-fill').style.background =
+    slot.health < 70 ? 'var(--red)' : slot.health < 85 ? 'var(--amber)' : 'var(--green)';
+
+  const pill = document.getElementById('sp-status-pill');
+  if (slot.type === 'charged' || slot.type === 'checking') {
+    pill.className = 'pill pill-green';
+    pill.innerHTML = '<i></i><span>' + t('slot_charged') + '</span>';
+  } else if (slot.type === 'charging') {
+    pill.className = 'pill pill-cyan';
+    pill.innerHTML = '<i></i><span>' + t('slot_charging') + '</span>';
+  } else if (slot.type === 'checked') {
+    pill.className = 'pill pill-blue';
+    pill.innerHTML = '<i></i><span>' + t('slot_checked') + '</span>';
+  } else {
+    pill.className = 'pill';
+    pill.innerHTML = '<span>' + t('slot_empty') + '</span>';
+  }
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* Confirm slot */
+document.getElementById('btn-confirm-slot').addEventListener('click', () => {
+  if (STATE.selectedSlot === null) return;
+  const slot = STATE.slots.find(s => s.id === STATE.selectedSlot);
+  if (!slot) return;
+
+  slot.type = 'checked';
+  renderSlotGrid();
+  updateInventoryProgress();
+  document.getElementById('slot-panel').classList.remove('open');
+  document.getElementById('defect-sheet').classList.remove('open');
+  STATE.selectedSlot = null;
+  showToast(t('toast_confirmed'), 'green');
+});
+
+/* Defect button */
+document.getElementById('btn-defect').addEventListener('click', () => {
+  const sheet = document.getElementById('defect-sheet');
+  STATE.defectSheetOpen = !STATE.defectSheetOpen;
+  sheet.classList.toggle('open', STATE.defectSheetOpen);
+  if (STATE.defectSheetOpen) {
+    sheet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+});
+
+/* Defect types */
+document.querySelectorAll('.defect-type').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.defect-type').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    STATE.selectedDefect = btn.dataset.defect;
+  });
+});
+
+/* Attach photo */
+const btnPhoto = document.getElementById('btn-photo');
+function handlePhoto() {
+  if (STATE.photoAttached) return;
+  STATE.photoAttached = true;
+  document.getElementById('photo-preview').classList.add('visible');
+  btnPhoto.style.display = 'none';
+  showToast(t('toast_photo'), 'green');
+}
+btnPhoto.addEventListener('click', handlePhoto);
+btnPhoto.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePhoto(); } });
+
+/* Send to service */
+document.getElementById('btn-send-service').addEventListener('click', () => {
+  if (STATE.selectedSlot === null) return;
+  const slot = STATE.slots.find(s => s.id === STATE.selectedSlot);
+  if (slot) { slot.type = 'checked'; }
+  renderSlotGrid();
+  updateInventoryProgress();
+  document.getElementById('slot-panel').classList.remove('open');
+  document.getElementById('defect-sheet').classList.remove('open');
+  STATE.defectSheetOpen = false;
+  STATE.selectedSlot = null;
+  showToast(t('toast_service'), 'amber');
+});
+
+/* Inventory progress */
+function updateInventoryProgress() {
+  const checked = STATE.slots.filter(s => s.type === 'checked').length;
+  document.getElementById('inv-done').textContent = checked;
+  const pct = (checked / 16) * 100;
+  const bar = document.getElementById('inv-bar');
+  bar.style.width = pct + '%';
+  const pb = document.querySelector('[role=progressbar]');
+  if (pb) pb.setAttribute('aria-valuenow', checked);
+}
+
+function initProgressBar() {
+  const bar = document.getElementById('inv-bar');
+  bar.style.width = '0';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const checked = STATE.slots.filter(s => s.type === 'checked').length;
+      bar.style.width = ((checked / 16) * 100) + '%';
+    });
+  });
+}
+
+/* ══════════════════════════════════════════
+   ALERTS
+══════════════════════════════════════════ */
+function renderAlerts() {
+  const list = document.getElementById('alert-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  let openCount = 0;
+
+  STATE.alerts.forEach(alert => {
+    if (!alert.open) openCount; // count below
+    const card = document.createElement('div');
+    card.className = 'alert-card' + (alert.open ? '' : ' dismissed');
+    card.setAttribute('role', 'listitem');
+    card.dataset.alertId = alert.id;
+
+    const stripe = document.createElement('div');
+    stripe.className = 'alert-stripe ' + alert.severity;
+
+    const body = document.createElement('div');
+    body.className = 'alert-body';
+
+    const head = document.createElement('div');
+    head.className = 'alert-head';
+    head.innerHTML =
+      '<span class="alert-title">' + t(alert.titleKey) + '</span>' +
+      '<span class="alert-time">' + alert.time + '</span>';
+
+    const desc = document.createElement('div');
+    desc.className = 'alert-desc';
+    desc.textContent = t(alert.descKey);
+
+    const meta = document.createElement('div');
+    meta.className = 'alert-meta';
+    meta.textContent = (alert.serial ? alert.serial + ' · ' : '') + alert.station;
+
+    const actions = document.createElement('div');
+    actions.className = 'alert-actions';
+
+    const btnTake = document.createElement('button');
+    btnTake.className = 'btn-grad';
+    btnTake.style.fontSize = '12px';
+    btnTake.style.padding = '10px 14px';
+    btnTake.style.minHeight = '44px';
+    btnTake.textContent = t('btn_take');
+    btnTake.disabled = !alert.open;
+
+    const btnClose = document.createElement('button');
+    btnClose.className = 'btn-ghost';
+    btnClose.style.fontSize = '12px';
+    btnClose.style.padding = '10px 14px';
+    btnClose.style.minHeight = '44px';
+    btnClose.textContent = t('btn_close');
+    btnClose.disabled = !alert.open;
+
+    btnTake.addEventListener('click', () => {
+      showToast(t('toast_taken'), 'green');
+    });
+
+    btnClose.addEventListener('click', () => {
+      alert.open = false;
+      renderAlerts();
+      updateAlertBadge();
+      showToast(t('toast_closed'), 'amber');
+    });
+
+    actions.appendChild(btnTake);
+    actions.appendChild(btnClose);
+
+    body.appendChild(head);
+    body.appendChild(desc);
+    body.appendChild(meta);
+    body.appendChild(actions);
+
+    card.appendChild(stripe);
+    card.appendChild(body);
+
+    // pulse for critical open
+    if (alert.severity === 'critical' && alert.open) {
+      const pulse = document.createElement('div');
+      pulse.className = 'alert-pulse';
+      pulse.setAttribute('aria-hidden', 'true');
+      card.appendChild(pulse);
+    }
+
+    list.appendChild(card);
+  });
+
+  openCount = STATE.alerts.filter(a => a.open).length;
+  const countEl = document.getElementById('alerts-open-count');
+  if (countEl) countEl.textContent = openCount;
+  const pillEl = document.getElementById('alerts-count-pill');
+  if (pillEl) {
+    pillEl.className = openCount > 0 ? 'pill pill-red' : 'pill pill-green';
+  }
+}
+
+function updateAlertBadge() {
+  const open = STATE.alerts.filter(a => a.open).length;
+  const badge = document.getElementById('alert-tab-badge');
+  if (badge) {
+    badge.textContent = open;
+    badge.style.display = open > 0 ? '' : 'none';
+  }
+  const mini = document.getElementById('alert-count-badge');
+  if (mini) mini.textContent = open;
+  const countEl = document.getElementById('alerts-open-count');
+  if (countEl) countEl.textContent = open;
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+function showToast(msg, type = 'green') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+
+  const icons = {
+    green: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    amber: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zm0 3v2.5M6 8.5v.5"/></svg>',
+    red:   '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  };
+
+  toast.innerHTML =
+    '<div class="toast-icon ' + type + '">' + (icons[type] || icons.green) + '</div>' +
+    '<span>' + msg + '</span>';
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('out');
+    setTimeout(() => toast.remove(), 240);
+  }, 2600);
+}
+
+/* ══════════════════════════════════════════
+   LANGUAGE SWITCHER
+══════════════════════════════════════════ */
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+/* ══════════════════════════════════════════
+   END SHIFT
+══════════════════════════════════════════ */
+document.getElementById('btn-end-shift').addEventListener('click', () => {
+  showToast(t('toast_shift_ended'), 'amber');
+});
+
+/* ══════════════════════════════════════════
+   TAB BAR + SIDEBAR EVENTS
+══════════════════════════════════════════ */
+document.querySelectorAll('.tab-item').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+document.querySelectorAll('.cl-screen-item').forEach(item => {
+  function go() { switchTab(item.dataset.tab); }
+  item.addEventListener('click', go);
+  item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+});
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+function init() {
+  const lang = detectLang();
+  applyLang(lang);
+
+  renderSlotGrid();
+  renderAlerts();
+  updateAlertBadge();
+
+  // Trigger cascade for initial screen
+  const initScreen = document.getElementById('screen-shift');
+  setTimeout(() => triggerCascade(initScreen), 120);
+  setTimeout(() => initProgressBar(), 200);
+}
+
+init();
+</script>
+</body>
+</html>

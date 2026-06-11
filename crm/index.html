@@ -52,6 +52,10 @@
           </button>
           <div class="lang-menu" id="langPicker" hidden role="listbox"></div>
         </div>
+        <button class="cmdk-btn" id="cmdkBtn" title="Quick search">
+          <svg class="ico-14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+          <kbd>⌘K</kbd>
+        </button>
         <button class="live-btn" id="liveBtn" title="Simulate live station events">
           <svg class="ico-14" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg>
           <span>Live demo</span>
@@ -71,6 +75,14 @@
   </div>
 </div>
 
+<!-- cmdk -->
+<div class="cmdk-root" id="cmdkRoot" hidden>
+  <div class="cmdk-back" data-cmdk-close></div>
+  <div class="cmdk" role="dialog" aria-modal="true" aria-label="Quick search">
+    <input id="cmdkInput" autocomplete="off" spellcheck="false">
+    <div class="cmdk-list" id="cmdkList"></div>
+  </div>
+</div>
 <!-- modal root -->
 <div class="modal-root" id="modalRoot" hidden></div>
 <!-- drawer root -->
