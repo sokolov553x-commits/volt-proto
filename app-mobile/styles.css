@@ -2447,3 +2447,9 @@ button:focus:not(:focus-visible) { outline: none; }
 .tab-item.active span { color: #7CA3FF; }
 .tab-item.active .tab-dot { background: linear-gradient(115deg,#5B8CFF,#A06BFF); }
 .station-name, .sh-title, .screen-title, .hs-val, .ps-val { font-family: var(--font-main); font-weight: 800; letter-spacing: -.01em; }
+
+/* таймер аренды — градиентные цифры */
+#rentalTimer { background: linear-gradient(115deg,#7CA3FF,#B07CFF,#3FD9FF); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
+#rentalCost { color: #7CA3FF !important; }
+/* и текущая карточка в истории */
+#crcTimer { background: linear-gradient(115deg,#7CA3FF,#B07CFF); -webkit-background-clip: text; background-clip: text; color: transparent !important; }

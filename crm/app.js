@@ -1535,6 +1535,15 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") { closeDrawer(); closeModal(); }
   });
+  // блик за курсором на карточках/панелях (делегировано)
+  document.addEventListener("mousemove", (e) => {
+    const t = e.target.closest(".card, .kpi-row");
+    if (!t) return;
+    const r = t.getBoundingClientRect();
+    t.style.setProperty("--mx", (e.clientX - r.left) + "px");
+    t.style.setProperty("--my", (e.clientY - r.top) + "px");
+  }, { passive: true });
+
   $("#liveBtn").addEventListener("click", toggleLive);
   $("#bellBtn").addEventListener("click", () => {
     if (role().nav.includes("alerts")) { state.view = "alerts"; state.stationId = null; render(); }

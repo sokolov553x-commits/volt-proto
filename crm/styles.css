@@ -664,3 +664,13 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tbl thead th { background: rgba(255,255,255,.04); }
 body { background: radial-gradient(900px 480px at 80% -10%, rgba(160,107,255,.12), transparent 60%),
        radial-gradient(800px 420px at -10% 10%, rgba(91,140,255,.12), transparent 60%), var(--bg); }
+
+/* ── glare: блик за курсором (как на лендинге) ── */
+.card, .kpi-row { --mx: 50%; --my: 50%; position: relative; }
+.card::after, .kpi-row::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(380px circle at var(--mx) var(--my), rgba(122,140,255,.10), transparent 55%); }
+.card:hover::after, .kpi-row:hover::after { opacity: 1; }
+/* hero-KPI — градиентная цифра */
+.kpi.hero .kpi-value:not(.long) { background: linear-gradient(115deg,#7CA3FF,#B07CFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* live-кнопка в активном режиме — градиентная рамка */
+.live-btn.on { background: linear-gradient(rgba(7,8,14,.9),rgba(7,8,14,.9)) padding-box, linear-gradient(115deg,#5B8CFF,#A06BFF) border-box; border: 1px solid transparent; color: #9DB7FF; }

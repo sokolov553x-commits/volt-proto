@@ -295,8 +295,8 @@ const HIST_ROUTES = {
   ru: [['Mlimani City Mall','Kariakoo Market'],['Kariakoo Market','Kariakoo Market'],['Msasani Mall','Mlimani City Mall'],['Аэропорт JNIA','Аэропорт JNIA'],['Kariakoo Market','Kariakoo Market']],
   sw: [['Mlimani City Mall','Soko la Kariakoo'],['Soko la Kariakoo','Soko la Kariakoo'],['Msasani Mall','Mlimani City Mall'],['Uwanja wa JNIA','Uwanja wa JNIA'],['Soko la Kariakoo','Soko la Kariakoo']],
 };
-const HIST_AMOUNTS  = [2200, 1500, 7000, 2700, 1500];
-const HIST_TOTAL    = HIST_AMOUNTS.reduce((a,b)=>a+b,0); // 14900
+const HIST_AMOUNTS  = [3100, 1500, 7000, 2300, 1500]; // по тарифу: 1500 первый час + 800/час
+const HIST_TOTAL    = HIST_AMOUNTS.reduce((a,b)=>a+b,0); // 15400
 
 const SLOTS = [
   { id:0,  type:'charged',  pct:100, serial:'VT-2603-00408', hours:14 },
