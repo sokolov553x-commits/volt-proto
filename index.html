@@ -212,6 +212,15 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 /* ─── footer ─── */
 .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:70px 0 0;padding:26px 4px 34px;border-top:1px solid var(--stroke);font-size:12.5px;color:var(--dim)}
 
+#fxc{position:absolute;inset:0;width:100%;height:100%}
+/* скролл-заряд */
+.charge-line{position:fixed;top:0;left:0;height:2.5px;width:0;z-index:200;background:var(--grad);box-shadow:0 0 12px rgba(122,124,255,.8)}
+/* блик за курсором на плитках */
+.tile{--mx:50%;--my:50%}
+.tile::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;opacity:0;transition:opacity .3s;
+  background:radial-gradient(420px circle at var(--mx) var(--my),rgba(122,140,255,.16),transparent 55%)}
+.tile:hover::after{opacity:1}
+
 /* ─── i18n swap ─── */
 .zone{transition:opacity .14s ease,transform .14s ease}
 .zone.swap{opacity:0;transform:translateY(5px)}
@@ -239,7 +248,7 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 </style>
 </head>
 <body>
-<div class="fx" aria-hidden="true"><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div><div class="gridfx"></div></div>
+<div class="fx" aria-hidden="true"><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div><div class="gridfx"></div><canvas id="fxc"></canvas></div>
 
 <div class="wrap">
 
@@ -502,6 +511,63 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
       phone.style.transform='rotateY('+(-16+x*14)+'deg) rotateX('+(6-y*10)+'deg)';
     });
     stage.addEventListener('mouseleave',function(){phone.style.transform=''});
+  }
+
+  /* ── скролл-заряд ── */
+  var cl=document.createElement('div');cl.className='charge-line';document.body.appendChild(cl);
+  addEventListener('scroll',function(){
+    var h=document.documentElement;
+    cl.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  },{passive:true});
+
+  /* ── блик за курсором на плитках ── */
+  document.querySelectorAll('.tile').forEach(function(t){
+    t.addEventListener('mousemove',function(e){
+      var r=t.getBoundingClientRect();
+      t.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      t.style.setProperty('--my',(e.clientY-r.top)+'px');
+    });
+  });
+
+  /* ── поле энергии: частицы-созвездие за курсором ── */
+  if(!reduce){
+    var cv=document.getElementById('fxc'),cx=cv.getContext('2d'),W,H,DPR=Math.min(devicePixelRatio||1,2);
+    var mouse={x:-9e3,y:-9e3};
+    function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0)}
+    size();addEventListener('resize',size);
+    addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY},{passive:true});
+    var N=Math.min(76,Math.round(innerWidth/19)),P=[];
+    for(var i=0;i<N;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.6+.6,
+      hue:[91,160,63][i%3]});
+    function col(p,a){return p.hue===91?'rgba(91,140,255,'+a+')':p.hue===160?'rgba(160,107,255,'+a+')':'rgba(63,217,255,'+a+')'}
+    (function loop(){
+      cx.clearRect(0,0,W,H);
+      for(var i=0;i<N;i++){
+        var p=P[i];
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<-20)p.x=W+20;if(p.x>W+20)p.x=-20;
+        if(p.y<-20)p.y=H+20;if(p.y>H+20)p.y=-20;
+        /* лёгкое притяжение к курсору */
+        var dx=mouse.x-p.x,dy=mouse.y-p.y,d2=dx*dx+dy*dy;
+        if(d2<32400){p.x+=dx*.0035;p.y+=dy*.0035}
+        cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.283);cx.fillStyle=col(p,.55);cx.fill();
+        /* связи между близкими */
+        for(var j=i+1;j<N;j++){
+          var q=P[j],ax=p.x-q.x,ay=p.y-q.y,dd=ax*ax+ay*ay;
+          if(dd<12100){
+            cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);
+            cx.strokeStyle=col(p,(1-dd/12100)*.16);cx.lineWidth=1;cx.stroke();
+          }
+        }
+        /* нить к курсору */
+        if(d2<26000){
+          cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(mouse.x,mouse.y);
+          cx.strokeStyle=col(p,(1-d2/26000)*.30);cx.lineWidth=1;cx.stroke();
+        }
+      }
+      requestAnimationFrame(loop);
+    })();
   }
 })();
 </script>
