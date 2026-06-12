@@ -299,21 +299,21 @@ const HIST_AMOUNTS  = [3100, 1500, 7000, 2300, 1500]; // по тарифу: 1500
 const HIST_TOTAL    = HIST_AMOUNTS.reduce((a,b)=>a+b,0); // 15400
 
 const SLOTS = [
-  { id:0,  type:'charged',  pct:100, serial:'VT-2603-00408', hours:14 },
-  { id:1,  type:'charged',  pct:95,  serial:'VT-2603-00391', hours:13 },
-  { id:2,  type:'charging', pct:61,  serial:'VT-2603-00402', hours:null },
-  { id:3,  type:'charged',  pct:88,  serial:'VT-2603-00377', hours:12 },
+  { id:0,  type:'charged',  pct:100, serial:'PB-2603-00408', hours:14 },
+  { id:1,  type:'charged',  pct:95,  serial:'PB-2603-00391', hours:13 },
+  { id:2,  type:'charging', pct:61,  serial:'PB-2603-00402', hours:null },
+  { id:3,  type:'charged',  pct:88,  serial:'PB-2603-00377', hours:12 },
   { id:4,  type:'empty',    pct:null,serial:null,             hours:null },
-  { id:5,  type:'charged',  pct:100, serial:'VT-2603-00417', hours:14 },
-  { id:6,  type:'charged',  pct:92,  serial:'VT-2603-00388', hours:12 },
+  { id:5,  type:'charged',  pct:100, serial:'PB-2603-00417', hours:14 },
+  { id:6,  type:'charged',  pct:92,  serial:'PB-2603-00388', hours:12 },
   { id:7,  type:'empty',    pct:null,serial:null,             hours:null },
-  { id:8,  type:'charged',  pct:80,  serial:'VT-2603-00365', hours:11 },
+  { id:8,  type:'charged',  pct:80,  serial:'PB-2603-00365', hours:11 },
   { id:9,  type:'empty',    pct:null,serial:null,             hours:null },
-  { id:10, type:'charged',  pct:100, serial:'VT-2603-00421', hours:14 },
-  { id:11, type:'charging', pct:34,  serial:'VT-2603-00410', hours:null },
-  { id:12, type:'charged',  pct:87,  serial:'VT-2603-00374', hours:12 },
+  { id:10, type:'charged',  pct:100, serial:'PB-2603-00421', hours:14 },
+  { id:11, type:'charging', pct:34,  serial:'PB-2603-00410', hours:null },
+  { id:12, type:'charged',  pct:87,  serial:'PB-2603-00374', hours:12 },
   { id:13, type:'empty',    pct:null,serial:null,             hours:null },
-  { id:14, type:'charged',  pct:93,  serial:'VT-2603-00398', hours:13 },
+  { id:14, type:'charged',  pct:93,  serial:'PB-2603-00398', hours:13 },
   { id:15, type:'empty',    pct:null,serial:null,             hours:null },
 ];
 

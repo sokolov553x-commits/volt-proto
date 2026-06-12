@@ -2478,3 +2478,10 @@ button:focus:not(:focus-visible) { outline: none; }
 .cm-screen-item.active { color: #F2F4FA; background: rgba(91,140,255,.12) !important; border-color: rgba(91,140,255,.35) !important; }
 .canvas-label .brand-name, .canvas-label .app-title { color: #F2F4FA; }
 .canvas-label .app-hint, .canvas-label .tab-hint-item { color: rgba(242,244,250,.4); }
+
+/* кнопки вторичные — стекло, не белые */
+.btn-secondary, .btn-sm, button.btn-secondary {
+  background: rgba(255,255,255,.06) !important; color: #F2F4FA !important;
+  border: 1px solid rgba(255,255,255,.12) !important; border-radius: 12px !important;
+}
+.btn-secondary:active { transform: scale(.97); }

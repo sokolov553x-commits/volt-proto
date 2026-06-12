@@ -241,6 +241,15 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
   background:radial-gradient(420px circle at var(--mx) var(--my),rgba(122,140,255,.16),transparent 55%)}
 .tile:hover::after{opacity:1}
 
+/* ─── boot splash ─── */
+.boot{position:fixed;inset:0;z-index:500;background:#05060B;display:grid;place-items:center;animation:bootOut .45s ease 1.25s forwards}
+.boot-bolt{filter:drop-shadow(0 0 30px rgba(122,124,255,.7));animation:bootPop .5s var(--e-spring)}
+.boot-fill{transform:translateY(24px);animation:bootCharge .9s ease .1s forwards}
+@keyframes bootCharge{to{transform:translateY(0)}}
+@keyframes bootPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes bootOut{to{opacity:0;visibility:hidden}}
+.boot.skip{display:none}
+
 /* ─── i18n swap ─── */
 .zone{transition:opacity .14s ease,transform .14s ease}
 .zone.swap{opacity:0;transform:translateY(5px)}
@@ -268,6 +277,17 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 </style>
 </head>
 <body>
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot-bolt">
+    <svg viewBox="0 0 24 24" width="74" height="74">
+      <defs><linearGradient id="bg1" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#5B8CFF"/><stop offset="50%" stop-color="#A06BFF"/><stop offset="100%" stop-color="#3FD9FF"/>
+      </linearGradient><clipPath id="boltclip"><path d="M14 2L6 14h6l-2 8 10-12h-6l2-8z"/></clipPath></defs>
+      <path d="M14 2L6 14h6l-2 8 10-12h-6l2-8z" fill="none" stroke="rgba(255,255,255,.18)" stroke-width=".8"/>
+      <rect class="boot-fill" x="0" y="0" width="24" height="24" fill="url(#bg1)" clip-path="url(#boltclip)"/>
+    </svg>
+  </div>
+</div>
 <div class="fx" aria-hidden="true"><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div><div class="gridfx"></div><canvas id="fxc"></canvas></div>
 
 <div class="wrap">
@@ -526,6 +546,11 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
   document.querySelectorAll('[data-setlang]').forEach(function(b){
     b.addEventListener('click',function(){setLang(b.getAttribute('data-setlang'))});
   });
+  var boot=document.getElementById('boot');
+  try{
+    if((window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)||sessionStorage.getItem('volt_boot')){boot.classList.add('skip');}
+    else sessionStorage.setItem('volt_boot','1');
+  }catch(e){}
   var saved;try{saved=localStorage.getItem('volt_landing_lang')}catch(e){}
   var nav=(navigator.language||'en').slice(0,2);
   setLang(saved||(L[nav]?nav:'en'));booted=true;
