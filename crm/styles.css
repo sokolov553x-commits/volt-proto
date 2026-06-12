@@ -755,3 +755,12 @@ body { background: radial-gradient(900px 480px at 80% -10%, rgba(160,107,255,.12
 
 /* v2: скроллится страница, не контейнер */
 html, body { height: auto; min-height: 100%; }
+
+/* мягкий бамп изменившегося KPI в live */
+.kpi.flash { animation: none; }
+.kpi.flash .kpi-value { animation: valBump .55s cubic-bezier(.34,1.4,.6,1); }
+@keyframes valBump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.05); text-shadow: 0 0 22px rgba(122,140,255,.55); }
+  100% { transform: scale(1); text-shadow: none; }
+}

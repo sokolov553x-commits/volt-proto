@@ -724,7 +724,7 @@
           <div class="card">
             <div class="card-head"><div class="card-title">${ico("alert")}${t("alertsSection")}</div>
               <button class="btn ghost sm" data-go="alerts">${t("allAlerts", openAlerts().length)} ${ico("chevR", 14)}</button></div>
-            <div class="card-body flush">${alertsHtml}</div>
+            <div class="card-body flush" id="alertsBox" data-n="${openAlerts().length}">${alertsHtml}</div>
           </div>` : ""}
           <div class="card">
             <div class="card-head"><div class="card-title">${ico("zap")}${t("eventFeed")}</div>
@@ -1307,10 +1307,69 @@
       });
       if (promoted) pushFeed("zap", t("charged_to", promoted.serial, promoted.charge), promoted.stationId);
     }
-    // refresh screen
+    // мягкое обновление — без перерисовки экрана
     updateBell();
-    if (["dashboard", "stations"].includes(state.view)) render(true);
+    softLiveUpdate();
   }
+
+  /* ── мягкие точечные обновления live-режима ── */
+  let lastFeedKey = null;
+  function softLiveUpdate() {
+    if (state.view !== "dashboard") return; // другие разделы не дёргаем
+    // KPI: меняем только изменившиеся ячейки, с мягким бампом
+    const kpiRow = $("#kpiRow");
+    if (kpiRow) {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = dashboardKpis();
+      const oldCells = kpiRow.children, newCells = tmp.children;
+      for (let i = 0; i < Math.min(oldCells.length, newCells.length); i++) {
+        const ov = oldCells[i].querySelector(".kpi-value");
+        const nv = newCells[i].querySelector(".kpi-value");
+        if (ov && nv && ov.textContent !== nv.textContent) {
+          oldCells[i].innerHTML = newCells[i].innerHTML;
+          oldCells[i].classList.remove("flash");
+          void oldCells[i].offsetWidth;
+          oldCells[i].classList.add("flash");
+        } else if (ov && nv) {
+          const os = oldCells[i].querySelector(".kpi-sub"), ns = newCells[i].querySelector(".kpi-sub");
+          if (os && ns && os.innerHTML !== ns.innerHTML) os.innerHTML = ns.innerHTML;
+        }
+      }
+    }
+    // лента: только новые события, по одному, с въездом
+    const box = $("#feedBox");
+    if (box && state.feed.length) {
+      const newestKey = state.feed[0].t + state.feed[0].txt;
+      if (newestKey !== lastFeedKey) {
+        const fresh = [];
+        for (const f of state.feed) {
+          const k = f.t + f.txt;
+          if (k === lastFeedKey) break;
+          fresh.push(f);
+        }
+        lastFeedKey = newestKey;
+        const myStation = role().station;
+        fresh.reverse().forEach((f) => {
+          if (myStation && f.st && f.st !== myStation) return;
+          box.insertAdjacentHTML("afterbegin", feedItem(f));
+        });
+        while (box.children.length > 10) box.lastElementChild.remove();
+        const empty = box.querySelector(".empty-state");
+        if (empty && box.children.length > 1) empty.remove();
+      }
+    }
+    // алерты: перерисовать карточку только если число изменилось
+    const ab = $("#alertsBox");
+    if (ab) {
+      const n = String(openAlerts().length);
+      if (ab.dataset.n !== n) {
+        ab.dataset.n = n;
+        ab.innerHTML = openAlerts().slice(0, 4).map(alertItem).join("")
+          || `<div class="empty-state">${ico("check", 20)}${t("allClear")}</div>`;
+      }
+    }
+  }
+
   function toggleLive() {
     state.live = !state.live;
     const btn = $("#liveBtn");
@@ -1322,7 +1381,6 @@
       pushFeed("zap", t("liveStarted"));
       liveTimer = setInterval(liveStep, 2800);
       toast(t("liveToast"));
-      if (state.view === "dashboard") render(true);
     } else {
       clearInterval(liveTimer);
       render(true);
