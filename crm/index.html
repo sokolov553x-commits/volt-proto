@@ -11,68 +11,44 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B8CFF'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
 </head>
 <body>
+<div class="fx" aria-hidden="true"><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="gridfx"></div></div>
 <div id="app" class="shell">
-
-  <!-- ───── Sidebar ───── -->
-  <aside class="sidebar" id="sidebar">
-    <a class="logo" href="../" title="VOLT Hub" style="text-decoration:none;color:inherit;cursor:pointer">
-      <span class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></svg>
-      </span>
+  <header class="topnav">
+    <span class="logo">
+      <span class="logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="#fff"/></svg></span>
       <span class="logo-word">VOLT</span>
-      <span class="logo-tag">CRM</span>
-    </a>
-
-    <nav class="nav" id="navWrap"><div id="navIndicator"></div><div id="nav"></div></nav>
-
-    <div class="sidebar-foot">
+    </span>
+    <nav id="nav" class="nav"></nav>
+    <div class="topnav-right">
+      <button class="cmdk-btn" id="cmdkBtn" title="Quick search">
+        <svg class="ico-14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg><kbd>⌘K</kbd>
+      </button>
+      <div class="lang-switch" id="langSwitch">
+        <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
+          <svg class="ico-14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 2.5 14.4 0 18M12 3c-2.5 2.6-2.5 14.4 0 18"/></svg>
+          <span id="langCurrent">EN</span>
+        </button>
+        <div class="lang-menu" id="langPicker" hidden role="listbox"></div>
+      </div>
+      <button class="live-btn" id="liveBtn" title="Live simulation">
+        <svg class="ico-14" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>Live</span>
+      </button>
+      <button class="icon-btn" id="bellBtn" title="Alerts">
+        <svg class="ico-18" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="bell-count" id="bellCount">0</span>
+      </button>
       <div class="role-switch" id="roleSwitch">
         <button class="role-btn" id="roleBtn" aria-haspopup="listbox" aria-expanded="false">
-          <span class="role-dot"></span>
-          <span class="role-current" id="roleCurrent">Manager</span>
+          <span class="avatar" id="userAvatar">AS</span>
+          <span class="role-meta"><b id="userName">Aleksandr S.</b><span class="role-current" id="roleCurrent">Manager</span></span>
           <svg class="ico-14" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="role-menu" id="roleMenu" role="listbox" hidden></div>
       </div>
-      <div class="live-status"><span class="ld"></span><span id="liveStatusTxt">live data</span></div>
-      <div class="sidebar-version" id="sidebarVersion">demo prototype · v0.1 · synthetic data</div>
     </div>
-  </aside>
-
-  <!-- ───── Main ───── -->
-  <div class="main">
-    <header class="topbar">
-      <div class="crumb" id="crumb">Overview</div>
-      <div class="topbar-right">
-        <div class="lang-switch" id="langSwitch">
-          <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" title="Language">
-            <svg class="ico-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            <span id="langCurrent">EN</span>
-            <svg class="ico-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
-          <div class="lang-menu" id="langPicker" hidden role="listbox"></div>
-        </div>
-        <button class="cmdk-btn" id="cmdkBtn" title="Quick search">
-          <svg class="ico-14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
-          <kbd>⌘K</kbd>
-        </button>
-        <button class="live-btn" id="liveBtn" title="Simulate live station events">
-          <svg class="ico-14" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg>
-          <span>Live demo</span>
-        </button>
-        <button class="icon-btn" id="bellBtn" title="Alerts">
-          <svg class="ico-18" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-          <span class="bell-count" id="bellCount">0</span>
-        </button>
-        <div class="user-chip">
-          <span class="avatar" id="userAvatar">AM</span>
-          <span class="user-name" id="userName">Amani M.</span>
-        </div>
-      </div>
-    </header>
-
-    <main class="content" id="view" tabindex="-1"></main>
-  </div>
+  </header>
+  <div class="crumb" id="crumb" hidden></div>
+  <main class="content" id="view" tabindex="-1"></main>
 </div>
 
 <!-- cmdk -->

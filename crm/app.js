@@ -698,8 +698,8 @@
 
     return `
       <div class="kpi-row" id="kpiRow">${dashboardKpis()}</div>
-      <div class="grid" style="grid-template-columns: minmax(0,2fr) minmax(280px,1fr)">
-        <div class="grid" style="align-content:start">
+      <div class="bento-d">
+        <div class="bd-4 grid" style="align-content:start">
           <div class="card">
             <div class="card-head"><div class="card-title">${ico("activity")}${t("rentals14")}${role().station ? " " + t("yourStation") : ""}</div>
               <span class="small muted">total ${fmtNum(V.rentalsByDay(role().station).reduce((s, d) => s + d.count, 0))}</span></div>
@@ -719,7 +719,7 @@
             </table></div>
           </div>
         </div>
-        <div class="grid" style="align-content:start">
+        <div class="bd-2 grid" style="align-content:start">
           ${state.role !== "investor" ? `
           <div class="card">
             <div class="card-head"><div class="card-title">${ico("alert")}${t("alertsSection")}</div>
