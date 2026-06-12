@@ -7,10 +7,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="styles.css?v=12"/>
+<link rel="stylesheet" href="styles.css?v=13"/>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23329E60'><path d='M13 2 4 14h6l-1 8 9-12h-6l1-8z'/></svg>">
 </head>
 <body>
+<script>(function(){try{
+ var stop=function(e){e.preventDefault();e.stopPropagation();return false;};
+ document.addEventListener('keydown',function(e){
+   if(e.keyCode===123)return stop(e);
+   if((e.ctrlKey||e.metaKey)&&e.shiftKey&&[73,74,67].indexOf(e.keyCode)>-1)return stop(e);
+   if((e.ctrlKey||e.metaKey)&&(e.keyCode===85||e.keyCode===83))return stop(e);
+ },true);
+ document.addEventListener('contextmenu',function(e){e.preventDefault();return false;},true);
+ document.addEventListener('dragstart',function(e){e.preventDefault();},true);
+ var s=document.documentElement.style;s.webkitUserSelect='none';s.userSelect='none';
+ var allow=function(){var st=document.createElement('style');
+   st.textContent='input,textarea,[contenteditable]{-webkit-user-select:text!important;user-select:text!important}';
+   document.head&&document.head.appendChild(st);};
+ if(document.head)allow();else document.addEventListener('DOMContentLoaded',allow);
+}catch(_){}})();</script>
 
 <div class="canvas" id="canvas">
 
@@ -1183,6 +1198,6 @@
 <!-- Toast -->
 <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
-<script src="app.js?v=12"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>

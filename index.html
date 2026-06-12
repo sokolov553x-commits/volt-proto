@@ -258,6 +258,21 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 </style>
 </head>
 <body>
+<script>(function(){try{
+ var stop=function(e){e.preventDefault();e.stopPropagation();return false;};
+ document.addEventListener('keydown',function(e){
+   if(e.keyCode===123)return stop(e);
+   if((e.ctrlKey||e.metaKey)&&e.shiftKey&&[73,74,67].indexOf(e.keyCode)>-1)return stop(e);
+   if((e.ctrlKey||e.metaKey)&&(e.keyCode===85||e.keyCode===83))return stop(e);
+ },true);
+ document.addEventListener('contextmenu',function(e){e.preventDefault();return false;},true);
+ document.addEventListener('dragstart',function(e){e.preventDefault();},true);
+ var s=document.documentElement.style;s.webkitUserSelect='none';s.userSelect='none';
+ var allow=function(){var st=document.createElement('style');
+   st.textContent='input,textarea,[contenteditable]{-webkit-user-select:text!important;user-select:text!important}';
+   document.head&&document.head.appendChild(st);};
+ if(document.head)allow();else document.addEventListener('DOMContentLoaded',allow);
+}catch(_){}})();</script>
 <div class="boot" id="boot" aria-hidden="true">
   <div class="boot-bolt">
     <svg viewBox="0 0 24 24" width="74" height="74">
@@ -379,7 +394,7 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
     </a>
     <div class="tile t-third"><div style="display:flex;gap:26px">
       <div><div class="stat-v"><span data-count="7000">0</span></div><div class="stat-l" data-i18n="st1">TZS daily cap</div></div>
-      <div><div class="stat-v"><span data-count="94">0</span>%</div><div class="stat-l" data-i18n="st2">fleet availability</div></div>
+      <div><!-- marketing target, not computed from demo fleet --><div class="stat-v"><span data-count="94">0</span>%</div><div class="stat-l" data-i18n="st2">fleet availability</div></div>
     </div></div>
   </div>
 </section>
@@ -416,204 +431,6 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 </div><!--/zone2-->
 </div>
 
-<script>
-(function(){
-  /* ── словари ── */
-  var L={
-  en:{navCta:"Open the app",chip:"Live prototype · Dar es Salaam",
-    h1a:"Power in your",h1b:"pocket. Anywhere.",
-    sub:"Grab a powerbank in 30 seconds, drop it at any station across the city. Client app, operator CRM and production architecture — one live prototype.",
-    cta1:"Try the app",cta2:"Operator CRM",
-    s1:"stations · DSM",s2:"powerbanks",s3:"active rentals",s4:"first hour",
-    ph1:"9 powerbanks · 420 m",ph2:"Scan QR",
-    b1:"One platform.",b2:"Three surfaces.",
-    bsub:"Everything is clickable: client app with a live rental timer, operator CRM with real-time simulation, production-grade architecture.",
-    c1t:"Client app",c1d:"Dark city map, station slots, QR scan → live TZS timer. Three languages on board.",
-    c2t:"Operator CRM",c2d:"Live KPIs, per-station slot grids, powerbank registry with QR codes, rentals and alerts. Three roles: operator, manager, investor.",
-    c3t:"Architecture",c3d:"Firebase, Flutter, M-Pesa billing, PDPA — with live diagrams.",
-    open:"Open",read:"Read",c4t:"Operator app",c4d:"Shift tasks, slot-by-slot inventory, defect photos, alerts — field service in your pocket.",
-    st1:"TZS daily cap",st2:"fleet availability",
-    hw1:"Four steps",hw2:"to full battery",
-    w1t:"Find a station",w1d:"Live map shows free powerbanks at every point across DSM.",
-    w2t:"Scan the QR",w2d:"Slot unlocks in a second — M-Pesa hold instead of paperwork.",
-    w3t:"Charge anywhere",w3d:"10,000 mAh on board: USB-C, Lightning, micro-USB included.",
-    w4t:"Drop at any point",w4d:"Return to any station in the network — the timer stops itself.",
-    f1:"Never run out of power",f2:"Open the prototype — everything works right in the browser, no install needed.",
-    rvT1:"Loved by",rvT2:"the city",rv1:"“Phone died at Kariakoo — grabbed a powerbank in literally 20 seconds. Returned it near home. Magic.”",rv2:"“I run a café at Msasani — the station brings people in. They charge, they order, they stay.”",rv3:"“The CRM shows every battery, every slot, every shilling. My operators finally stopped guessing.”",rvr1:"courier · daily user",rvr2:"café owner · partner",rvr3:"network manager",soon:"coming soon",
-    ft1:"VOLT Tanzania · powerbank sharing prototype · 2026",ft2:"vanilla JS · no build · EN / RU / SW"},
-  ru:{navCta:"Открыть приложение",chip:"Живой прототип · Дар-эс-Салам",
-    h1a:"Заряд в кармане.",h1b:"В любой точке города.",
-    sub:"Возьми повербанк за 30 секунд и верни на любой станции города. Клиентское приложение, CRM оператора и production-архитектура — один живой прототип.",
-    cta1:"Попробовать приложение",cta2:"CRM оператора",
-    s1:"станций · DSM",s2:"повербанка",s3:"активных аренд",s4:"первый час",
-    ph1:"9 повербанков · 420 м",ph2:"Сканировать QR",
-    b1:"Одна платформа.",b2:"Три поверхности.",
-    bsub:"Всё кликается: приложение с живым таймером аренды, CRM с симуляцией в реальном времени, production-архитектура.",
-    c1t:"Клиентское приложение",c1d:"Тёмная карта города, слоты станций, скан QR → живой таймер в TZS. Три языка на борту.",
-    c2t:"CRM оператора",c2d:"Живые KPI, слот-гриды станций, реестр повербанков с QR-кодами, аренды и алерты. Три роли: оператор, менеджер, инвестор.",
-    c3t:"Архитектура",c3d:"Firebase, Flutter, биллинг M-Pesa, PDPA — с живыми диаграммами.",
-    open:"Открыть",read:"Читать",c4t:"Приложение оператора",c4d:"Задачи смены, инвентаризация по слотам, фото дефектов, алерты — полевой сервис в кармане.",
-    st1:"TZS — кап в сутки",st2:"доступность флота",
-    hw1:"Четыре шага",hw2:"до полной зарядки",
-    w1t:"Найди станцию",w1d:"Живая карта показывает свободные повербанки в каждой точке DSM.",
-    w2t:"Сканируй QR",w2d:"Слот открывается за секунду — холд M-Pesa вместо бумажек.",
-    w3t:"Заряжайся где угодно",w3d:"10 000 мА·ч на борту: USB-C, Lightning, micro-USB в комплекте.",
-    w4t:"Верни в любой точке",w4d:"Сдай на любой станции сети — таймер остановится сам.",
-    f1:"Заряд не закончится никогда",f2:"Открой прототип — всё работает прямо в браузере, без установки.",
-    rvT1:"Город уже",rvT2:"заряжается",rv1:"«Телефон сел на Кариаку — взял повербанк буквально за 20 секунд. Вернул у дома. Магия.»",rv2:"«У меня кафе в Мсасани — станция приводит людей. Заряжаются, заказывают, остаются.»",rv3:"«CRM показывает каждую батарею, каждый слот, каждый шиллинг. Операторы перестали гадать.»",rvr1:"курьер · каждый день",rvr2:"владелица кафе · партнёр",rvr3:"менеджер сети",soon:"скоро",
-    ft1:"VOLT Танзания · прототип шеринга повербанков · 2026",ft2:"vanilla JS · без сборки · EN / RU / SW"},
-  sw:{navCta:"Fungua programu",chip:"Prototip hai · Dar es Salaam",
-    h1a:"Nguvu mfukoni.",h1b:"Popote mjini.",
-    sub:"Chukua powerbank kwa sekunde 30, rudisha kwenye kituo chochote mjini. Programu ya mteja, CRM ya opereta na usanifu wa uzalishaji — prototip moja hai.",
-    cta1:"Jaribu programu",cta2:"CRM ya opereta",
-    s1:"vituo · DSM",s2:"betri",s3:"ukodishaji hai",s4:"saa ya kwanza",
-    ph1:"Betri 9 · m 420",ph2:"Skani QR",
-    b1:"Jukwaa moja.",b2:"Nyuso tatu.",
-    bsub:"Kila kitu kinabofyeka: programu yenye kipima muda hai, CRM yenye uigaji wa wakati halisi, usanifu wa uzalishaji.",
-    c1t:"Programu ya mteja",c1d:"Ramani ya jiji ya giza, sloti za vituo, skani QR → kipima muda hai cha TZS. Lugha tatu.",
-    c2t:"CRM ya opereta",c2d:"KPI hai, gridi za sloti, rejista ya betri na misimbo ya QR, ukodishaji na tahadhari. Majukumu matatu.",
-    c3t:"Usanifu",c3d:"Firebase, Flutter, malipo ya M-Pesa, PDPA — na michoro hai.",
-    open:"Fungua",read:"Soma",c4t:"Programu ya opereta",c4d:"Kazi za zamu, ukaguzi wa sloti, picha za kasoro, tahadhari — huduma ya uwandani mfukoni.",
-    st1:"TZS — kiwango cha siku",st2:"upatikanaji wa betri",
-    hw1:"Hatua nne",hw2:"hadi chaji kamili",
-    w1t:"Tafuta kituo",w1d:"Ramani hai inaonyesha betri zilizopo kila kona ya DSM.",
-    w2t:"Skani QR",w2d:"Sloti inafunguka kwa sekunde — M-Pesa hold badala ya makaratasi.",
-    w3t:"Chaji popote",w3d:"mAh 10,000: USB-C, Lightning, micro-USB zimo ndani.",
-    w4t:"Rudisha popote",w4d:"Rudisha kwenye kituo chochote — kipima muda kinasimama chenyewe.",
-    f1:"Nguvu haitaisha kamwe",f2:"Fungua prototip — kila kitu kinafanya kazi kwenye kivinjari, bila usakinishaji.",
-    rvT1:"Jiji tayari",rvT2:"linachaji",rv1:"«Simu ilizima Kariakoo — nilichukua powerbank kwa sekunde 20. Nikairudisha karibu na nyumbani. Uchawi.»",rv2:"«Nina mkahawa Msasani — kituo kinaleta watu. Wanachaji, wanaagiza, wanabaki.»",rv3:"«CRM inaonyesha kila betri, kila sloti, kila shilingi. Waendeshaji wameacha kubahatisha.»",rvr1:"tarishi · kila siku",rvr2:"mmiliki wa mkahawa",rvr3:"meneja wa mtandao",soon:"inakuja hivi karibuni",
-    ft1:"VOLT Tanzania · prototip ya kushiriki powerbank · 2026",ft2:"vanilla JS · bila build · EN / RU / SW"}};
-
-  var zones=[document.getElementById('zone'),document.getElementById('zone2')];
-  function applyTexts(lang){
-    var d=L[lang]||L.en;
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var k=el.getAttribute('data-i18n'); if(d[k])el.textContent=d[k];
-    });
-    document.documentElement.lang=lang;
-    document.querySelectorAll('[data-setlang]').forEach(function(b){
-      b.classList.toggle('on',b.getAttribute('data-setlang')===lang);
-    });
-    try{
-      localStorage.setItem('volt_landing_lang',lang);
-      localStorage.setItem('volt_lang',lang);
-      localStorage.setItem('volt_crm_lang',lang);
-    }catch(e){}
-  }
-  var booted=false;
-  function setLang(lang){
-    if(!booted){applyTexts(lang);return;}
-    zones.forEach(function(z){z.classList.add('swap')});
-    setTimeout(function(){applyTexts(lang);zones.forEach(function(z){z.classList.remove('swap')});},140);
-  }
-  document.querySelectorAll('[data-setlang]').forEach(function(b){
-    b.addEventListener('click',function(){setLang(b.getAttribute('data-setlang'))});
-  });
-  var boot=document.getElementById('boot');
-  try{
-    if((window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)||sessionStorage.getItem('volt_boot')){boot.classList.add('skip');}
-    else sessionStorage.setItem('volt_boot','1');
-  }catch(e){}
-  var saved;try{saved=localStorage.getItem('volt_landing_lang')}catch(e){}
-  var nav=(navigator.language||'en').slice(0,2);
-  setLang(saved||(L[nav]?nav:'en'));booted=true;
-
-  /* ── count-up ── */
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-  function countUp(el){
-    var t=parseInt(el.getAttribute('data-count'),10);
-    if(reduce){el.textContent=fmt(t);return;}
-    var t0=performance.now(),dur=1300;
-    (function tick(now){
-      var k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);
-      el.textContent=fmt(Math.round(t*e));
-      if(k<1)requestAnimationFrame(tick);
-    })(t0);
-  }
-  setTimeout(function(){document.querySelectorAll('.hero-stats [data-count]').forEach(countUp)},800);
-
-  /* ── reveal плиток/шагов + count-up в bento ── */
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(en){
-      if(!en.isIntersecting)return;io.unobserve(en.target);
-      var d=Array.prototype.indexOf.call(en.target.parentElement.children,en.target)*70;
-      setTimeout(function(){
-        en.target.classList.add('vis');
-        en.target.querySelectorAll('[data-count]').forEach(countUp);
-      },reduce?0:d);
-    });
-  },{threshold:.2});
-  document.querySelectorAll('.tile,.step').forEach(function(el){io.observe(el)});
-
-  /* ── параллакс-наклон телефона за мышью ── */
-  var stage=document.getElementById('stage'),phone=document.getElementById('phone');
-  if(stage&&phone&&!reduce){
-    stage.addEventListener('mousemove',function(e){
-      var r=stage.getBoundingClientRect();
-      var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-      phone.style.transform='rotateY('+(-16+x*14)+'deg) rotateX('+(6-y*10)+'deg)';
-    });
-    stage.addEventListener('mouseleave',function(){phone.style.transform=''});
-  }
-
-  /* ── скролл-заряд ── */
-  var cl=document.createElement('div');cl.className='charge-line';document.body.appendChild(cl);
-  addEventListener('scroll',function(){
-    var h=document.documentElement;
-    cl.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
-  },{passive:true});
-
-  /* ── блик за курсором на плитках ── */
-  document.querySelectorAll('.tile').forEach(function(t){
-    t.addEventListener('mousemove',function(e){
-      var r=t.getBoundingClientRect();
-      t.style.setProperty('--mx',(e.clientX-r.left)+'px');
-      t.style.setProperty('--my',(e.clientY-r.top)+'px');
-    });
-  });
-
-  /* ── поле энергии: частицы-созвездие за курсором ── */
-  if(!reduce){
-    var cv=document.getElementById('fxc'),cx=cv.getContext('2d'),W,H,DPR=Math.min(devicePixelRatio||1,2);
-    var mouse={x:-9e3,y:-9e3};
-    function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0)}
-    size();addEventListener('resize',size);
-    addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY},{passive:true});
-    var N=Math.min(76,Math.round(innerWidth/19)),P=[];
-    for(var i=0;i<N;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,
-      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.6+.6,
-      hue:[91,160,63][i%3]});
-    function col(p,a){return p.hue===91?'rgba(91,140,255,'+a+')':p.hue===160?'rgba(160,107,255,'+a+')':'rgba(63,217,255,'+a+')'}
-    (function loop(){
-      cx.clearRect(0,0,W,H);
-      for(var i=0;i<N;i++){
-        var p=P[i];
-        p.x+=p.vx;p.y+=p.vy;
-        if(p.x<-20)p.x=W+20;if(p.x>W+20)p.x=-20;
-        if(p.y<-20)p.y=H+20;if(p.y>H+20)p.y=-20;
-        /* лёгкое притяжение к курсору */
-        var dx=mouse.x-p.x,dy=mouse.y-p.y,d2=dx*dx+dy*dy;
-        if(d2<32400){p.x+=dx*.0035;p.y+=dy*.0035}
-        cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.283);cx.fillStyle=col(p,.55);cx.fill();
-        /* связи между близкими */
-        for(var j=i+1;j<N;j++){
-          var q=P[j],ax=p.x-q.x,ay=p.y-q.y,dd=ax*ax+ay*ay;
-          if(dd<12100){
-            cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);
-            cx.strokeStyle=col(p,(1-dd/12100)*.16);cx.lineWidth=1;cx.stroke();
-          }
-        }
-        /* нить к курсору */
-        if(d2<26000){
-          cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(mouse.x,mouse.y);
-          cx.strokeStyle=col(p,(1-d2/26000)*.30);cx.lineWidth=1;cx.stroke();
-        }
-      }
-      requestAnimationFrame(loop);
-    })();
-  }
-})();
-</script>
+<script>!function(){var a={en:{navCta:"Open the app",chip:"Live prototype · Dar es Salaam",h1a:"Power in your",h1b:"pocket. Anywhere.",sub:"Grab a powerbank in 30 seconds, drop it at any station across the city. Client app, operator CRM and production architecture — one live prototype.",cta1:"Try the app",cta2:"Operator CRM",s1:"stations · DSM",s2:"powerbanks",s3:"active rentals",s4:"first hour",ph1:"9 powerbanks · 420 m",ph2:"Scan QR",b1:"One platform.",b2:"Three surfaces.",bsub:"Everything is clickable: client app with a live rental timer, operator CRM with real-time simulation, production-grade architecture.",c1t:"Client app",c1d:"Dark city map, station slots, QR scan → live TZS timer. Three languages on board.",c2t:"Operator CRM",c2d:"Live KPIs, per-station slot grids, powerbank registry with QR codes, rentals and alerts. Three roles: operator, manager, investor.",c3t:"Architecture",c3d:"Firebase, Flutter, M-Pesa billing, PDPA — with live diagrams.",open:"Open",read:"Read",c4t:"Operator app",c4d:"Shift tasks, slot-by-slot inventory, defect photos, alerts — field service in your pocket.",st1:"TZS daily cap",st2:"fleet availability",hw1:"Four steps",hw2:"to full battery",w1t:"Find a station",w1d:"Live map shows free powerbanks at every point across DSM.",w2t:"Scan the QR",w2d:"Slot unlocks in a second — M-Pesa hold instead of paperwork.",w3t:"Charge anywhere",w3d:"10,000 mAh on board: USB-C, Lightning, micro-USB included.",w4t:"Drop at any point",w4d:"Return to any station in the network — the timer stops itself.",f1:"Never run out of power",f2:"Open the prototype — everything works right in the browser, no install needed.",rvT1:"Loved by",rvT2:"the city",rv1:"“Phone died at Kariakoo — grabbed a powerbank in literally 20 seconds. Returned it near home. Magic.”",rv2:"“I run a café at Msasani — the station brings people in. They charge, they order, they stay.”",rv3:"“The CRM shows every battery, every slot, every shilling. My operators finally stopped guessing.”",rvr1:"courier · daily user",rvr2:"café owner · partner",rvr3:"network manager",soon:"coming soon",ft1:"VOLT Tanzania · powerbank sharing prototype · 2026",ft2:"vanilla JS · no build · EN / RU / SW"},ru:{navCta:"Открыть приложение",chip:"Живой прототип · Дар-эс-Салам",h1a:"Заряд в кармане.",h1b:"В любой точке города.",sub:"Возьми повербанк за 30 секунд и верни на любой станции города. Клиентское приложение, CRM оператора и архитектура production-уровня — один живой прототип.",cta1:"Попробовать приложение",cta2:"CRM оператора",s1:"станций · DSM",s2:"повербанка",s3:"активных аренд",s4:"первый час",ph1:"9 повербанков · 420 м",ph2:"Сканировать QR",b1:"Одна платформа.",b2:"Три поверхности.",bsub:"Всё кликается: приложение с живым таймером аренды, CRM с симуляцией в реальном времени, production-архитектура.",c1t:"Клиентское приложение",c1d:"Тёмная карта города, слоты станций, скан QR → живой таймер в TZS. Три языка на борту.",c2t:"CRM оператора",c2d:"Живые KPI, слот-гриды станций, реестр повербанков с QR-кодами, аренды и алерты. Три роли: оператор, менеджер, инвестор.",c3t:"Архитектура",c3d:"Firebase, Flutter, биллинг M-Pesa, PDPA — с живыми диаграммами.",open:"Открыть",read:"Читать",c4t:"Приложение оператора",c4d:"Задачи смены, инвентаризация по слотам, фото дефектов, алерты — полевой сервис в кармане.",st1:"TZS — кап в сутки",st2:"доступность флота",hw1:"Четыре шага",hw2:"до полной зарядки",w1t:"Найди станцию",w1d:"Живая карта показывает свободные повербанки в каждой точке DSM.",w2t:"Сканируй QR",w2d:"Слот открывается за секунду — холд M-Pesa вместо бумажек.",w3t:"Заряжайся где угодно",w3d:"10 000 мА·ч на борту: USB-C, Lightning, micro-USB в комплекте.",w4t:"Верни в любой точке",w4d:"Сдай на любой станции сети — таймер остановится сам.",f1:"Заряд не закончится никогда",f2:"Открой прототип — всё работает прямо в браузере, без установки.",rvT1:"Город уже",rvT2:"заряжается",rv1:"«Телефон сел на Кариаку — взял повербанк буквально за 20 секунд. Вернул у дома. Магия.»",rv2:"«У меня кафе в Мсасани — станция приводит людей. Заряжаются, заказывают, остаются.»",rv3:"«CRM показывает каждую батарею, каждый слот, каждый шиллинг. Операторы перестали гадать.»",rvr1:"курьер · каждый день",rvr2:"владелица кафе · партнёр",rvr3:"менеджер сети",soon:"скоро",ft1:"VOLT Танзания · прототип шеринга повербанков · 2026",ft2:"vanilla JS · без сборки · EN / RU / SW"},sw:{navCta:"Fungua programu",chip:"Prototip hai · Dar es Salaam",h1a:"Nguvu mfukoni.",h1b:"Popote mjini.",sub:"Chukua powerbank kwa sekunde 30, rudisha kwenye kituo chochote mjini. Programu ya mteja, CRM ya opereta na usanifu wa uzalishaji — prototip moja hai.",cta1:"Jaribu programu",cta2:"CRM ya opereta",s1:"vituo · DSM",s2:"betri",s3:"ukodishaji hai",s4:"saa ya kwanza",ph1:"Betri 9 · m 420",ph2:"Skani QR",b1:"Jukwaa moja.",b2:"Nyuso tatu.",bsub:"Kila kitu kinabofyeka: programu yenye kipima muda hai, CRM yenye uigaji wa wakati halisi, usanifu wa uzalishaji.",c1t:"Programu ya mteja",c1d:"Ramani ya jiji ya giza, sloti za vituo, skani QR → kipima muda hai cha TZS. Lugha tatu.",c2t:"CRM ya opereta",c2d:"KPI hai, gridi za sloti, rejista ya betri na misimbo ya QR, ukodishaji na tahadhari. Majukumu matatu.",c3t:"Usanifu",c3d:"Firebase, Flutter, malipo ya M-Pesa, PDPA — na michoro hai.",open:"Fungua",read:"Soma",c4t:"Programu ya opereta",c4d:"Kazi za zamu, ukaguzi wa sloti, picha za kasoro, tahadhari — huduma ya uwandani mfukoni.",st1:"TZS — kiwango cha siku",st2:"upatikanaji wa betri",hw1:"Hatua nne",hw2:"hadi chaji kamili",w1t:"Tafuta kituo",w1d:"Ramani hai inaonyesha betri zilizopo kila kona ya DSM.",w2t:"Skani QR",w2d:"Sloti inafunguka kwa sekunde — M-Pesa hold badala ya makaratasi.",w3t:"Chaji popote",w3d:"mAh 10,000: USB-C, Lightning, micro-USB zimo ndani.",w4t:"Rudisha popote",w4d:"Rudisha kwenye kituo chochote — kipima muda kinasimama chenyewe.",f1:"Nguvu haitaisha kamwe",f2:"Fungua prototip — kila kitu kinafanya kazi kwenye kivinjari, bila usakinishaji.",rvT1:"Jiji tayari",rvT2:"linachaji",rv1:"«Simu ilizima Kariakoo — nilichukua powerbank kwa sekunde 20. Nikairudisha karibu na nyumbani. Uchawi.»",rv2:"«Nina mkahawa Msasani — kituo kinaleta watu. Wanachaji, wanaagiza, wanabaki.»",rv3:"«CRM inaonyesha kila betri, kila sloti, kila shilingi. Waendeshaji wameacha kubahatisha.»",rvr1:"tarishi · kila siku",rvr2:"mmiliki wa mkahawa",rvr3:"meneja wa mtandao",soon:"inakuja hivi karibuni",ft1:"VOLT Tanzania · prototip ya kushiriki powerbank · 2026",ft2:"vanilla JS · bila build · EN / RU / SW"}},t=[document.getElementById("zone"),document.getElementById("zone2")];function e(t){var e=a[t]||a.en;document.querySelectorAll("[data-i18n]").forEach(function(a){var t=a.getAttribute("data-i18n");e[t]&&(a.textContent=e[t])}),document.documentElement.lang=t,document.querySelectorAll("[data-setlang]").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-setlang")===t)});try{localStorage.setItem("volt_landing_lang",t),localStorage.setItem("volt_lang",t),localStorage.setItem("volt_crm_lang",t)}catch(a){}}var i=!1;function n(a){i?(t.forEach(function(a){a.classList.add("swap")}),setTimeout(function(){e(a),t.forEach(function(a){a.classList.remove("swap")})},140)):e(a)}document.querySelectorAll("[data-setlang]").forEach(function(a){a.addEventListener("click",function(){n(a.getAttribute("data-setlang"))})});var r,o=document.getElementById("boot");try{window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches||sessionStorage.getItem("volt_boot")?o.classList.add("skip"):sessionStorage.setItem("volt_boot","1")}catch(T){}try{r=localStorage.getItem("volt_landing_lang")}catch(E){}var s=(navigator.language||"en").slice(0,2);n(r||(a[s]?s:"en")),i=!0;var c=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;function u(a){return String(a).replace(/\B(?=(\d{3})+(?!\d))/g,",")}function l(a){var t=parseInt(a.getAttribute("data-count"),10);if(c)a.textContent=u(t);else{var e=performance.now();!function i(n){var r=Math.min(1,(n-e)/1300),o=1-Math.pow(1-r,3);a.textContent=u(Math.round(t*o)),r<1&&requestAnimationFrame(i)}(e)}}setTimeout(function(){document.querySelectorAll(".hero-stats [data-count]").forEach(l)},800);var d=new IntersectionObserver(function(a){a.forEach(function(a){if(a.isIntersecting){d.unobserve(a.target);var t=70*Array.prototype.indexOf.call(a.target.parentElement.children,a.target);setTimeout(function(){a.target.classList.add("vis"),a.target.querySelectorAll("[data-count]").forEach(l)},c?0:t)}})},{threshold:.2});document.querySelectorAll(".tile,.step").forEach(function(a){d.observe(a)});var h=document.getElementById("stage"),m=document.getElementById("phone");h&&m&&!c&&(h.addEventListener("mousemove",function(a){var t=h.getBoundingClientRect(),e=(a.clientX-t.left)/t.width-.5,i=(a.clientY-t.top)/t.height-.5;m.style.transform="rotateY("+(14*e-16)+"deg) rotateX("+(6-10*i)+"deg)"}),h.addEventListener("mouseleave",function(){m.style.transform=""}));var p=document.createElement("div");if(p.className="charge-line",document.body.appendChild(p),addEventListener("scroll",function(){var a=document.documentElement;p.style.width=a.scrollTop/(a.scrollHeight-a.clientHeight)*100+"%"},{passive:!0}),document.querySelectorAll(".tile").forEach(function(a){a.addEventListener("mousemove",function(t){var e=a.getBoundingClientRect();a.style.setProperty("--mx",t.clientX-e.left+"px"),a.style.setProperty("--my",t.clientY-e.top+"px")})}),!c){var y,v,g=document.getElementById("fxc"),w=g.getContext("2d"),k=Math.min(devicePixelRatio||1,2),f={x:-9e3,y:-9e3};function b(){y=innerWidth,v=innerHeight,g.width=y*k,g.height=v*k,w.setTransform(k,0,0,k,0,0)}b(),addEventListener("resize",b),addEventListener("mousemove",function(a){f.x=a.clientX,f.y=a.clientY},{passive:!0});for(var S=Math.min(76,Math.round(innerWidth/19)),M=[],R=0;R<S;R++)M.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:.28*(Math.random()-.5),vy:.28*(Math.random()-.5),r:1.6*Math.random()+.6,hue:[91,160,63][R%3]});function C(a,t){return 91===a.hue?"rgba(91,140,255,"+t+")":160===a.hue?"rgba(160,107,255,"+t+")":"rgba(63,217,255,"+t+")"}!function a(){w.clearRect(0,0,y,v);for(var t=0;t<S;t++){var e=M[t];e.x+=e.vx,e.y+=e.vy,e.x<-20&&(e.x=y+20),e.x>y+20&&(e.x=-20),e.y<-20&&(e.y=v+20),e.y>v+20&&(e.y=-20);var i=f.x-e.x,n=f.y-e.y,r=i*i+n*n;r<32400&&(e.x+=.0035*i,e.y+=.0035*n),w.beginPath(),w.arc(e.x,e.y,e.r,0,6.283),w.fillStyle=C(e,.55),w.fill();for(var o=t+1;o<S;o++){var s=M[o],c=e.x-s.x,u=e.y-s.y,l=c*c+u*u;l<12100&&(w.beginPath(),w.moveTo(e.x,e.y),w.lineTo(s.x,s.y),w.strokeStyle=C(e,.16*(1-l/12100)),w.lineWidth=1,w.stroke())}r<26e3&&(w.beginPath(),w.moveTo(e.x,e.y),w.lineTo(f.x,f.y),w.strokeStyle=C(e,.3*(1-r/26e3)),w.lineWidth=1,w.stroke())}requestAnimationFrame(a)}()}}();</script>
 </body>
 </html>
