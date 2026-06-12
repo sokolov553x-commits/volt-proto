@@ -61,7 +61,8 @@ body {
   font-size: 14px;
   line-height: 1.57;
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 button { font-family: inherit; color: inherit; background: none; border: none; cursor: pointer; }
@@ -751,3 +752,6 @@ body { background: radial-gradient(900px 480px at 80% -10%, rgba(160,107,255,.12
   .role-meta { display: none; }
   .content { padding: 16px 14px 48px; }
 }
+
+/* v2: скроллится страница, не контейнер */
+html, body { height: auto; min-height: 100%; }

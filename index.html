@@ -199,25 +199,6 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 .step b{display:block;font-size:15px;font-weight:800;margin-bottom:6px}
 .step span{font-size:13px;color:var(--mid);line-height:1.55}
 
-/* ─── отзывы ─── */
-.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.rev{border-radius:20px;padding:24px;background:var(--glass);border:1px solid var(--stroke);opacity:0;transform:translateY(24px)}
-.rev.vis{opacity:1;transform:none;transition:.5s var(--e-out)}
-.rev-stars{display:flex;gap:3px;margin-bottom:14px}
-.rev-stars svg{width:15px;height:15px;fill:url(#starg)}
-.rev p{font-size:14px;color:var(--mid);line-height:1.65}
-.rev-who{display:flex;align-items:center;gap:11px;margin-top:18px}
-.rev-av{width:38px;height:38px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font:800 13px var(--font);color:#fff}
-.rev-who b{display:block;font-size:13.5px}
-.rev-who span{font-size:11.5px;color:var(--dim)}
-/* стор-бейджи */
-.stores{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
-.store{display:flex;align-items:center;gap:11px;padding:11px 20px;border-radius:14px;background:rgba(5,6,12,.55);border:1px solid var(--stroke);text-decoration:none;color:inherit;transition:.2s}
-.store:hover{border-color:var(--stroke-hi);transform:translateY(-2px)}
-.store svg{width:22px;height:22px;fill:var(--text)}
-.store small{display:block;font-size:9.5px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
-.store b{font-size:14px;font-weight:800}
-@media(max-width:920px){.reviews{grid-template-columns:1fr}}
 
 /* ─── финальный CTA ─── */
 .fin{position:relative;margin:90px 0 0;border-radius:28px;overflow:hidden;
@@ -416,24 +397,6 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
 </section>
 
 
-<section class="sec">
-  <div class="sec-head">
-    <h2><span data-i18n="rvT1">Loved by</span> <span class="gx" data-i18n="rvT2">the city</span></h2>
-  </div>
-  <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="starg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5B8CFF"/><stop offset="1" stop-color="#A06BFF"/></linearGradient></defs></svg>
-  <div class="reviews">
-    <div class="rev"><div class="rev-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg></div>
-      <p data-i18n="rv1">"Phone died at Kariakoo — grabbed a powerbank in literally 20 seconds. Returned it near home. Magic."</p>
-      <div class="rev-who"><span class="rev-av">AK</span><div><b>Amani K.</b><span data-i18n="rvr1">courier · daily user</span></div></div></div>
-    <div class="rev"><div class="rev-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg></div>
-      <p data-i18n="rv2">"I run a café at Msasani — the station brings people in. They charge, they order, they stay."</p>
-      <div class="rev-who"><span class="rev-av">NJ</span><div><b>Neema J.</b><span data-i18n="rvr2">café owner · partner</span></div></div></div>
-    <div class="rev"><div class="rev-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7-6.2-3.6L5.8 21l1.4-7L2 9.4l7-.8z"/></svg></div>
-      <p data-i18n="rv3">"The CRM shows every battery, every slot, every shilling. My operators finally stopped guessing."</p>
-      <div class="rev-who"><span class="rev-av">DM</span><div><b>David M.</b><span data-i18n="rvr3">network manager</span></div></div></div>
-  </div>
-</section>
-
 <section class="fin">
   <h2 data-i18n="f1">Never run out of power</h2>
   <p data-i18n="f2">Open the prototype — everything works right in the browser, no install needed.</p>
@@ -581,7 +544,7 @@ h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;
       },reduce?0:d);
     });
   },{threshold:.2});
-  document.querySelectorAll('.tile,.step,.rev').forEach(function(el){io.observe(el)});
+  document.querySelectorAll('.tile,.step').forEach(function(el){io.observe(el)});
 
   /* ── параллакс-наклон телефона за мышью ── */
   var stage=document.getElementById('stage'),phone=document.getElementById('phone');
